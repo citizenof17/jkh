@@ -2,6 +2,7 @@ package com.jkh.backend.model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Flat {
@@ -20,6 +21,15 @@ public class Flat {
 
     @Column(name = "amount_registered")
     private Integer amountRegistered;
+
+    @OneToMany(mappedBy = "flat", fetch = FetchType.LAZY)
+    private List<Counter> counterList;
+
+    @OneToMany(mappedBy = "flat", fetch = FetchType.LAZY)
+    private List<User> userList;
+
+    public Flat() {
+    }
 
     public Integer getId() {
         return id;
@@ -59,5 +69,21 @@ public class Flat {
 
     public void setAmountRegistered(Integer amountRegistered) {
         this.amountRegistered = amountRegistered;
+    }
+
+    public List<Counter> getCounterList() {
+        return counterList;
+    }
+
+    public void setCounterList(List<Counter> counterList) {
+        this.counterList = counterList;
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
     }
 }

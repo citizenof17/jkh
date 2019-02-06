@@ -17,6 +17,9 @@ public class Indication {
 
     private Integer value;
 
+    public Indication() {
+    }
+
     public Integer getId() {
         return id;
     }

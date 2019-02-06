@@ -19,6 +19,9 @@ public class Tariff {
 
     private Date date;
 
+    public Tariff() {
+    }
+
     public Integer getId() {
         return id;
     }
