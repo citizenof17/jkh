@@ -3,7 +3,7 @@ package com.jkh.backend.model;
 import com.jkh.backend.model.enums.CounterType;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Counter {
@@ -13,6 +13,8 @@ public class Counter {
 
     private String number;
 
+    @Column(name = "counter_type")
+    @Enumerated(EnumType.STRING)
     private CounterType type;
 
     @ManyToOne
@@ -21,8 +23,8 @@ public class Counter {
 
     private Integer zero;
 
-    @OneToMany(mappedBy = "counter", fetch = FetchType.LAZY)
-    private List<Indication> indicationList;
+    @OneToMany(mappedBy = "counter", orphanRemoval = true, cascade = CascadeType.ALL)
+    private Set<Indication> indicationSet;
 
     public Counter() {
     }
@@ -67,11 +69,11 @@ public class Counter {
         this.zero = zero;
     }
 
-    public List<Indication> getIndicationList() {
-        return indicationList;
+    public Set<Indication> getIndicationSet() {
+        return indicationSet;
     }
 
-    public void setIndicationList(List<Indication> indicationList) {
-        this.indicationList = indicationList;
+    public void setIndicationSet(Set<Indication> indicationSet) {
+        this.indicationSet = indicationSet;
     }
 }

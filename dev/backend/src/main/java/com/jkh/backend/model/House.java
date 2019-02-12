@@ -1,7 +1,7 @@
 package com.jkh.backend.model;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 public class House {
@@ -12,14 +12,11 @@ public class House {
     @Column(unique = true)
     private String address;
 
-    @OneToMany(mappedBy = "house", fetch = FetchType.LAZY)
-    private List<Flat> flatList;
+    @OneToMany(mappedBy = "house", orphanRemoval = true, cascade = CascadeType.ALL)
+    private Set<Flat> flatSet;
 
-    @OneToMany(mappedBy = "house", fetch = FetchType.LAZY)
-    private List<AdminHouse> adminHouseList;
-
-//    @ManyToMany(mappedBy = "houses")
-//    private List<User> adminList;
+    @ManyToMany(mappedBy = "houseSet")
+    private Set<User> adminSet;
 
     public House() {
     }
@@ -40,26 +37,19 @@ public class House {
         this.address = address;
     }
 
-    public List<Flat> getFlatList() {
-        return flatList;
+    public Set<Flat> getFlatSet() {
+        return flatSet;
     }
 
-    public void setFlatList(List<Flat> flatList) {
-        this.flatList = flatList;
+    public void setFlatSet(Set<Flat> flatSet) {
+        this.flatSet = flatSet;
     }
 
-    public List<AdminHouse> getAdminHouseList() {
-        return adminHouseList;
+    public Set<User> getAdminSet() {
+        return adminSet;
     }
 
-    public void setAdminHouseList(List<AdminHouse> adminHouseList) {
-        this.adminHouseList = adminHouseList;
+    public void setAdminSet(Set<User> adminSet) {
+        this.adminSet = adminSet;
     }
-//    public List<User> getAdminList() {
-//        return adminList;
-//    }
-//
-//    public void setAdminList(List<User> adminList) {
-//        this.adminList = adminList;
-//    }
 }
