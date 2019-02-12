@@ -3,7 +3,7 @@ package com.jkh.backend.model;
 import com.jkh.backend.model.enums.Role;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -26,19 +26,22 @@ public class User {
 
     private String password;
 
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column(name = "is_active")
     private boolean isActive;
 
-    @OneToMany(mappedBy = "house", fetch = FetchType.LAZY)
-    private List<AdminHouse> adminHouseList;
+    @ManyToMany(cascade=CascadeType.ALL)
+    @JoinTable(name = "admin_house",
+        joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+        inverseJoinColumns = {@JoinColumn(name = "house_id", referencedColumnName = "id")})
+    private Set<House> houseSet;
 
-//    @ManyToMany
-//    @JoinTable(name = "house_admin",
-//        joinColumns = @JoinColumn(name = "house_id", referencedColumnName = "id"),
-//        inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-//    private List<House> houseList;
+    public User(String login, String password) {
+        this.login = login;
+        this.password = password;
+    }
 
     public User() {
     }
@@ -115,18 +118,11 @@ public class User {
         isActive = active;
     }
 
-    public List<AdminHouse> getAdminHouseList() {
-        return adminHouseList;
+    public Set<House> getHouseSet() {
+        return houseSet;
     }
 
-    public void setAdminHouseList(List<AdminHouse> adminHouseList) {
-        this.adminHouseList = adminHouseList;
+    public void setHouseSet(Set<House> houseSet) {
+        this.houseSet = houseSet;
     }
-//    public List<House> getHouseList() {
-//        return houseList;
-//    }
-//
-//    public void setHouseList(List<House> houseList) {
-//        this.houseList = houseList;
-//    }
 }

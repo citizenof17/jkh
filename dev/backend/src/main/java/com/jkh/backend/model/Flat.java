@@ -2,7 +2,7 @@ package com.jkh.backend.model;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Flat {
@@ -14,19 +14,19 @@ public class Flat {
     @JoinColumn(name = "house_id")
     private House house;
 
-    @Column(name = "owner_date")
-    private Date ownerDate;
+    @Column(name = "last_registration_date")
+    private Date LastRegistrationDate;
 
     private Double square;
 
-    @Column(name = "amount_registered")
-    private Integer amountRegistered;
+    @Column(name = "num_of_reg_owners")
+    private Integer NumOfRegOwners;
 
-    @OneToMany(mappedBy = "flat", fetch = FetchType.LAZY)
-    private List<Counter> counterList;
+    @OneToMany(mappedBy = "flat", orphanRemoval = true, cascade = CascadeType.ALL)
+    private Set<Counter> counterSet;
 
-    @OneToMany(mappedBy = "flat", fetch = FetchType.LAZY)
-    private List<User> userList;
+    @OneToMany(mappedBy = "flat", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
+    private Set<User> userSet;
 
     public Flat() {
     }
@@ -48,11 +48,11 @@ public class Flat {
     }
 
     public Date getOwnerDate() {
-        return ownerDate;
+        return LastRegistrationDate;
     }
 
     public void setOwnerDate(Date ownerDate) {
-        this.ownerDate = ownerDate;
+        this.LastRegistrationDate = ownerDate;
     }
 
     public Double getSquare() {
@@ -64,26 +64,26 @@ public class Flat {
     }
 
     public Integer getAmountRegistered() {
-        return amountRegistered;
+        return NumOfRegOwners;
     }
 
     public void setAmountRegistered(Integer amountRegistered) {
-        this.amountRegistered = amountRegistered;
+        this.NumOfRegOwners = amountRegistered;
     }
 
-    public List<Counter> getCounterList() {
-        return counterList;
+    public Set<Counter> getCounterSet() {
+        return counterSet;
     }
 
-    public void setCounterList(List<Counter> counterList) {
-        this.counterList = counterList;
+    public void setCounterSet(Set<Counter> counterSet) {
+        this.counterSet = counterSet;
     }
 
-    public List<User> getUserList() {
-        return userList;
+    public Set<User> getUserSet() {
+        return userSet;
     }
 
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
+    public void setUserSet(Set<User> userSet) {
+        this.userSet = userSet;
     }
 }
