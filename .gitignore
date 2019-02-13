@@ -2,3 +2,29 @@
 */*target
 */*.iml
 **/.DS_Store
+
+### STS ###
+/dev/**/.apt_generated
+/dev/**/.classpath
+/dev/**/.factorypath
+/dev/**/.project
+/dev/**/.settings
+/dev/**/.springBeans
+/dev/**/.sts4-cache
+
+### IntelliJ IDEA ###
+/dev/**/*.iws
+/dev/**/*.ipr
+
+### NetBeans ###
+/dev/nbproject/private/
+/dev/nbbuild/
+/dev/dist/
+/dev/nbdist/
+/dev/.nb-gradle/
+/dev/build/
+
+### Maven ###
+/dev/.mvn/
+/dev/mvnw
+/dev/mvnw.cmd
