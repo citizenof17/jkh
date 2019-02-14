@@ -1,0 +1,8 @@
+﻿<h3 align="center">Авторизация</h3>
+<form (submit)="loginUser($event)" align="center">
+    <p><input type="text" placeholder="Логин" id="username" required pattern="[a-zA-ZА-Яа-я0-9]{3,}"></p>
+    <p><input type="password" placeholder="Пароль" id="password" required pattern="(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[_!-])[0-9a-zA-Z_!-]{8,}"></p>
+    <p><input type="submit" value="Войти"></p>
+    <p><a [routerLink]="['//register']" routerLinkActive="router-link-active">Зарегистрироваться</a></p>
+</form>
+<hr>
