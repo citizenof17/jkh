@@ -1,11 +1,14 @@
 package com.jkh.backend.model;
 
 import com.jkh.backend.model.enums.CounterType;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Getter @Setter
 public class Counter {
     @Id
     @GeneratedValue
@@ -21,7 +24,7 @@ public class Counter {
     @JoinColumn(name = "flat_id")
     private Flat flat;
 
-    private Integer zero;
+    private Integer zero = 0;
 
     @OneToMany(mappedBy = "counter", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<Indication> indicationSet;
@@ -29,51 +32,8 @@ public class Counter {
     public Counter() {
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public CounterType getType() {
-        return type;
-    }
-
-    public void setType(CounterType type) {
+    public Counter(CounterType type, Flat flat) {
         this.type = type;
-    }
-
-    public Flat getFlat() {
-        return flat;
-    }
-
-    public void setFlat(Flat flat) {
         this.flat = flat;
-    }
-
-    public Integer getZero() {
-        return zero;
-    }
-
-    public void setZero(Integer zero) {
-        this.zero = zero;
-    }
-
-    public Set<Indication> getIndicationSet() {
-        return indicationSet;
-    }
-
-    public void setIndicationSet(Set<Indication> indicationSet) {
-        this.indicationSet = indicationSet;
     }
 }

@@ -1,9 +1,13 @@
 package com.jkh.backend.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@Getter @Setter
 public class Indication {
     @Id
     @GeneratedValue
@@ -17,38 +21,4 @@ public class Indication {
 
     private Integer value;
 
-    public Indication() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public Counter getCounter() {
-        return counter;
-    }
-
-    public void setCounter(Counter counter) {
-        this.counter = counter;
-    }
-
-    public Integer getValue() {
-        return value;
-    }
-
-    public void setValue(Integer value) {
-        this.value = value;
-    }
 }
