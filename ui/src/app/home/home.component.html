@@ -1,3 +1,29 @@
-<p>
-  This is home page.
-</p>
+<p align="right">{{ greetingMessage }} | <a href (click)="logout($event)">Выйти</a></p>
+
+<table width="100%" cellspacing="0" cellpadding="5" align="center">
+  <tr>
+    <td width="300" valign="top">
+      <form align="center" (submit)="sendIndication($event)">
+        <fieldset>
+          <legend>Отправка показаний счетчиков</legend>
+          <p>
+            <label>Электричество</label>
+            <input type="text"  id="electr" required pattern="[0-9]{1,}">
+          </p>
+          <p>
+            <label>Горячая вода</label>
+            <input type="text" id="hot" required pattern="[0-9]{1,}">
+          </p>
+          <p>
+            <label>Холодная вода</label>
+            <input type="text" id="cold" required pattern="[0-9]{1,}">
+          </p>
+          <p><button type="submit" value="">Отправить показания</button></p>
+        </fieldset>
+      </form>
+    </td>
+    <td valign="top" align="center">
+      Здесь будут отображаться отчеты о Ваших показаниях.
+    </td>
+  </tr>
+  </table>

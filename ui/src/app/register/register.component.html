@@ -1,3 +1,38 @@
-<p>
-  register works!
-</p>
+<h3 align="center">Регистрация</h3>
+<form (submit)="registerUser($event)" align="center">
+
+  <p><label>Логин</label>
+    <input type="text" id="username" required pattern="[a-zA-ZА-Яа-я0-9]{3,}"></p>
+
+  <p><label>Ф.И.О.</label>
+    <input type="text" id="fullname" required pattern="[a-zA-ZА-Яа-я\s]{3,}"></p>
+
+
+  <p><label>Номер квартиры</label>
+    <input type="text" id="flatnumber" required pattern="[0-9]{1,}"></p>
+
+  <p><label>Почта</label>
+    <input type="email" id="email_address" required></p>
+
+
+  <p><label>Телефон*</label>
+    <input type="text" id="phone_number" required pattern="\+[0-9]{11}"></p>
+
+
+  <p><label>Пароль**</label>
+    <input type="password" id="password" required pattern="(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[_!-])[0-9a-zA-Z_!-]{8,}"></p>
+
+
+  <p><label>Повторите пароль</label>
+    <input type="password" id="confirm_password" required></p>
+
+  <p><input type="submit" value="Зарегистрироваться"></p>
+</form>
+
+<p>*В формате +XXXXXXXXXXX</p>
+
+<p>**Длина пароля должна составлять не менее 8 символов и содержать по крайней мере одну
+  строчную и одну прописную английские буквы, одну цифру и один специальный символ (_, -, !) без пробелов.</p>
+<hr>
+
+
