@@ -1,7 +1,8 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { $ } from 'protractor';
+import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
+import {CookieService} from "ngx-cookie-service";
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,8 @@ import { $ } from 'protractor';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private auth: AuthService, private router: Router) { }
+  constructor(private router: Router, private http: HttpClient, private cookieService : CookieService) {
+  }
 
   ngOnInit() {
   }
@@ -20,15 +22,27 @@ export class LoginComponent implements OnInit {
     const target = event.target;
     const username = target.querySelector('#username').value;
     const password = target.querySelector('#password').value;
-    this.auth.getUserDetails(username, password).subscribe(
-      _ => {
-        this.router.navigate(['main']);
+
+    this.http.post('http://localhost:8080/login', {
+          login: username,
+          password: password
+      }, {
+          observe: 'response' as 'response',
+          withCredentials: true
+      }).subscribe(
+        (data : HttpResponse<any>) => {
+            this.cookieService.set("JSESSIONID", data.headers.get("Set-Cookie"));
+            if (data.body['role'] == 'USER') {
+              this.router.navigate(['home']);
+            } else {
+              this.router.navigate(['admin']);
+            }
       },
       err => {
         window.alert(err.error.message);
       }
      );
-     
   }
+
 
 }
