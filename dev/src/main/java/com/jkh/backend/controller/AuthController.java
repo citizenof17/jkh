@@ -62,6 +62,23 @@ public class AuthController {
         }
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/userInfo")
+    public ResponseEntity<JSONObject> getUserInfo() {
+        JSONObject json = new JSONObject();
+        try {
+            String login = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.findUserByLogin(login);
+            json.put("name", user.getName());
+            json.put("role", user.getRole());
+            json.put("status", user.isActive());
+            return new ResponseEntity<>(json, HttpStatus.OK);
+        } catch (Exception e) {
+            json.put("message", "User not found");
+            return new ResponseEntity<>(json, HttpStatus.UNAUTHORIZED);
+        }
+    }
+
 
 
 }
