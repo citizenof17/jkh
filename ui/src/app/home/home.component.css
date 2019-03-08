@@ -4,10 +4,32 @@ label {
     text-align: left;
 }
 
-input {
-    width: 100px;
-}
-
 fieldset {
     width: 260px;
+}
+
+input[type="submit"] {
+    width: 143px;
+}
+
+.hide {
+    display: none;
+}
+
+td thead {
+    border-bottom: 1px solid black;
+}
+
+td table {
+    border: solid 1px black;
+    border-collapse: collapse;
+}
+
+td tr td {
+    width: 150px;
+    border-right: 1px solid black;
+}
+
+.last {
+    border-top: solid 1px black;
 }

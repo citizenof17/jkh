@@ -1,1 +1,65 @@
 <p align="right">{{ greetingMessage }} | <a href (click)="logout($event)">Выйти</a></p>
+
+<table width="95%" cellspacing="0" cellpadding="5" align="center">
+    <tr>
+        <td width="25%" valign="top" align = "left">
+
+            <form (submit)="reportAll($event)">
+                <p>Квартира (необязательно): <input type="number" id="flat"></p>
+
+                <p>Выберите тип отчета:</p>
+                <p><input name="repType" type="radio" value="ALL" checked (change)="hideManual()">за весь период</p>
+                <p><input name="repType" type="radio" value="THIS_YEAR" (change)="hideManual()">за этот год</p>
+                <p><input name="repType" type="radio" value="THIS_MONTH" (change)="hideManual()">за этот месяц</p>
+                <p><input name="repType" type="radio" value="MANUAL" (change)="showManual()">указать свой период</p>
+
+                <div id="div1" class="hide">
+                    <p align="center"><input type="date" id="left-b"></p>
+                    <p align="center"><input type="date" id="right-b"></p>
+                </div>
+
+                <p align="center"><input width="50px" type="submit" value="Построить отчет"></p>
+            </form>
+        </td>
+
+        <td valign="top" align = "center">
+            <ng-container
+                    *ngIf="report['rows'] != null && report['rows'].length ; then build_report; else dont_build">
+            </ng-container>
+
+            <ng-template #build_report>
+            <table>
+                <caption>{{ report['message']}}</caption>
+                    <thead>
+                        <tr align="center">
+                            <td class="vl">Дата</td>
+                            <td>Квартира</td>
+                            <td>Электричество</td>
+                            <td>Горячая вода</td>
+                            <td>Холодная вода</td>
+                        </tr>
+                    </thead>
+                    <tr *ngFor="let line of report['rows']" align="center">
+                        <td>{{ line['date'] }}</td>
+                        <td>{{ line['flat']['number'] }}</td>
+                        <td>{{ line['indicationMap']["ELECTRICITY"]["value"]}}</td>
+                        <td>{{ line['indicationMap']["HOT_WATER"]["value"]}}</td>
+                        <td>{{ line['indicationMap']["COLD_WATER"]["value"]}}</td>
+                    </tr>
+
+                    <tr align="center" class="last">
+                        <td>Всего</td>
+                        <td> </td>
+                        <td>{{ report['total']["ELECTRICITY"]["value"] }}</td>
+                        <td>{{ report['total']["HOT_WATER"]["value"] }}</td>
+                        <td>{{ report['total']["COLD_WATER"]["value"] }}</td>
+                    </tr>
+            </table>
+            </ng-template>
+            <ng-template #dont_build>
+                {{ report['message']}}
+            </ng-template>
+        </td>
+
+    </tr>
+</table>

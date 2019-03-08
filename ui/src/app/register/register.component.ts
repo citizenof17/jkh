@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { $ } from 'protractor';
 import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
+import { environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-register',
@@ -24,7 +25,7 @@ export class RegisterComponent implements OnInit {
     const passwordConfirm = target.querySelector('#confirm_password').value;
 
     if (passwordConfirm === password) {
-        this.http.post('http://localhost:8080/register', {
+        this.http.post(environment.backend + 'register', {
             login: target.querySelector('#username').value,
             name: target.querySelector('#fullname').value,
             flat :

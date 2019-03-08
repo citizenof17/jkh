@@ -2,28 +2,70 @@
 
 <table width="100%" cellspacing="0" cellpadding="5" align="center">
   <tr>
-    <td width="300" valign="top">
+    <td width="25%" valign="top" align = "left">
       <form align="center" (submit)="sendIndication($event)">
         <fieldset>
           <legend>Отправка показаний счетчиков</legend>
-          <p>
-            <label>Электричество</label>
-            <input type="text"  id="electr" required pattern="[0-9]{1,}">
-          </p>
-          <p>
-            <label>Горячая вода</label>
-            <input type="text" id="hot" required pattern="[0-9]{1,}">
-          </p>
-          <p>
-            <label>Холодная вода</label>
-            <input type="text" id="cold" required pattern="[0-9]{1,}">
-          </p>
+          <p><input type="number"  placeholder="Электричество" id="electr" required></p>
+          <p><input type="number" placeholder="Горячая вода" id="hot" required></p>
+          <p><input type="number" placeholder="Холодная вода" id="cold" required></p>
           <p><button type="submit" value="">Отправить показания</button></p>
         </fieldset>
       </form>
+
+      <br>
+      <form (submit)="reportAll($event)">
+        <p>Выберите тип отчета:</p>
+        <p><input name="repType" type="radio" value="ALL" checked (change)="hideManual()">за весь период</p>
+        <p><input name="repType" type="radio" value="THIS_YEAR" (change)="hideManual()">за этот год</p>
+        <p><input name="repType" type="radio" value="THIS_MONTH" (change)="hideManual()">за этот месяц</p>
+        <p><input name="repType" type="radio" value="MANUAL" (change)="showManual()">указать свой период</p>
+
+        <div id="div1" class="hide">
+          <p align="center"><input type="date" id="left-b"></p>
+          <p align="center"><input type="date" id="right-b"></p>
+        </div>
+
+        <p align="center"><input width="50px" type="submit" value="Построить отчет"></p>
+      </form>
+
+
     </td>
     <td valign="top" align="center">
-      Здесь будут отображаться отчеты о Ваших показаниях.
+      <ng-container
+              *ngIf="report['rows'] != null && report['rows'].length ; then build_report; else dont_build">
+      </ng-container>
+
+      <ng-template #build_report>
+        <table>
+          <caption>{{ report['message']}}</caption>
+          <thead>
+          <tr align="center">
+            <td class="vl">Дата</td>
+            <td>Электричество</td>
+            <td>Горячая вода</td>
+            <td>Холодная вода</td>
+          </tr>
+          </thead>
+          <tr *ngFor="let line of report['rows']" align="center">
+            <td>{{ line['date'] }}</td>
+            <td>{{ line['indicationMap']["ELECTRICITY"]["value"]}}</td>
+            <td>{{ line['indicationMap']["HOT_WATER"]["value"]}}</td>
+            <td>{{ line['indicationMap']["COLD_WATER"]["value"]}}</td>
+          </tr>
+
+          <tr align="center" class="last">
+            <td>Всего</td>
+            <td>{{ report['total']["ELECTRICITY"]["value"] }}</td>
+            <td>{{ report['total']["HOT_WATER"]["value"] }}</td>
+            <td>{{ report['total']["COLD_WATER"]["value"] }}</td>
+          </tr>
+        </table>
+      </ng-template>
+      <ng-template #dont_build>
+        {{ report['message']}}
+      </ng-template>
     </td>
+
   </tr>
-  </table>
+</table>

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { $ } from 'protractor';
 import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
+import { environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,7 @@ export class LoginComponent implements OnInit {
     const username = target.querySelector('#username').value;
     const password = target.querySelector('#password').value;
 
-    this.http.post('http://localhost:8080/login', {
+    this.http.post(environment.backend + 'login', {
           login: username,
           password: password
       }, {
