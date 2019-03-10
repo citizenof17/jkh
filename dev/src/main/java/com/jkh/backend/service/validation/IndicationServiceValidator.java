@@ -23,7 +23,7 @@ public class IndicationServiceValidator {
         //todo compare interval between newIndication date and prevIndication date (?)
 
         if (prevIndication != null && (prevIndication.getValue() > newIndication.getValue()
-                || prevIndication.getDate().after(newIndication.getDate()))) {
+                || prevIndication.getDate().isAfter(newIndication.getDate()))) {
             isOk.setFalse();
             json.put("message", INDICATION_INCORRECT);
         }

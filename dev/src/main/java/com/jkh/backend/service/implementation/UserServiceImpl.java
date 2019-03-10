@@ -2,12 +2,12 @@ package com.jkh.backend.service.implementation;
 
 import com.jkh.backend.model.User;
 import com.jkh.backend.model.enums.Role;
+import com.jkh.backend.model.wrappers.ResponseWrapperRegistrationValidator;
 import com.jkh.backend.repository.UserRepository;
 import com.jkh.backend.service.FlatService;
 import com.jkh.backend.service.UserService;
 import com.jkh.backend.service.validation.RegistrationValidator;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,9 +39,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public JSONObject register(User user) {
-        JSONObject json = registrationValidator.validate(user);
-        if (json.get("isOk").equals(true)) {
+    public ResponseWrapperRegistrationValidator register(User user) {
+        ResponseWrapperRegistrationValidator json = registrationValidator.validate(user);
+        if (json.isOk()) {
             user.setActive(false);
             user.setRole(Role.USER);
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));

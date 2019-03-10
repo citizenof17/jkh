@@ -6,14 +6,14 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Getter @Setter
 public class Flat implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Integer id;
 
     @Column(unique = true)
@@ -32,6 +32,7 @@ public class Flat implements Serializable {
 //    private Integer NumOfRegOwners;
 
     @OneToMany(mappedBy = "flat", orphanRemoval = true, cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Counter> counterSet;
 
     @OneToMany(mappedBy = "flat", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})

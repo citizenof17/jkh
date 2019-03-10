@@ -11,7 +11,7 @@ import java.util.Set;
 @Getter @Setter
 public class Counter {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String number;

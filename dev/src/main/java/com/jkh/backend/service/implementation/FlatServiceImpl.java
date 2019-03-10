@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -27,6 +28,11 @@ public class FlatServiceImpl implements FlatService {
     @Override
     public Flat findFlatByNumber(Integer number) {
         return flatRepository.findFlatByNumber(number);
+    }
+
+    @Override
+    public List<Flat> findAll() {
+        return flatRepository.findAll();
     }
 
     @Override

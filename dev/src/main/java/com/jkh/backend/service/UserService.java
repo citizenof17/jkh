@@ -1,10 +1,7 @@
 package com.jkh.backend.service;
 
 import com.jkh.backend.model.User;
-import org.json.simple.JSONObject;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
+import com.jkh.backend.model.wrappers.ResponseWrapperRegistrationValidator;
 
 public interface UserService {
 
@@ -12,6 +9,6 @@ public interface UserService {
 
     User findUserByLogin(String login);
 
-    JSONObject register(User user);
+    ResponseWrapperRegistrationValidator register(User user);
 
 }

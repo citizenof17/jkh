@@ -2,10 +2,10 @@ package com.jkh.backend.service.validation;
 
 import com.jkh.backend.model.Flat;
 import com.jkh.backend.model.User;
+import com.jkh.backend.model.wrappers.ResponseWrapperRegistrationValidator;
 import com.jkh.backend.repository.UserRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +64,12 @@ public class RegistrationValidator {
             return PHONE_INCORRECT;
         }
 
+        User user = userRepository.findUserByPhone(phone);
+        if(user != null) {
+            isOk.setFalse();
+            return PHONE_NOT_UNIQUE;
+        }
+
         return OK;
     }
 
@@ -73,23 +79,41 @@ public class RegistrationValidator {
             return EMAIL_INCORRECT;
         }
 
+        User user = userRepository.findUserByEmail(email);
+        if(user != null) {
+            isOk.setFalse();
+            return EMAIL_NOT_UNIQUE;
+        }
+
         return OK;
     }
 
 
-    public JSONObject validate(User user) {
+//    public JSONObject validate(User user) {
+//        MutableBoolean userDataIsOk = new MutableBoolean(true);
+//
+//        JSONObject json = new JSONObject();
+//
+//        json.put("login", checkLogin(user.getLogin(), userDataIsOk));
+//        json.put("password", checkPassword(user.getPassword(), userDataIsOk));
+//        json.put("name", checkNotEmpty(user.getName(), userDataIsOk));
+//        json.put("flat", checkFlat(user.getFlat(), userDataIsOk));
+//        json.put("phone", checkPhone(user.getPhone(), userDataIsOk));
+//        json.put("email", checkEmail(user.getEmail(), userDataIsOk));
+//        json.put("isOk", userDataIsOk.getValue());
+//
+//        return json;
+//    }
+
+    public ResponseWrapperRegistrationValidator validate(User user) {
         MutableBoolean userDataIsOk = new MutableBoolean(true);
-
-        JSONObject json = new JSONObject();
-
-        json.put("login", checkLogin(user.getLogin(), userDataIsOk));
-        json.put("password", checkPassword(user.getPassword(), userDataIsOk));
-        json.put("name", checkNotEmpty(user.getName(), userDataIsOk));
-        json.put("flat", checkFlat(user.getFlat(), userDataIsOk));
-        json.put("phone", checkPhone(user.getPhone(), userDataIsOk));
-        json.put("email", checkEmail(user.getEmail(), userDataIsOk));
-        json.put("isOk", userDataIsOk.getValue());
-
-        return json;
+        return new ResponseWrapperRegistrationValidator(
+                checkLogin(user.getLogin(), userDataIsOk),
+                checkPassword(user.getPassword(), userDataIsOk),
+                checkNotEmpty(user.getName(), userDataIsOk),
+                checkFlat(user.getFlat(), userDataIsOk),
+                checkPhone(user.getPhone(), userDataIsOk),
+                checkEmail(user.getEmail(), userDataIsOk),
+                userDataIsOk.getValue());
     }
 }

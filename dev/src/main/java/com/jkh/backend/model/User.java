@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Getter @Setter
 public class User implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String name;
@@ -20,11 +20,13 @@ public class User implements Serializable {
     @JoinColumn(name = "flat_id")
     private Flat flat;
 
+    @Column(unique = true)
     private String phone;
 
     @Column(unique = true)
     private String login;
 
+    @Column(unique = true)
     private String email;
 
     private String password;

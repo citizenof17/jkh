@@ -3,12 +3,10 @@ package com.jkh.backend.service;
 import com.jkh.backend.model.Counter;
 import com.jkh.backend.model.Flat;
 import com.jkh.backend.model.Indication;
-import com.jkh.backend.model.ResponseWrapperIndicationReport;
-import io.swagger.models.auth.In;
-import org.json.simple.JSONArray;
+import com.jkh.backend.model.wrappers.ResponseWrapperIndicationReportRow;
 import org.json.simple.JSONObject;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IndicationService {
@@ -20,10 +18,10 @@ public interface IndicationService {
 
     Indication findDistinctTopIndicationByCounterOrderByDateDesc(Counter counter);
 
-    JSONArray getLastNIndications(Integer n);
+    List<ResponseWrapperIndicationReportRow> getLastNIndications(Integer n);
 
-    List<ResponseWrapperIndicationReport> getIndications();
-    List<ResponseWrapperIndicationReport> getIndications(Flat flat);
-    List<ResponseWrapperIndicationReport> getIndications(Date left, Date right);
-    List<ResponseWrapperIndicationReport> getIndications(Flat flat, Date left, Date right);
+    List<ResponseWrapperIndicationReportRow> getIndications();
+    List<ResponseWrapperIndicationReportRow> getIndications(Flat flat);
+    List<ResponseWrapperIndicationReportRow> getIndications(LocalDateTime left, LocalDateTime right);
+    List<ResponseWrapperIndicationReportRow> getIndications(Flat flat, LocalDateTime left, LocalDateTime right);
 }

@@ -36,11 +36,52 @@ Please do not delete this file because it contains useful for devs code chunks
 ]
 ```
 
+/report 
+
+```
+{
+  "leftDate" : "2019-03-03",
+  "rightDate" : "2019-03-13"
+}
+```
+
+или
+
+```
+{
+  "standardPeriod" : "THIS_YEAR"
+}
+```
+
+Только для админов:
+
+```
+{
+  "standardPeriod" : "THIS_MONTH",
+  "flat" : { "number" : "13" }
+}
+```
+
+Для получения отчета о не предоставивших данные:
+
+```
+{
+  "leftDate" : "2019-01-03",
+  "rightDate" : "2019-03-13",
+  "type" : "WHO_DID_NOT_SEND"
+}
+```
+
 
 Для создание БД в MySQL запустить скрипт со следующим кодом:
 
 ```
-create database jkh;
-create user 'jkh_admin'@'localhost' identified by 'jkh_admin';
-grant all on jkh.* to 'jkh_admin'@'localhost';
+CREATE DATABASE IF NOT EXISTS jkh;
+DROP USER IF EXISTS 'jkh_admin'@'%';
+
+CREATE USER 'jkh_admin'@'%' IDENTIFIED BY 'jkh_admin';
+GRANT ALL PRIVILEGES ON jkh.* TO 'jkh_admin'@'%';
+FLUSH PRIVILEGES;
+
+SET GLOBAL sql_mode = '';
 ```

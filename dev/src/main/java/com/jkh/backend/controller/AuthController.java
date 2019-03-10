@@ -1,13 +1,14 @@
 package com.jkh.backend.controller;
 
 import com.jkh.backend.model.User;
+import com.jkh.backend.model.wrappers.ResponseWrapperRegistrationValidator;
+import com.jkh.backend.model.wrappers.ResponseWrapperUserAuth;
 import com.jkh.backend.service.SecurityService;
 import com.jkh.backend.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SerializationUtils;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,32 +31,29 @@ public class AuthController {
     @ApiOperation(value="login")
     @ResponseBody
     @RequestMapping(value = "/login",  method = RequestMethod.POST, consumes = {"application/json"})
-    public ResponseEntity<JSONObject> login(@RequestBody User user) {
+    public ResponseEntity<Object> login(@RequestBody User user) {
         String login = user.getLogin();
         securityService.login(login, user.getPassword());
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        JSONObject json = new JSONObject();
-
         if (auth != null && auth.getName().equals(login)) {
-            json.put("message", "User with login " + login + " logged in successfully");
             User userFromDB = userService.findUserByLogin(login);
-            json.put("role", userFromDB.getRole());
-            json.put("status", userFromDB.isActive());
-            return ResponseEntity.ok(json);
+            return ResponseEntity.ok(
+                    new ResponseWrapperUserAuth(
+                            userFromDB.getName(),
+                            userFromDB.getRole(),
+                            userFromDB.isActive()));
         }
-
-        json.put("message", "Login or password is incorrect");
-        return new ResponseEntity<>(json, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(
+                new ResponseWrapperUserAuth("Login or password is incorrect"), HttpStatus.UNAUTHORIZED);
     }
 
     @ApiOperation(value="register")
     @ResponseBody
     @RequestMapping(value = "/register",  method = RequestMethod.POST, consumes = {"application/json"})
-    public ResponseEntity<JSONObject> register(@RequestBody User user) {
+    public ResponseEntity<Object> register(@RequestBody User user) {
         User copyOfUser = SerializationUtils.clone(user);
-        JSONObject json = userService.register(copyOfUser);
-        if (json.get("isOk").equals(true)) {
+        ResponseWrapperRegistrationValidator json = userService.register(copyOfUser);
+        if (json.isOk()) {
             return login(user);
         } else {
             return new ResponseEntity<>(json, HttpStatus.CONFLICT);
@@ -64,18 +62,17 @@ public class AuthController {
 
     @ResponseBody
     @RequestMapping(value = "/userInfo")
-    public ResponseEntity<JSONObject> getUserInfo() {
-        JSONObject json = new JSONObject();
+    public ResponseEntity<ResponseWrapperUserAuth> getUserInfo() {
         try {
             String login = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.findUserByLogin(login);
-            json.put("name", user.getName());
-            json.put("role", user.getRole());
-            json.put("status", user.isActive());
-            return new ResponseEntity<>(json, HttpStatus.OK);
+            return ResponseEntity.ok(
+                    new ResponseWrapperUserAuth(
+                            user.getName(),
+                            user.getRole(),
+                            user.isActive()));
         } catch (Exception e) {
-            json.put("message", "User not found");
-            return new ResponseEntity<>(json, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new ResponseWrapperUserAuth("User not found"), HttpStatus.UNAUTHORIZED);
         }
     }
 
