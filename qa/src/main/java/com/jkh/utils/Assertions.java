@@ -1,8 +1,10 @@
 package com.jkh.utils;
 
-import org.springframework.stereotype.Component;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-@Component
 public class Assertions {
 
+    public static void compareIfEqual(Object actual, Object expected) {
+        assertThat(actual).isEqualTo(expected);
+    }
 }
