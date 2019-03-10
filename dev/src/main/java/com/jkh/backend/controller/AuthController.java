@@ -1,6 +1,7 @@
 package com.jkh.backend.controller;
 
 import com.jkh.backend.model.User;
+import com.jkh.backend.model.wrappers.ResponseWrapperErrorMessage;
 import com.jkh.backend.model.wrappers.ResponseWrapperRegistrationValidator;
 import com.jkh.backend.model.wrappers.ResponseWrapperUserAuth;
 import com.jkh.backend.service.SecurityService;
@@ -44,7 +45,7 @@ public class AuthController {
                             userFromDB.isActive()));
         }
         return new ResponseEntity<>(
-                new ResponseWrapperUserAuth("Login or password is incorrect"), HttpStatus.UNAUTHORIZED);
+                new ResponseWrapperErrorMessage("Login or password is incorrect"), HttpStatus.UNAUTHORIZED);
     }
 
     @ApiOperation(value="register")
@@ -62,7 +63,7 @@ public class AuthController {
 
     @ResponseBody
     @RequestMapping(value = "/userInfo")
-    public ResponseEntity<ResponseWrapperUserAuth> getUserInfo() {
+    public ResponseEntity<Object> getUserInfo() {
         try {
             String login = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.findUserByLogin(login);
@@ -72,7 +73,7 @@ public class AuthController {
                             user.getRole(),
                             user.isActive()));
         } catch (Exception e) {
-            return new ResponseEntity<>(new ResponseWrapperUserAuth("User not found"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new ResponseWrapperErrorMessage("User not found"), HttpStatus.UNAUTHORIZED);
         }
     }
 
