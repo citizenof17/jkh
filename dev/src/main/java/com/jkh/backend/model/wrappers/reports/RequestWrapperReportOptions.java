@@ -1,4 +1,4 @@
-package com.jkh.backend.model.wrappers;
+package com.jkh.backend.model.wrappers.reports;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jkh.backend.model.Flat;
@@ -44,6 +44,12 @@ public class RequestWrapperReportOptions implements Serializable {
             case MANUAL:
                 DateTimeFormatter dateTimeFormatter =
                         DateTimeFormatter.ofPattern("dd MMMM yyyy", new Locale("ru"));
+                if (type.equals(ReportOptionsType.WHO_DID_NOT_SEND)) {
+                    leftDate = leftDate.withDayOfMonth(1);
+                    rightDate = rightDate.withDayOfMonth(1).plusMonths(1).minusDays(1);
+
+                    dateTimeFormatter = DateTimeFormatter.ofPattern("MM.yyyy", new Locale("ru"));
+                }
                 message = "за период с " + dateTimeFormatter.format(leftDate) +
                         " по " + dateTimeFormatter.format(rightDate);
                 break;

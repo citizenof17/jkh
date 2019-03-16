@@ -1,9 +1,9 @@
 package com.jkh.backend.controller;
 
 import com.jkh.backend.model.Indication;
-import com.jkh.backend.model.wrappers.RequestWrapperReportOptions;
-import com.jkh.backend.model.wrappers.ResponseWrapperIndicationReport;
-import com.jkh.backend.model.wrappers.ResponseWrapperIndicationReportRow;
+import com.jkh.backend.model.wrappers.reports.RequestWrapperReportOptions;
+import com.jkh.backend.model.wrappers.reports.indicationReport.ResponseWrapperIndicationReportRow;
+import com.jkh.backend.model.wrappers.reports.ResponseWrapperReport;
 import com.jkh.backend.service.IndicationService;
 import com.jkh.backend.service.ReportService;
 import org.json.simple.JSONObject;
@@ -45,9 +45,8 @@ public class IndicationController {
 
     @ResponseBody
     @RequestMapping(value = "/report", method = RequestMethod.POST, consumes = {"application/json"})
-    public ResponseEntity<ResponseWrapperIndicationReport> getReport(
-            @RequestBody RequestWrapperReportOptions reportOptions) {
-        ResponseWrapperIndicationReport report = reportService.getReport(reportOptions);
+    public ResponseEntity<ResponseWrapperReport> getReport(@RequestBody RequestWrapperReportOptions reportOptions) {
+        ResponseWrapperReport report = reportService.getReport(reportOptions);
         if (report.isOk()) {
             return new ResponseEntity<>(report, HttpStatus.OK);
         } else {

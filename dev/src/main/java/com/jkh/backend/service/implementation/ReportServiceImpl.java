@@ -5,7 +5,12 @@ import com.jkh.backend.model.User;
 import com.jkh.backend.model.enums.CounterType;
 import com.jkh.backend.model.enums.ReportOptionsType;
 import com.jkh.backend.model.enums.Role;
-import com.jkh.backend.model.wrappers.*;
+import com.jkh.backend.model.wrappers.reports.RequestWrapperReportOptions;
+import com.jkh.backend.model.wrappers.reports.ResponseWrapperReport;
+import com.jkh.backend.model.wrappers.reports.didNotSendReport.ResponseWrapperDidNotSendReport;
+import com.jkh.backend.model.wrappers.reports.indicationReport.ResponseWrapperIndicationReport;
+import com.jkh.backend.model.wrappers.reports.indicationReport.ResponseWrapperIndicationReportCounter;
+import com.jkh.backend.model.wrappers.reports.indicationReport.ResponseWrapperIndicationReportRow;
 import com.jkh.backend.service.FlatService;
 import com.jkh.backend.service.IndicationService;
 import com.jkh.backend.service.ReportService;
@@ -36,11 +41,11 @@ public class ReportServiceImpl implements ReportService {
     FlatService flatService;
 
     @Override
-    public ResponseWrapperIndicationReport getReport(RequestWrapperReportOptions reportOptions) {
+    public ResponseWrapperReport getReport(RequestWrapperReportOptions reportOptions) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findUserByLogin(login);
 
-        ResponseWrapperIndicationReport report = reportValidator.validateReportOptions(reportOptions, user);
+        ResponseWrapperReport report = reportValidator.validateReportOptions(reportOptions, user);
         if (report.isOk()) {
             reportOptions.normalizePeriod();
             if (user.getRole().equals(Role.USER)) {
@@ -55,20 +60,20 @@ public class ReportServiceImpl implements ReportService {
             }
 
             if (reportOptions.getType().equals(ReportOptionsType.STANDARD)) {
+                report = new ResponseWrapperIndicationReport(report.getMessage());
                 report.setMessage("Отчет " + reportOptions.getMessage());
-                report.setRows(indicationService.getIndications(
+                ((ResponseWrapperIndicationReport) report).setRows(indicationService.getIndications(
                         reportOptions.getFlat(),
                         reportOptions.getLeft(),
                         reportOptions.getRight()));
-
-                if (report.getRows().size() == 0) {
+                if (((ResponseWrapperIndicationReport) report).getRows().size() == 0) {
                     report.setMessage(EMPTY_LIST);
                 }
-
-                report.setTotal(calculateTotal(report));
+                ((ResponseWrapperIndicationReport) report).setTotal(calculateTotal(((ResponseWrapperIndicationReport) report)));
             } else if (reportOptions.getType().equals(ReportOptionsType.WHO_DID_NOT_SEND)) {
+                report = new ResponseWrapperDidNotSendReport(report.getMessage());
                 report.setMessage("Отчет по не предоставившим данные " + reportOptions.getMessage());
-                report.setDidNotSend(findWhoDidNotSend(reportOptions));
+                ((ResponseWrapperDidNotSendReport) report).addRows(findWhoDidNotSend(reportOptions));
             }
         }
 
@@ -109,11 +114,11 @@ public class ReportServiceImpl implements ReportService {
         return total;
     }
 
-    private ResponseWrapperDidNotSendReport findWhoDidNotSend(RequestWrapperReportOptions reportOptions) {
+    private Map<LocalDate, List<Flat>> findWhoDidNotSend(RequestWrapperReportOptions reportOptions) {
         List<ResponseWrapperIndicationReportRow> indicationList = indicationService.getIndications(
                 reportOptions.getFlat(), reportOptions.getLeft(), reportOptions.getRight());
         List<LocalDate> months = getMonths(reportOptions);
-        List<Flat> flats = new ArrayList<>();
+        List<Flat> flats;
         if (reportOptions.getFlat() == null) {
             flats = flatService.findAll();
         } else {
@@ -124,11 +129,12 @@ public class ReportServiceImpl implements ReportService {
             monthFlat.add(new Pair<>(row.getDate().withDayOfMonth(1), row.getFlat()));
         }
 
-        ResponseWrapperDidNotSendReport didNotSendReport = new ResponseWrapperDidNotSendReport();
+        Map<LocalDate, List<Flat>> didNotSendReport = new TreeMap<>();
         for (LocalDate month : months) {
             for (Flat flat : flats) {
                 if (!monthFlat.contains(new Pair<>(month, flat))) {
-                    didNotSendReport.add(month, flat);
+                    didNotSendReport.putIfAbsent(month, new ArrayList<>());
+                    didNotSendReport.get(month).add(flat);
                 }
             }
         }

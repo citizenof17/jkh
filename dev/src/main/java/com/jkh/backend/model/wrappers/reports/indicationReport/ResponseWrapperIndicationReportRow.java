@@ -1,4 +1,4 @@
-package com.jkh.backend.model.wrappers;
+package com.jkh.backend.model.wrappers.reports.indicationReport;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.jkh.backend.model.Flat;

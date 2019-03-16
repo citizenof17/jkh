@@ -1,4 +1,4 @@
-package com.jkh.backend.model.wrappers;
+package com.jkh.backend.model.wrappers.reports.indicationReport;
 
 import com.jkh.backend.model.enums.CounterType;
 import lombok.Getter;

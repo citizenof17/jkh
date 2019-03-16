@@ -88,23 +88,6 @@ public class RegistrationValidator {
         return OK;
     }
 
-
-//    public JSONObject validate(User user) {
-//        MutableBoolean userDataIsOk = new MutableBoolean(true);
-//
-//        JSONObject json = new JSONObject();
-//
-//        json.put("login", checkLogin(user.getLogin(), userDataIsOk));
-//        json.put("password", checkPassword(user.getPassword(), userDataIsOk));
-//        json.put("name", checkNotEmpty(user.getName(), userDataIsOk));
-//        json.put("flat", checkFlat(user.getFlat(), userDataIsOk));
-//        json.put("phone", checkPhone(user.getPhone(), userDataIsOk));
-//        json.put("email", checkEmail(user.getEmail(), userDataIsOk));
-//        json.put("isOk", userDataIsOk.getValue());
-//
-//        return json;
-//    }
-
     public ResponseWrapperRegistrationValidator validate(User user) {
         MutableBoolean userDataIsOk = new MutableBoolean(true);
         return new ResponseWrapperRegistrationValidator(

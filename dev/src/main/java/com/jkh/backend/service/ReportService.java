@@ -1,8 +1,8 @@
 package com.jkh.backend.service;
 
-import com.jkh.backend.model.wrappers.RequestWrapperReportOptions;
-import com.jkh.backend.model.wrappers.ResponseWrapperIndicationReport;
+import com.jkh.backend.model.wrappers.reports.RequestWrapperReportOptions;
+import com.jkh.backend.model.wrappers.reports.ResponseWrapperReport;
 
 public interface ReportService {
-    ResponseWrapperIndicationReport getReport(RequestWrapperReportOptions reportOptions);
+    ResponseWrapperReport getReport(RequestWrapperReportOptions reportOptions);
 }

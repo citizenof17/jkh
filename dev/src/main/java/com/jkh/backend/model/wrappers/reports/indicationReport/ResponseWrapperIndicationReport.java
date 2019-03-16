@@ -1,7 +1,7 @@
-package com.jkh.backend.model.wrappers;
+package com.jkh.backend.model.wrappers.reports.indicationReport;
 
 import com.jkh.backend.model.enums.CounterType;
-import com.jkh.backend.service.validation.ValidationMessages;
+import com.jkh.backend.model.wrappers.reports.ResponseWrapperReport;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.SerializationUtils;
@@ -13,16 +13,12 @@ import java.util.List;
 import java.util.Map;
 
 @Getter @Setter
-public class ResponseWrapperIndicationReport implements Serializable {
-    private boolean isOk;
-    private String message;
+public class ResponseWrapperIndicationReport extends ResponseWrapperReport implements Serializable {
     private List<ResponseWrapperIndicationReportRow> rows;
     private Map<CounterType, ResponseWrapperIndicationReportCounter> total;
-    private ResponseWrapperDidNotSendReport didNotSend;
 
     public ResponseWrapperIndicationReport(String message) {
-        this.message = message;
-        this.isOk = this.message.equals(ValidationMessages.OK);
+        super(message);
         this.rows = new ArrayList<>();
         this.total = new HashMap<>();
     }

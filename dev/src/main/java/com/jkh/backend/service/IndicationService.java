@@ -3,7 +3,7 @@ package com.jkh.backend.service;
 import com.jkh.backend.model.Counter;
 import com.jkh.backend.model.Flat;
 import com.jkh.backend.model.Indication;
-import com.jkh.backend.model.wrappers.ResponseWrapperIndicationReportRow;
+import com.jkh.backend.model.wrappers.reports.indicationReport.ResponseWrapperIndicationReportRow;
 import org.json.simple.JSONObject;
 
 import java.time.LocalDateTime;

@@ -5,7 +5,7 @@ import com.jkh.backend.model.Flat;
 import com.jkh.backend.model.Indication;
 import com.jkh.backend.model.User;
 import com.jkh.backend.model.enums.Role;
-import com.jkh.backend.model.wrappers.ResponseWrapperIndicationReportRow;
+import com.jkh.backend.model.wrappers.reports.indicationReport.ResponseWrapperIndicationReportRow;
 import com.jkh.backend.repository.IndicationRepository;
 import com.jkh.backend.service.CounterService;
 import com.jkh.backend.service.IndicationService;

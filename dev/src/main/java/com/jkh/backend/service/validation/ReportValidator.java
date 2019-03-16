@@ -5,8 +5,8 @@ import com.jkh.backend.model.User;
 import com.jkh.backend.model.enums.ReportOptionsStandardPeriod;
 import com.jkh.backend.model.enums.ReportOptionsType;
 import com.jkh.backend.model.enums.Role;
-import com.jkh.backend.model.wrappers.RequestWrapperReportOptions;
-import com.jkh.backend.model.wrappers.ResponseWrapperIndicationReport;
+import com.jkh.backend.model.wrappers.reports.RequestWrapperReportOptions;
+import com.jkh.backend.model.wrappers.reports.ResponseWrapperReport;
 import com.jkh.backend.service.FlatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class ReportValidator {
     @Autowired
     private FlatService flatService;
 
-    public ResponseWrapperIndicationReport validateReportOptions(RequestWrapperReportOptions reportOptions, User user) {
+    public ResponseWrapperReport validateReportOptions(RequestWrapperReportOptions reportOptions, User user) {
         if (reportOptions.getStandardPeriod() == null) {
             reportOptions.setStandardPeriod(ReportOptionsStandardPeriod.MANUAL);
         }
@@ -52,6 +52,6 @@ public class ReportValidator {
                 reportOptions.getStandardPeriod().equals(ReportOptionsStandardPeriod.ALL)) {
             message = DID_NOT_SEND_ALL_TIME;
         }
-        return new ResponseWrapperIndicationReport(message);
+        return new ResponseWrapperReport(message);
     }
 }
