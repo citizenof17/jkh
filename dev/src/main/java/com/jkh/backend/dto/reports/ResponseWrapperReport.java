@@ -1,4 +1,4 @@
-package com.jkh.backend.model.wrappers.reports;
+package com.jkh.backend.dto.reports;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.jkh.backend.service.validation.ValidationMessages;

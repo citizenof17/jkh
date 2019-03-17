@@ -1,8 +1,8 @@
-package com.jkh.backend.model.wrappers.reports.didNotSendReport;
+package com.jkh.backend.dto.reports.didNotSendReport;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.jkh.backend.model.Flat;
-import com.jkh.backend.model.serializers.LocalDateWithoutDateSerializer;
+import com.jkh.backend.dto.reports.serializers.LocalDateWithoutDateSerializer;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,9 +1,9 @@
-package com.jkh.backend.model.wrappers.reports.indicationReport;
+package com.jkh.backend.dto.reports.indicationReport;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.jkh.backend.model.Flat;
 import com.jkh.backend.model.Indication;
-import com.jkh.backend.model.serializers.LocalDateSerializer;
+import com.jkh.backend.dto.reports.serializers.LocalDateSerializer;
 import com.jkh.backend.model.enums.CounterType;
 import lombok.Getter;
 import lombok.Setter;

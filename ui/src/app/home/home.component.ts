@@ -71,17 +71,17 @@ export class HomeComponent implements OnInit {
             window.alert('Данные успешно отправлены.');
         } ,
         err => {
-            let temp = err.error.message;
-            if (temp instanceof Array) {
+            let temp = err.error.messages;
+            if (temp.length > 1) {
                 let msg: String = '';
                 for (let i in temp) {
-                    if (!temp[i]['isOk']) {
-                        msg = msg + temp[i]['message'] + ' ' + (+i + 1) + '.\n';
+                    if (temp[i] !== 'ok') {
+                        msg = msg + temp[i] + ' ' + (+i + 1) + '.\n';
                     }
                 }
-            window.alert(msg);
+                window.alert(msg);
             } else {
-                window.alert(temp);
+                window.alert(temp[0]);
             }
         }
 

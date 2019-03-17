@@ -1,8 +1,10 @@
 package com.jkh.backend.model;
 
 import com.jkh.backend.model.enums.Role;
+import com.jkh.backend.model.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -34,8 +36,8 @@ public class User implements Serializable {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(name = "is_active")
-    private boolean isActive;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
 //    @ManyToMany(cascade=CascadeType.ALL)
 //    @JoinTable(name = "admin_house",

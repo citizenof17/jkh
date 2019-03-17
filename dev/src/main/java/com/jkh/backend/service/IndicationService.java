@@ -1,10 +1,11 @@
 package com.jkh.backend.service;
 
+import com.jkh.backend.dto.ResponseWrapperStateWithMessages;
 import com.jkh.backend.model.Counter;
 import com.jkh.backend.model.Flat;
 import com.jkh.backend.model.Indication;
-import com.jkh.backend.model.wrappers.reports.indicationReport.ResponseWrapperIndicationReportRow;
-import org.json.simple.JSONObject;
+import com.jkh.backend.model.User;
+import com.jkh.backend.dto.reports.indicationReport.ResponseWrapperIndicationReportRow;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,13 +13,13 @@ import java.util.List;
 public interface IndicationService {
     void save(Indication indication);
 
-    JSONObject addIndication(Flat flat, Indication indication);
+    String addIndication(Flat flat, Indication indication);
 
-    JSONObject addIndications(List<Indication> indications);
+    ResponseWrapperStateWithMessages addIndications(List<Indication> indications);
 
     Indication findDistinctTopIndicationByCounterOrderByDateDesc(Counter counter);
 
-    List<ResponseWrapperIndicationReportRow> getLastNIndications(Integer n);
+    List<ResponseWrapperIndicationReportRow> getLastNIndications(User user, Integer n);
 
     List<ResponseWrapperIndicationReportRow> getIndications();
     List<ResponseWrapperIndicationReportRow> getIndications(Flat flat);

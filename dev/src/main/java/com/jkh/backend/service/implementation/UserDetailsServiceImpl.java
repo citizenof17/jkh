@@ -1,6 +1,5 @@
 package com.jkh.backend.service.implementation;
 
-
 import com.jkh.backend.model.User;
 import com.jkh.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +33,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
 
         grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
+        grantedAuthorities.add(new SimpleGrantedAuthority(user.getStatus().toString()));
 
-        return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(), grantedAuthorities);
+        return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(),
+                grantedAuthorities);
     }
 
 }

@@ -1,7 +1,7 @@
-package com.jkh.backend.model.wrappers.reports.indicationReport;
+package com.jkh.backend.dto.reports.indicationReport;
 
+import com.jkh.backend.dto.reports.ResponseWrapperReport;
 import com.jkh.backend.model.enums.CounterType;
-import com.jkh.backend.model.wrappers.reports.ResponseWrapperReport;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.SerializationUtils;

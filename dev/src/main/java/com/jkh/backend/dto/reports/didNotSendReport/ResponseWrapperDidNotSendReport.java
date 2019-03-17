@@ -1,7 +1,7 @@
-package com.jkh.backend.model.wrappers.reports.didNotSendReport;
+package com.jkh.backend.dto.reports.didNotSendReport;
 
+import com.jkh.backend.dto.reports.ResponseWrapperReport;
 import com.jkh.backend.model.Flat;
-import com.jkh.backend.model.wrappers.reports.ResponseWrapperReport;
 import lombok.Getter;
 import lombok.Setter;
 

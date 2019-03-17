@@ -1,17 +1,18 @@
 package com.jkh.backend.service.implementation;
 
+import com.jkh.backend.dto.ResponseWrapperStateWithMessages;
 import com.jkh.backend.model.Counter;
 import com.jkh.backend.model.Flat;
 import com.jkh.backend.model.Indication;
 import com.jkh.backend.model.User;
 import com.jkh.backend.model.enums.Role;
-import com.jkh.backend.model.wrappers.reports.indicationReport.ResponseWrapperIndicationReportRow;
+import com.jkh.backend.dto.reports.indicationReport.ResponseWrapperIndicationReportRow;
 import com.jkh.backend.repository.IndicationRepository;
 import com.jkh.backend.service.CounterService;
 import com.jkh.backend.service.IndicationService;
 import com.jkh.backend.service.UserService;
 import com.jkh.backend.service.validation.IndicationServiceValidator;
-import org.json.simple.JSONObject;
+import com.jkh.backend.service.validation.ValidationMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -44,62 +45,59 @@ public class IndicationServiceImpl implements IndicationService {
     }
 
     @Override
-    public JSONObject addIndication(Flat flat, Indication indication) {
+    public String addIndication(Flat flat, Indication indication) {
         Counter counter = counterService.findCounterByFlatAndIndication(flat, indication);
 
         indication.setCounter(counter);
 
-        JSONObject json = IndicationServiceValidator.checkIndication(indication,
+        return IndicationServiceValidator.checkIndication(indication,
                 findDistinctTopIndicationByCounterOrderByDateDesc(counter));
-
-        return json;
     }
 
     @Override
-    public JSONObject addIndications(List<Indication> indications) {
-        JSONObject json = IndicationServiceValidator.checkListOfIndications(indications);
-        if (json.get("isOk").equals(true)) {
+    public ResponseWrapperStateWithMessages addIndications(List<Indication> indications) {
+        ResponseWrapperStateWithMessages listOfIndications = IndicationServiceValidator.checkListOfIndications(indications);
+        if (listOfIndications.getIsOk()) {
             String login = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.findUserByLogin(login);
 
             Flat flat = user.getFlat();
-            List<JSONObject> messagesPerIndication = new ArrayList<>();
+            List<String> messagesPerIndication = new ArrayList<>();
 
             LocalDateTime curDate = LocalDateTime.now();
             for (Indication indication : indications) {
                 indication.setDate(curDate);
-                JSONObject oneIndicationJson = addIndication(flat, indication);
+                String indicationStatus = addIndication(flat, indication);
 
-                if (oneIndicationJson.get("isOk").equals(false)) {
-                    json.replace("isOk", false);
+                if (!indicationStatus.equals(ValidationMessages.OK)) {
+                    listOfIndications.setIsOk(false);
                 }
 
-                messagesPerIndication.add(oneIndicationJson);
+                messagesPerIndication.add(indicationStatus);
             }
 
-            if (json.get("isOk").equals(false)) {
-                json.replace("message", messagesPerIndication);
-            } else {
-                for (Indication indication : indications) {
-                    save(indication);
-                }
+            listOfIndications.setMessages(messagesPerIndication);
+        }
+
+
+        if (listOfIndications.getIsOk()) {
+            for (Indication indication : indications) {
+                save(indication);
             }
         }
 
-        return json;
+        return listOfIndications;
     }
 
     @Override
-    public List<ResponseWrapperIndicationReportRow> getLastNIndications(Integer n) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.findUserByLogin(login);
-
+    public List<ResponseWrapperIndicationReportRow> getLastNIndications(User user, Integer n) {
         List<ResponseWrapperIndicationReportRow> indicationReportList;
         if (user.getRole().equals(Role.USER)) {
             indicationReportList = getIndications(user.getFlat());
         } else {
             indicationReportList = getIndications();
         }
+
         return indicationReportList.subList(0, Math.min(indicationReportList.size(), n));
     }
 
@@ -144,10 +142,11 @@ public class IndicationServiceImpl implements IndicationService {
         return getIndications(indicationList);
     }
 
+
     private List<ResponseWrapperIndicationReportRow> getIndications(List<Indication> indicationList) {
         indicationList.sort(Comparator.comparing(Indication::getDate).reversed());
 
-        if (indicationList.size() < 1) {
+        if (indicationList.isEmpty()) {
             return new ArrayList<>();
         }
 
@@ -164,4 +163,5 @@ public class IndicationServiceImpl implements IndicationService {
         }
         return result;
     }
+
 }

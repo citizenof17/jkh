@@ -1,4 +1,4 @@
-package com.jkh.backend.model.wrappers;
+package com.jkh.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;

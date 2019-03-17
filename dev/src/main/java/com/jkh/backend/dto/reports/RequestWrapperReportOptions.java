@@ -1,9 +1,9 @@
-package com.jkh.backend.model.wrappers.reports;
+package com.jkh.backend.dto.reports;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jkh.backend.model.Flat;
-import com.jkh.backend.model.enums.ReportOptionsStandardPeriod;
-import com.jkh.backend.model.enums.ReportOptionsType;
+import com.jkh.backend.dto.reports.enums.ReportOptionsStandardPeriod;
+import com.jkh.backend.dto.reports.enums.ReportOptionsType;
 import lombok.Getter;
 import lombok.Setter;
 

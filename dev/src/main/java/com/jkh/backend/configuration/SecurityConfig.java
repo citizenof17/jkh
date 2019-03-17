@@ -1,5 +1,7 @@
 package com.jkh.backend.configuration;
 
+import com.jkh.backend.model.enums.Role;
+import com.jkh.backend.model.enums.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("root").password("password").roles("SUPERADMIN");
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
     }
 
@@ -44,6 +45,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .antMatchers("/index.html", "/", "/register", "/login", "/live").permitAll()
+                .antMatchers("/admin/**").hasAuthority(Role.ADMIN.toString())
+                .antMatchers("/sendIndications").hasAuthority(Status.ACTIVE.toString())
+                .antMatchers("/report").hasAnyAuthority(Status.ACTIVE.toString(), Status.INACTIVE.toString())
                 .anyRequest().authenticated();
 
         http.logout()

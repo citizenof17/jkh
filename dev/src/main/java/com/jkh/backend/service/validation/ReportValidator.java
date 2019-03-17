@@ -2,11 +2,11 @@ package com.jkh.backend.service.validation;
 
 import com.jkh.backend.model.Flat;
 import com.jkh.backend.model.User;
-import com.jkh.backend.model.enums.ReportOptionsStandardPeriod;
-import com.jkh.backend.model.enums.ReportOptionsType;
+import com.jkh.backend.dto.reports.enums.ReportOptionsStandardPeriod;
+import com.jkh.backend.dto.reports.enums.ReportOptionsType;
 import com.jkh.backend.model.enums.Role;
-import com.jkh.backend.model.wrappers.reports.RequestWrapperReportOptions;
-import com.jkh.backend.model.wrappers.reports.ResponseWrapperReport;
+import com.jkh.backend.dto.reports.RequestWrapperReportOptions;
+import com.jkh.backend.dto.reports.ResponseWrapperReport;
 import com.jkh.backend.service.FlatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
