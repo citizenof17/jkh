@@ -2,6 +2,7 @@ package com.jkh.backend.service.implementation;
 
 import com.jkh.backend.model.Flat;
 import com.jkh.backend.model.User;
+import com.jkh.backend.model.custom.CustomPair;
 import com.jkh.backend.model.enums.CounterType;
 import com.jkh.backend.model.enums.ReportOptionsType;
 import com.jkh.backend.model.enums.Role;
@@ -16,7 +17,6 @@ import com.jkh.backend.service.IndicationService;
 import com.jkh.backend.service.ReportService;
 import com.jkh.backend.service.UserService;
 import com.jkh.backend.service.validation.ReportValidator;
-import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -124,15 +124,15 @@ public class ReportServiceImpl implements ReportService {
         } else {
             flats = Collections.singletonList(flatService.findFlatByNumber(reportOptions.getFlat().getNumber()));
         }
-        Set<Pair<LocalDate, Flat>> monthFlat = new HashSet<>();
+        Set<CustomPair> monthFlat = new HashSet<>();
         for (ResponseWrapperIndicationReportRow row : indicationList) {
-            monthFlat.add(new Pair<>(row.getDate().withDayOfMonth(1), row.getFlat()));
+            monthFlat.add(new CustomPair(row.getDate().withDayOfMonth(1), row.getFlat()));
         }
 
         Map<LocalDate, List<Flat>> didNotSendReport = new TreeMap<>();
         for (LocalDate month : months) {
             for (Flat flat : flats) {
-                if (!monthFlat.contains(new Pair<>(month, flat))) {
+                if (!monthFlat.contains(new CustomPair(month, flat))) {
                     didNotSendReport.putIfAbsent(month, new ArrayList<>());
                     didNotSendReport.get(month).add(flat);
                 }

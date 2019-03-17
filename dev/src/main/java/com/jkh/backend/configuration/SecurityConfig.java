@@ -64,7 +64,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:4200")
                         .allowCredentials(true)
                         .allowedHeaders("*")
                         .allowedMethods("GET", "POST", "OPTIONS");
