@@ -16,6 +16,6 @@ public class ObjMapper {
 
     public static <T> String objest2Json(T object) throws IOException {
         return objectMapper.writerWithDefaultPrettyPrinter()
-              .writeValueAsString(object);
+                .writeValueAsString(object);
     }
 }

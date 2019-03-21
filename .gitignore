@@ -1,8 +1,9 @@
+### AQA ###
 **/*.idea
 */*target
 */*.iml
 **/.DS_Store
-
+qa/build
 
 ### STS ###
 /dev/**/.apt_generated

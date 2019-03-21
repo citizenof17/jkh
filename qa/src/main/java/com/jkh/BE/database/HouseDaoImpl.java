@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 public class HouseDaoImpl extends JdbcDao implements HouseDao {
 
-    private static final String DELETE_ALL_HOUSES = "DELETE FROM HOUSE";
+    private static final String DELETE_ALL_HOUSES = "DELETE FROM house";
 
     public HouseDaoImpl(JdbcTemplate jdbcTemplate, MetricRegistry metricRegistry) {
         super(jdbcTemplate, metricRegistry);

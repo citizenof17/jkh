@@ -23,7 +23,6 @@ public class RegisterRequest {
         this.email = email;
     }
 
-
     public String getLogin() {
         return login;
     }
@@ -78,8 +77,8 @@ public class RegisterRequest {
         if (o == null || getClass() != o.getClass()) return false;
         RegisterRequest that = (RegisterRequest) o;
         return Objects.equals(login, that.login) && Objects.equals(password, that.password) &&
-               Objects.equals(phone, that.phone) && Objects.equals(flat, that.flat) &&
-               Objects.equals(name, that.name) && Objects.equals(email, that.email);
+                Objects.equals(phone, that.phone) && Objects.equals(flat, that.flat) &&
+                Objects.equals(name, that.name) && Objects.equals(email, that.email);
     }
 
     @Override
@@ -90,6 +89,6 @@ public class RegisterRequest {
     @Override
     public String toString() {
         return "RegisterRequest{" + "login='" + login + '\'' + ", password='" + password + '\'' + ", phone='" + phone +
-               '\'' + ", flat=" + flat + ", name='" + name + '\'' + ", email='" + email + '\'' + '}';
+                '\'' + ", flat=" + flat + ", name='" + name + '\'' + ", email='" + email + '\'' + '}';
     }
 }

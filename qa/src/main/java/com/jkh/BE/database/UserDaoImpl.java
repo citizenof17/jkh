@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 public class UserDaoImpl extends JdbcDao implements UserDao {
 
-    private static final String DELETE_ALL_USERS = "DELETE FROM USER";
+    private static final String DELETE_ALL_USERS = "DELETE FROM user";
 
     @Autowired
     public UserDaoImpl(JdbcTemplate jdbcTemplate, MetricRegistry metricRegistry) {
@@ -14,7 +14,7 @@ public class UserDaoImpl extends JdbcDao implements UserDao {
     }
 
     @Override
-    public void deleteAll()  {
+    public void deleteAll() {
         getJdbcTemplate().update(DELETE_ALL_USERS);
     }
 }

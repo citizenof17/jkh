@@ -18,7 +18,7 @@ import static com.jkh.utils.TestConstants.correctRegisterData;
 import static com.jkh.utils.TestConstants.incorrectRegisterData;
 
 @ContextConfiguration(classes = ConfigurationMain.class)
-public class RegisterTest extends AbstractTestNGSpringContextTests{
+public class RegisterTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private AuthSteps authSteps;
@@ -26,7 +26,7 @@ public class RegisterTest extends AbstractTestNGSpringContextTests{
     @Autowired
     private DataLoadSteps dataLoadSteps;
 
-    @BeforeClass(groups = { "BE", "Register"})
+    @BeforeClass(groups = {"BE", "Register"})
     public void prepareData() {
         dataLoadSteps.deleteAllData();
     }

@@ -7,6 +7,9 @@ import feign.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,14 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSocketFactory;
 
-import static feign.Util.CONTENT_ENCODING;
-import static feign.Util.CONTENT_LENGTH;
-import static feign.Util.ENCODING_DEFLATE;
-import static feign.Util.ENCODING_GZIP;
+import static feign.Util.*;
 import static java.lang.String.format;
 
 public class NonFollowedRedirectsClient implements Client {

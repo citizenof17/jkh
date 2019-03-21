@@ -29,10 +29,10 @@ public class DataLoadSteps {
     @Step("Delete all data from DB")
     public void deleteAllData() {
         usersDao.deleteAll();
+        indicationDao.deleteAll();
         counterDao.deleteAll();
         flatDao.deleteAll();
         houseDao.deleteAll();
-        indicationDao.deleteAll();
         tariffDao.deleteAll();
     }
 }

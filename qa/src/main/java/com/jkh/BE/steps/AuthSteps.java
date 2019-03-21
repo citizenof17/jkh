@@ -21,11 +21,10 @@ import static com.jkh.utils.TestConstants.R;
 @Component
 public class AuthSteps {
 
+    private final AuthClient authClient;
     private String sessionId;
     private RegisterResponse registerResponse;
     private RegisterBadResponse registerBadResponse;
-
-    private final AuthClient authClient;
 
     @Autowired
     public AuthSteps(AuthClient authClient) {

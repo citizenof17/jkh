@@ -47,7 +47,7 @@ public class RegisterResponse {
         if (o == null || getClass() != o.getClass()) return false;
         RegisterResponse that = (RegisterResponse) o;
         return Objects.equals(role, that.role) && Objects.equals(name, that.name) &&
-               Objects.equals(status, that.status);
+                Objects.equals(status, that.status);
     }
 
     @Override
@@ -58,6 +58,6 @@ public class RegisterResponse {
     @Override
     public String toString() {
         return "RegisterResponse{" + "role='" + role + '\'' + ", name='" + name + '\'' + ", status=" + status +
-               '}';
+                '}';
     }
 }

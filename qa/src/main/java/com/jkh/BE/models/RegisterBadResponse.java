@@ -80,8 +80,8 @@ public class RegisterBadResponse {
         if (o == null || getClass() != o.getClass()) return false;
         RegisterBadResponse that = (RegisterBadResponse) o;
         return Objects.equals(login, that.login) && Objects.equals(password, that.password) &&
-               Objects.equals(phone, that.phone) && Objects.equals(flat, that.flat) &&
-               Objects.equals(name, that.name) && Objects.equals(email, that.email);
+                Objects.equals(phone, that.phone) && Objects.equals(flat, that.flat) &&
+                Objects.equals(name, that.name) && Objects.equals(email, that.email);
     }
 
     @Override
@@ -92,6 +92,6 @@ public class RegisterBadResponse {
     @Override
     public String toString() {
         return "RegisterBadResponse{" + "login='" + login + '\'' + ", password='" + password + '\'' + ", phone='" +
-               phone + '\'' + ", flat='" + flat + '\'' + ", name='" + name + '\'' + ", email='" + email + '\'' + '}';
+                phone + '\'' + ", flat='" + flat + '\'' + ", name='" + name + '\'' + ", email='" + email + '\'' + '}';
     }
 }

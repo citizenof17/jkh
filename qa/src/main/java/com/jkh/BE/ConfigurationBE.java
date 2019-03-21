@@ -26,10 +26,10 @@ public class ConfigurationBE {
     @Value("${database.url:jdbc:mysql://localhost:3306/jkh}")
     private String jdbcUrl;
 
-    @Value("${database.user:jkh}")
+    @Value("${database.user:jkh_admin}")
     private String userName;
 
-    @Value("${database.password:jkhPass}")
+    @Value("${database.password:jkh_admin}")
     private String userPassword;
 
     // DB
@@ -53,32 +53,32 @@ public class ConfigurationBE {
     }
 
     @Bean
-    public UserDaoImpl usersDao(JdbcTemplate jdbcTemplate, MetricRegistry metricRegistry){
+    public UserDaoImpl usersDao(JdbcTemplate jdbcTemplate, MetricRegistry metricRegistry) {
         return new UserDaoImpl(jdbcTemplate, metricRegistry);
     }
 
     @Bean
-    public CounterDaoImpl counterDao(JdbcTemplate jdbcTemplate, MetricRegistry metricRegistry){
+    public CounterDaoImpl counterDao(JdbcTemplate jdbcTemplate, MetricRegistry metricRegistry) {
         return new CounterDaoImpl(jdbcTemplate, metricRegistry);
     }
 
     @Bean
-    public FlatDaoImpl flatDao(JdbcTemplate jdbcTemplate, MetricRegistry metricRegistry){
+    public FlatDaoImpl flatDao(JdbcTemplate jdbcTemplate, MetricRegistry metricRegistry) {
         return new FlatDaoImpl(jdbcTemplate, metricRegistry);
     }
 
     @Bean
-    public HouseDaoImpl houseDao(JdbcTemplate jdbcTemplate, MetricRegistry metricRegistry){
+    public HouseDaoImpl houseDao(JdbcTemplate jdbcTemplate, MetricRegistry metricRegistry) {
         return new HouseDaoImpl(jdbcTemplate, metricRegistry);
     }
 
     @Bean
-    public IndicationDaoImpl indicationDao(JdbcTemplate jdbcTemplate, MetricRegistry metricRegistry){
+    public IndicationDaoImpl indicationDao(JdbcTemplate jdbcTemplate, MetricRegistry metricRegistry) {
         return new IndicationDaoImpl(jdbcTemplate, metricRegistry);
     }
 
     @Bean
-    public TariffDaoImpl tariffDao(JdbcTemplate jdbcTemplate, MetricRegistry metricRegistry){
+    public TariffDaoImpl tariffDao(JdbcTemplate jdbcTemplate, MetricRegistry metricRegistry) {
         return new TariffDaoImpl(jdbcTemplate, metricRegistry);
     }
 
@@ -86,12 +86,12 @@ public class ConfigurationBE {
     @Bean
     public AuthClient authClient() {
         return Feign.builder()
-                    .client(new NonFollowedRedirectsClient(null, null))
-                    .encoder(new JacksonEncoder())
-                    .decoder(new JacksonDecoder())
-                    .logger(new Slf4jLogger(AuthClient.class))
-                    .logLevel(Logger.Level.FULL)
-                    .target(AuthClient.class, address);
+                .client(new NonFollowedRedirectsClient(null, null))
+                .encoder(new JacksonEncoder())
+                .decoder(new JacksonDecoder())
+                .logger(new Slf4jLogger(AuthClient.class))
+                .logLevel(Logger.Level.FULL)
+                .target(AuthClient.class, address);
     }
 }
 

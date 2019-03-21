@@ -11,34 +11,34 @@ public interface TestConstants {
 
     Object[][] correctRegisterData = new Object[][]{
             {
-                new RegisterRequest(
-                    "login1",
-                    "Qwerty_1",
-                    "+79996739856",
-                    new Flat(12),
-                    "Олег Раскин",
-                    "oleg@mail.ru"
-                ),
-                new RegisterResponse(
-                    "USER",
-                    "Олег Раскин",
-                    false
-                )
+                    new RegisterRequest(
+                            "login1",
+                            "Qwerty_1",
+                            "+79996739856",
+                            new Flat(12),
+                            "Олег Раскин",
+                            "oleg@mail.ru"
+                    ),
+                    new RegisterResponse(
+                            "USER",
+                            "Олег Раскин",
+                            false
+                    )
             },
             {
-                new RegisterRequest(
-                        "login2",
-                        "Qwerty_2",
-                        "+79874147392",
-                        new Flat(55),
-                        "Екатерина Астровская",
-                        "katya@gmail.com"
-                ),
-                new RegisterResponse(
-                        "USER",
-                        "Екатерина Астровская",
-                        false
-                )
+                    new RegisterRequest(
+                            "login2",
+                            "Qwerty_2",
+                            "+79874147392",
+                            new Flat(55),
+                            "Екатерина Астровская",
+                            "katya@gmail.com"
+                    ),
+                    new RegisterResponse(
+                            "USER",
+                            "Екатерина Астровская",
+                            false
+                    )
             }
     };
 
@@ -73,8 +73,8 @@ public interface TestConstants {
                     new RegisterBadResponse(
                             "ok",
                             "Длина пароля должна составлять не менее 8 символов, где присутствуют по крайней " +
-                            "мере одна строчная и одна прописная английские буквы, одна цифра и один специальный символ " +
-                            "('_', '-', '!'), без пробелов",
+                                    "мере одна строчная и одна прописная английские буквы, одна цифра и один специальный символ " +
+                                    "('_', '-', '!'), без пробелов",
                             "Некорректный номер телефона",
                             "Некорректный номер квартиры",
                             "ok",
@@ -93,8 +93,8 @@ public interface TestConstants {
                     new RegisterBadResponse(
                             "ok",
                             "Длина пароля должна составлять не менее 8 символов, где присутствуют по крайней " +
-                            "мере одна строчная и одна прописная английские буквы, одна цифра и один специальный символ " +
-                            "('_', '-', '!'), без пробелов",
+                                    "мере одна строчная и одна прописная английские буквы, одна цифра и один специальный символ " +
+                                    "('_', '-', '!'), без пробелов",
                             "ok",
                             "Некорректный номер квартиры",
                             "ok",
@@ -120,4 +120,11 @@ public interface TestConstants {
                     )
             }
     };
+
+    String LOGIN_PAGE_ADDRESS = "/login";
+    String REGISTRATION_PAGE_ADDRESS = "/register";
+    String USER_PAGE_ADDRESS = "/home";
+    String ADMIN_PAGE_ADDRESS = "/admin";
+
+    String HOME_PAGE_WELCOME_TITLE = "Добро пожаловать, %s!";
 }

@@ -8,6 +8,4 @@ public class ConfigurationFE {
 
     @Value("${currentBrowser:firefox}")
     private String currentBrowser;
-
-    
 }
