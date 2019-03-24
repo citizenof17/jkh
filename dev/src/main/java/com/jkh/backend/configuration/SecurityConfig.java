@@ -46,7 +46,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .antMatchers("/index.html", "/", "/register", "/login", "/live").permitAll()
                 .antMatchers("/admin/**").hasAuthority(Role.ADMIN.toString())
-                .antMatchers("/sendIndications").hasAuthority(Status.ACTIVE.toString())
+                .antMatchers("/sendIndications")
+                    .access("hasAuthority('" + Status.ACTIVE.toString() + "') " +
+                            "and hasAuthority('" + Role.USER.toString() + "')")
                 .antMatchers("/report").hasAnyAuthority(Status.ACTIVE.toString(), Status.INACTIVE.toString())
                 .anyRequest().authenticated();
 

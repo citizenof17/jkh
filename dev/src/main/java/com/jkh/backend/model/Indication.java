@@ -21,4 +21,8 @@ public class Indication {
 
     private Integer value;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
 }

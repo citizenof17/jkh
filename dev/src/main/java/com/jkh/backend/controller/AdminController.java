@@ -1,10 +1,11 @@
 package com.jkh.backend.controller;
 
-import com.jkh.backend.dto.StringMessage;
 import com.jkh.backend.dto.FullUserInfo;
 import com.jkh.backend.dto.ResponseWrapperStateWithMessages;
+import com.jkh.backend.dto.StringMessage;
 import com.jkh.backend.model.Common;
 import com.jkh.backend.model.Flat;
+import com.jkh.backend.model.User;
 import com.jkh.backend.model.enums.Role;
 import com.jkh.backend.model.enums.Status;
 import com.jkh.backend.service.CommonService;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,8 +34,8 @@ public class AdminController {
     private static final String GET_FLAT_INHABITANTS_ENDPOINT = "/getFlatInhabitants";
     private static final String SET_FLAT_INHABITANTS_ENDPOINT = "/setFlatInhabitants";
 
-    private static final String UNAVAILABLE_ACTION = "This action is unavailable";
-    private static final String FLAT_NOT_FOUND = "Flat was not found";
+    private static final String UNAVAILABLE_ACTION = "Это действие недоступно";
+    private static final String FLAT_NOT_FOUND = "Квартира не найдена";
 
     @Autowired
     private UserService userService;
@@ -65,13 +67,12 @@ public class AdminController {
     @RequestMapping(value = GET_WHO_DID_NOT_SEND_ENDPOINT)
     public ResponseEntity<Object> getWhoDidNotSend() {
         try {
-            List<FullUserInfo> whoDidNotSend = userService.getAllUsers().stream()
-                    .filter(x -> x.getRole().equals(Role.USER))
-                    .filter(x -> x.getStatus().equals(Status.ACTIVE))
+            List<FullUserInfo> whoDidNotSend = userService.findUsersByRoleAndStatus(Role.USER, Status.ACTIVE).stream()
                     .map(x -> new FullUserInfo(x.getName(), x.getFlat().getNumber(),
-                            x.getPhone(), x.getLogin(), x.getEmail(), x.getStatus(),
+                            x.getPhone(), x.getLogin(), x.getEmail(), null,
                             periodCalculatorService.countDaysOverDefaultPeriodOfCountersSendingForUser(x)))
                     .filter(x -> x.getDaysOverDefaultPeriodOfCountersSending() > 0)
+                    .sorted(Comparator.comparing(FullUserInfo::getFlatNumber))
                     .collect(Collectors.toList());
 
             return new ResponseEntity<>(whoDidNotSend, HttpStatus.OK);
@@ -84,14 +85,16 @@ public class AdminController {
     @RequestMapping(value = GET_NEWCOMERS_ENDPOINT)
     public ResponseEntity<Object> getNewcomers() {
         try {
-            List<List<FullUserInfo>> newcomersInBlocks = userService.getAllUsers().stream()
-                    .filter(x -> x.getRole().equals(Role.USER))
-                    .filter(x -> x.getStatus().equals(Status.UNVERIFIED))
-                    .map(x -> new ArrayList<>(x.getFlat().getUserSet()).stream()
-                            .map(y -> new FullUserInfo(y.getName(), y.getFlat().getNumber(),
-                                    y.getPhone(), y.getLogin(), y.getEmail(), y.getStatus(), null))
-                            .collect(Collectors.toList()))
-                    .collect(Collectors.toList());
+            List<List<FullUserInfo>> newcomersInBlocks =
+                    userService.findUsersByRoleAndStatus(Role.USER, Status.UNVERIFIED).stream()
+                            .map(User::getFlat).distinct()
+                            .sorted(Comparator.comparing(Flat::getNumber))
+                            .map(x -> new ArrayList<>(x.getUserSet()).stream()
+                                    .map(y -> new FullUserInfo(y.getName(), y.getFlat().getNumber(),
+                                            y.getPhone(), y.getLogin(), y.getEmail(), y.getStatus()))
+                                    .sorted(Comparator.comparing(FullUserInfo::getLogin))
+                                    .collect(Collectors.toList()))
+                            .collect(Collectors.toList());
 
             return new ResponseEntity<>(newcomersInBlocks, HttpStatus.OK);
         } catch (Exception e) {
@@ -101,8 +104,7 @@ public class AdminController {
 
     @ResponseBody
     @RequestMapping(value = SET_NEWCOMERS_ENDPOINT, method = RequestMethod.POST, consumes = {"application/json"})
-    public ResponseEntity<Object> setNewcomersEndpoint(
-            @RequestBody List<List<FullUserInfo>> newcomersInBlocks) {
+    public ResponseEntity<Object> setNewcomersEndpoint(@RequestBody List<List<FullUserInfo>> newcomersInBlocks) {
         ResponseWrapperStateWithMessages ans = userService.setStatusChangesBulk(newcomersInBlocks);
         return new ResponseEntity<>(ans, ans.getIsOk() ? HttpStatus.OK : HttpStatus.CONFLICT);
     }
@@ -118,8 +120,9 @@ public class AdminController {
             }
 
             List<FullUserInfo> flatInhabitants = flat.getUserSet().stream()
+                    .sorted(Comparator.comparing(User::getLogin))
                     .map(x -> new FullUserInfo(x.getName(), x.getFlat().getNumber(),
-                            x.getPhone(), x.getLogin(), x.getEmail(), x.getStatus(), null))
+                            x.getPhone(), x.getLogin(), x.getEmail(), x.getStatus()))
                     .collect(Collectors.toList());
 
             return new ResponseEntity<>(flatInhabitants, HttpStatus.OK);
@@ -136,5 +139,4 @@ public class AdminController {
         ResponseWrapperStateWithMessages ans = userService.setStatusChangesBulk(lst);
         return new ResponseEntity<>(ans, ans.getIsOk() ? HttpStatus.OK : HttpStatus.CONFLICT);
     }
-
 }

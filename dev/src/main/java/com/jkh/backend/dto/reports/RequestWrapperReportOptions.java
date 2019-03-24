@@ -1,9 +1,9 @@
 package com.jkh.backend.dto.reports;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.jkh.backend.model.Flat;
 import com.jkh.backend.dto.reports.enums.ReportOptionsStandardPeriod;
-import com.jkh.backend.dto.reports.enums.ReportOptionsType;
+import com.jkh.backend.model.Flat;
+import com.jkh.backend.model.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,7 +20,7 @@ public class RequestWrapperReportOptions implements Serializable {
     private LocalDate leftDate;
     private LocalDate rightDate;
     private ReportOptionsStandardPeriod standardPeriod;
-    private ReportOptionsType type;
+    private Status status;
     private Flat flat;
 
     @JsonIgnore
@@ -44,12 +44,6 @@ public class RequestWrapperReportOptions implements Serializable {
             case MANUAL:
                 DateTimeFormatter dateTimeFormatter =
                         DateTimeFormatter.ofPattern("dd MMMM yyyy", new Locale("ru"));
-                if (type.equals(ReportOptionsType.WHO_DID_NOT_SEND)) {
-                    leftDate = leftDate.withDayOfMonth(1);
-                    rightDate = rightDate.withDayOfMonth(1).plusMonths(1).minusDays(1);
-
-                    dateTimeFormatter = DateTimeFormatter.ofPattern("MM.yyyy", new Locale("ru"));
-                }
                 message = "за период с " + dateTimeFormatter.format(leftDate) +
                         " по " + dateTimeFormatter.format(rightDate);
                 break;

@@ -1,8 +1,11 @@
 package com.jkh.backend.controller;
 
-import com.jkh.backend.dto.*;
+import com.jkh.backend.dto.ResponseWrapperRegistrationValidator;
+import com.jkh.backend.dto.ResponseWrapperUserAuth;
+import com.jkh.backend.dto.StringMessage;
 import com.jkh.backend.model.User;
-import com.jkh.backend.service.*;
+import com.jkh.backend.service.SecurityService;
+import com.jkh.backend.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -22,21 +25,14 @@ public class AuthController {
 
     private static final String LOGIN_ENDPOINT = "/login";
     private static final String REGISTER_ENDPOINT = "/register";
-    private static final String USER_INFO_ENDPOINT = "/userInfo";
 
-
-    private static final String INCORRECT_LOGIN_OR_PASSWORD = "Login or password is incorrect";
-    private static final String USER_NOT_FOUND = "User is not found";
-
+    private static final String INCORRECT_LOGIN_OR_PASSWORD = "Неверный логин или пароль";
 
     @Autowired
     private SecurityService securityService;
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private PeriodCalculatorService periodCalculatorService;
 
     @ApiOperation(value = "login")
     @ResponseBody
@@ -70,24 +66,5 @@ public class AuthController {
             return new ResponseEntity<>(json, HttpStatus.CONFLICT);
         }
     }
-
-    @ResponseBody
-    @RequestMapping(value = USER_INFO_ENDPOINT)
-    public ResponseEntity<Object> getUserInfo() {
-        try {
-            String login = SecurityContextHolder.getContext().getAuthentication().getName();
-            User user = userService.findUserByLogin(login);
-            Integer days = periodCalculatorService.countDaysOverDefaultPeriodOfCountersSendingForUser(user);
-            return ResponseEntity.ok(
-                    new ResponseWrapperUserInfo(
-                            user.getName(),
-                            user.getRole(),
-                            user.getStatus(),
-                            days));
-        } catch (Exception e) {
-            return new ResponseEntity<>(new StringMessage(USER_NOT_FOUND), HttpStatus.UNAUTHORIZED);
-        }
-    }
-
 
 }

@@ -1,7 +1,7 @@
 package com.jkh.backend.controller;
 
 import com.jkh.backend.dto.reports.RequestWrapperReportOptions;
-import com.jkh.backend.dto.reports.ResponseWrapperReport;
+import com.jkh.backend.dto.reports.indicationReport.ResponseWrapperIndicationReport;
 import com.jkh.backend.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,9 +19,10 @@ public class ReportController {
 
     @ResponseBody
     @RequestMapping(value = REPORT_ENDPOINT, method = RequestMethod.POST, consumes = {"application/json"})
-    public ResponseEntity<ResponseWrapperReport> getReport(@RequestBody RequestWrapperReportOptions reportOptions) {
+    public ResponseEntity<ResponseWrapperIndicationReport> getReport(
+            @RequestBody RequestWrapperReportOptions reportOptions) {
 
-        ResponseWrapperReport report = reportService.getReport(reportOptions);
+        ResponseWrapperIndicationReport report = reportService.getReport(reportOptions);
         if (report.isOk()) {
             return new ResponseEntity<>(report, HttpStatus.OK);
         } else {

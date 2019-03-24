@@ -10,13 +10,11 @@ import com.jkh.backend.utils.CommonKeys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-@PropertySource("classpath:application.properties")
 public class AppInitializer implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
@@ -28,14 +26,23 @@ public class AppInitializer implements ApplicationListener<ContextRefreshedEvent
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Value("${default.period.between.counters.sendings}")
+    @Value("${DEFAULT_PERIOD_BETWEEN_COUNTERS_SENDINGS:30}")
     private Integer n;
 
-    @Value("${admin.login}")
+    @Value("${ADMIN_LOGIN:Administrator}")
     private String login;
 
-    @Value("${admin.password}")
+    @Value("${ADMIN_PASSWORD:Administrator_1}")
     private String password;
+
+    @Value("${ADMIN_NAME:Администратор Великий Ужаснович}")
+    private String name;
+
+    @Value("${ADMIN_EMAIL:Administrator@jkh.ru}")
+    private String email;
+
+    @Value("${ADMIN_PHONE:+79995550000}")
+    private String phone;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
@@ -58,7 +65,9 @@ public class AppInitializer implements ApplicationListener<ContextRefreshedEvent
     public void initializeAdmin() {
         User admin = new User();
         admin.setLogin(login);
-        admin.setName(login);
+        admin.setName(name);
+        admin.setEmail(email);
+        admin.setPhone(phone);
         admin.setStatus(Status.ACTIVE);
         admin.setPassword(bCryptPasswordEncoder.encode(password));
         admin.setRole(Role.ADMIN);

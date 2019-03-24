@@ -1,12 +1,11 @@
 package com.jkh.backend.service.validation;
 
+import com.jkh.backend.dto.reports.RequestWrapperReportOptions;
+import com.jkh.backend.dto.reports.enums.ReportOptionsStandardPeriod;
+import com.jkh.backend.dto.reports.indicationReport.ResponseWrapperIndicationReport;
 import com.jkh.backend.model.Flat;
 import com.jkh.backend.model.User;
-import com.jkh.backend.dto.reports.enums.ReportOptionsStandardPeriod;
-import com.jkh.backend.dto.reports.enums.ReportOptionsType;
 import com.jkh.backend.model.enums.Role;
-import com.jkh.backend.dto.reports.RequestWrapperReportOptions;
-import com.jkh.backend.dto.reports.ResponseWrapperReport;
 import com.jkh.backend.service.FlatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,37 +20,34 @@ public class ReportValidator {
     @Autowired
     private FlatService flatService;
 
-    public ResponseWrapperReport validateReportOptions(RequestWrapperReportOptions reportOptions, User user) {
+    public ResponseWrapperIndicationReport validateReportOptions(RequestWrapperReportOptions reportOptions, User user) {
         if (reportOptions.getStandardPeriod() == null) {
             reportOptions.setStandardPeriod(ReportOptionsStandardPeriod.MANUAL);
-        }
-        if (reportOptions.getType() == null) {
-            reportOptions.setType(ReportOptionsType.STANDARD);
         }
         if (reportOptions.getFlat() != null && reportOptions.getFlat().getNumber() == null) {
             reportOptions.setFlat(null);
         }
 
-        String message = OK;
+        String message = "";
         Flat flat = reportOptions.getFlat();
 
         if (reportOptions.getStandardPeriod().equals(ReportOptionsStandardPeriod.MANUAL)) {
             LocalDate leftDate = reportOptions.getLeftDate();
             LocalDate rightDate = reportOptions.getRightDate();
             if (leftDate == null || rightDate == null || leftDate.isAfter(rightDate)) {
-                message = REPORT_OPTIONS_DATE;
+                message += REPORT_OPTIONS_DATE + "\n";
             }
         }
         if (flat != null && flatService.findFlatByNumber(flat.getNumber()) == null) {
-            message = FLAT_NUMBER_INCORRECT;
+            message += FLAT_NUMBER_INCORRECT + "\n";
         }
-        if (flat != null && user.getRole().equals(Role.USER)) {
-            message = FORBIDDEN;
+        if ((flat != null || reportOptions.getStatus() != null) && user.getRole().equals(Role.USER)) {
+            message += FORBIDDEN + "\n";
         }
-        if (reportOptions.getType().equals(ReportOptionsType.WHO_DID_NOT_SEND) &&
-                reportOptions.getStandardPeriod().equals(ReportOptionsStandardPeriod.ALL)) {
-            message = DID_NOT_SEND_ALL_TIME;
+
+        if (message.length() == 0) {
+            message = OK;
         }
-        return new ResponseWrapperReport(message);
+        return new ResponseWrapperIndicationReport(message);
     }
 }

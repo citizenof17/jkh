@@ -26,6 +26,11 @@ public class FlatServiceImpl implements FlatService {
     }
 
     @Override
+    public void delete(Flat flat) {
+        flatRepository.delete(flat);
+    }
+
+    @Override
     public Flat findFlatByNumber(Integer number) {
         return flatRepository.findFlatByNumber(number);
     }

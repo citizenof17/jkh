@@ -1,12 +1,13 @@
 package com.jkh.backend.service.implementation;
 
 import com.jkh.backend.dto.ResponseWrapperStateWithMessages;
+import com.jkh.backend.dto.reports.indicationReport.ResponseWrapperIndicationReportRow;
 import com.jkh.backend.model.Counter;
 import com.jkh.backend.model.Flat;
 import com.jkh.backend.model.Indication;
 import com.jkh.backend.model.User;
 import com.jkh.backend.model.enums.Role;
-import com.jkh.backend.dto.reports.indicationReport.ResponseWrapperIndicationReportRow;
+import com.jkh.backend.model.enums.Status;
 import com.jkh.backend.repository.IndicationRepository;
 import com.jkh.backend.service.CounterService;
 import com.jkh.backend.service.IndicationService;
@@ -67,6 +68,7 @@ public class IndicationServiceImpl implements IndicationService {
             LocalDateTime curDate = LocalDateTime.now();
             for (Indication indication : indications) {
                 indication.setDate(curDate);
+                indication.setUser(user);
                 String indicationStatus = addIndication(flat, indication);
 
                 if (!indicationStatus.equals(ValidationMessages.OK)) {
@@ -119,6 +121,15 @@ public class IndicationServiceImpl implements IndicationService {
     }
 
     @Override
+    public List<ResponseWrapperIndicationReportRow> getIndications(Status status) {
+        if (status == null) {
+            return getIndications();
+        }
+
+        return getIndications(indicationRepository.findIndicationsByUserStatusOrderByDate(status));
+    }
+
+    @Override
     public List<ResponseWrapperIndicationReportRow> getIndications(LocalDateTime left, LocalDateTime right) {
         if (left == null || right == null) {
             return getIndications();
@@ -138,6 +149,60 @@ public class IndicationServiceImpl implements IndicationService {
         for (Counter counter : flat.getCounterSet()) {
             indicationList.addAll(
                     indicationRepository.findIndicationsByCounterAndDateBetweenOrderByDate(counter, left, right));
+        }
+        return getIndications(indicationList);
+    }
+
+    @Override
+    public List<ResponseWrapperIndicationReportRow> getIndications(Status status, Flat flat) {
+        if (status == null) {
+            return getIndications(flat);
+        }
+        if (flat == null) {
+            return getIndications(status);
+        }
+
+        List<Indication> indicationList = new ArrayList<>();
+        for (Counter counter : flat.getCounterSet()) {
+            indicationList.addAll(indicationRepository.findIndicationsByUserStatusAndCounterOrderByDate(status, counter));
+        }
+        return getIndications(indicationList);
+    }
+
+    @Override
+    public List<ResponseWrapperIndicationReportRow> getIndications(
+            Status status, LocalDateTime left, LocalDateTime right) {
+
+        if (status == null) {
+            return getIndications(left, right);
+        }
+        if (left == null || right == null) {
+            return getIndications(status);
+        }
+
+        return getIndications(
+                indicationRepository.findIndicationsByUserStatusAndDateBetweenOrderByDate(status, left, right));
+    }
+
+    @Override
+    public List<ResponseWrapperIndicationReportRow> getIndications(
+            Status status, Flat flat, LocalDateTime left, LocalDateTime right) {
+
+        if (status == null) {
+            return getIndications(flat, left, right);
+        }
+        if (flat == null) {
+            return getIndications(status, left, right);
+        }
+        if (left == null || right == null) {
+            return getIndications(status, flat);
+        }
+
+        List<Indication> indicationList = new ArrayList<>();
+        for (Counter counter : flat.getCounterSet()) {
+            indicationList.addAll(
+                    indicationRepository.findIndicationsByUserStatusAndCounterAndDateBetweenOrderByDate(
+                            status, counter, left, right));
         }
         return getIndications(indicationList);
     }

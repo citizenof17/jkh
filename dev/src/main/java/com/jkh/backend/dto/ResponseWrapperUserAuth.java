@@ -10,9 +10,7 @@ import java.io.Serializable;
 @Getter @Setter
 public class ResponseWrapperUserAuth implements Serializable {
     private String name;
-
     private Role role;
-
     private Status status;
 
     public ResponseWrapperUserAuth(String name, Role role, Status status) {

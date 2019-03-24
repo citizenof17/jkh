@@ -46,6 +46,6 @@ public interface ValidationMessages {
 
     String INCORRECT_STATUS_CHANGE = "Некорректное изменение статуса пользователя";
 
-    String INCORRECT_STATUS_CHANGE_IN_BLOCK = "Блок статусов в квартире некорректен";
+    String INCORRECT_STATUS_CHANGE_IN_BLOCK = "Блок статусов некорректен в квартире ";
 
 }

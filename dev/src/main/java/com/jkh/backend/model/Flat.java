@@ -35,7 +35,7 @@ public class Flat implements Serializable {
     @JsonIgnore
     private Set<Counter> counterSet;
 
-    @OneToMany(mappedBy = "flat", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
+    @OneToMany(mappedBy = "flat", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<User> userSet;
 }

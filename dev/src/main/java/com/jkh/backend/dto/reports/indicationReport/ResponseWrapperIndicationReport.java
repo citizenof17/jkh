@@ -1,7 +1,8 @@
 package com.jkh.backend.dto.reports.indicationReport;
 
-import com.jkh.backend.dto.reports.ResponseWrapperReport;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.jkh.backend.model.enums.CounterType;
+import com.jkh.backend.service.validation.ValidationMessages;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.SerializationUtils;
@@ -13,12 +14,17 @@ import java.util.List;
 import java.util.Map;
 
 @Getter @Setter
-public class ResponseWrapperIndicationReport extends ResponseWrapperReport implements Serializable {
+@JsonIgnoreProperties("ok")
+public class ResponseWrapperIndicationReport implements Serializable {
+    private boolean isOk;
+    private String message;
+
     private List<ResponseWrapperIndicationReportRow> rows;
     private Map<CounterType, ResponseWrapperIndicationReportCounter> total;
 
     public ResponseWrapperIndicationReport(String message) {
-        super(message);
+        this.message = message;
+        this.isOk = this.message.equals(ValidationMessages.OK);
         this.rows = new ArrayList<>();
         this.total = new HashMap<>();
     }

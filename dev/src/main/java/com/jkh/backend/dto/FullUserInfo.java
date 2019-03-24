@@ -30,4 +30,13 @@ public class FullUserInfo implements Serializable {
         this.status = status;
         this.daysOverDefaultPeriodOfCountersSending = daysOverDefaultPeriodOfCountersSending;
     }
+
+    public FullUserInfo(String name, Integer flatNumber, String phone, String login, String email, Status status) {
+        this.name = name;
+        this.flatNumber = flatNumber;
+        this.phone = phone;
+        this.login = login;
+        this.email = email;
+        this.status = status;
+    }
 }

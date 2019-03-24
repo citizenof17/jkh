@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface FlatService {
     void save(Flat flat);
+    void delete(Flat flat);
 
     Flat findFlatByNumber(Integer number);
     List<Flat> findAll();

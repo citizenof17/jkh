@@ -1,10 +1,11 @@
 package com.jkh.backend.service.implementation;
 
 import com.jkh.backend.dto.FullUserInfo;
+import com.jkh.backend.dto.ResponseWrapperRegistrationValidator;
 import com.jkh.backend.dto.ResponseWrapperStateWithMessages;
+import com.jkh.backend.model.Flat;
 import com.jkh.backend.model.User;
 import com.jkh.backend.model.enums.Role;
-import com.jkh.backend.dto.ResponseWrapperRegistrationValidator;
 import com.jkh.backend.model.enums.Status;
 import com.jkh.backend.repository.UserRepository;
 import com.jkh.backend.service.FlatService;
@@ -43,10 +44,34 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public void delete(User user) {
+        Flat flat = user.getFlat();
+        userRepository.delete(user);
+        if (flat.getUserSet().isEmpty()) {
+            flatService.delete(flat);
+        }
+    }
+
 
     @Override
     public User findUserByLogin(String login) {
         return userRepository.findUserByLogin(login);
+    }
+
+    @Override
+    public User findUserByRole(Role role) {
+        return userRepository.findUserByRole(role);
+    }
+
+    @Override
+    public List<User> findUsersByStatus(Status status) {
+        return userRepository.findUsersByStatus(status);
+    }
+
+    @Override
+    public List<User> findUsersByRoleAndStatus(Role role, Status status) {
+        return userRepository.findUsersByRoleAndStatus(role, status);
     }
 
     @Override
@@ -74,8 +99,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changeStatus(User user, Status desiredStatus) {
-        user.setStatus(desiredStatus);
-        save(user);
+        if (user.getStatus().equals(Status.UNVERIFIED) && desiredStatus.equals(Status.REMOVED)) {
+            delete(user);
+        }
+        else {
+            user.setStatus(desiredStatus);
+            save(user);
+        }
     }
 
     @Override
@@ -96,10 +126,8 @@ public class UserServiceImpl implements UserService {
 
         for (List<FullUserInfo> block : blocks) {
             boolean checkBlock = checkBlockForStatusChange(block);
-            if (checkBlock) {
-                messages.add(ValidationMessages.OK);
-            } else {
-                messages.add(ValidationMessages.INCORRECT_STATUS_CHANGE_IN_BLOCK);
+            if (!checkBlock) {
+                messages.add(ValidationMessages.INCORRECT_STATUS_CHANGE_IN_BLOCK + block.get(0).getFlatNumber());
             }
 
             isOk &= checkBlock;

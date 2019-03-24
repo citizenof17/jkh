@@ -4,10 +4,10 @@ import com.jkh.backend.model.enums.Role;
 import com.jkh.backend.model.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -38,6 +38,9 @@ public class User implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Indication> indicationList;
 
 //    @ManyToMany(cascade=CascadeType.ALL)
 //    @JoinTable(name = "admin_house",

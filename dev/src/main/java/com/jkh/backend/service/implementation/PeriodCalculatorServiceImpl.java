@@ -24,6 +24,7 @@ public class PeriodCalculatorServiceImpl implements PeriodCalculatorService {
     @Autowired
     private IndicationService indicationService;
 
+    @Override
     public Integer countDaysOverDefaultPeriodOfCountersSendingForUser(User user) {
         Integer defaultPeriodBetweenSendings = Integer.parseInt(commonService.findCommonByKey(
                 CommonKeys.DEFAULT_PERIOD_BETWEEN_COUNTERS_SENDINGS).getValue());
@@ -41,6 +42,12 @@ public class PeriodCalculatorServiceImpl implements PeriodCalculatorService {
             }
         }
 
-        return -100500;
+        return null;
+    }
+
+    @Override
+    public Integer getDefaultPeriodBetweenSendings() {
+        return Integer.parseInt(commonService.findCommonByKey(
+                CommonKeys.DEFAULT_PERIOD_BETWEEN_COUNTERS_SENDINGS).getValue());
     }
 }
