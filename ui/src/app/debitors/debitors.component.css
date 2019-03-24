@@ -1,0 +1,22 @@
+thead {
+    border-bottom: 1px solid black;
+}
+
+table {
+    border: solid 1px black;
+    border-collapse: collapse;
+}
+
+tr td {
+    border-right: 1px solid black;
+}
+
+input[type="submit"] {
+    width: 159px;
+    height: 25px;
+}
+
+input[type="number"] {
+    width: 40px;
+    height: 17px;
+}
