@@ -12,11 +12,15 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import ru.yandex.qatools.allure.annotations.Features;
+import ru.yandex.qatools.allure.annotations.Stories;
 import ru.yandex.qatools.allure.annotations.Title;
 
 import static com.jkh.utils.TestConstants.correctRegisterData;
 import static com.jkh.utils.TestConstants.incorrectRegisterData;
 
+@Features("BackEnd")
+@Stories("Registration API tests")
 @ContextConfiguration(classes = ConfigurationMain.class)
 public class RegisterTest extends AbstractTestNGSpringContextTests {
 

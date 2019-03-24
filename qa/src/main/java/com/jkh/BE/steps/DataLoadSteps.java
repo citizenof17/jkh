@@ -1,6 +1,7 @@
 package com.jkh.BE.steps;
 
 import com.jkh.BE.database.*;
+import com.jkh.BE.models.Counter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.yandex.qatools.allure.annotations.Step;
@@ -34,5 +35,10 @@ public class DataLoadSteps {
         flatDao.deleteAll();
         houseDao.deleteAll();
         tariffDao.deleteAll();
+    }
+
+    @Step("Select {1} last indication")
+    public Integer lastIndication(String login, Counter.CounterType counterType) {
+        return indicationDao.select(login, counterType);
     }
 }

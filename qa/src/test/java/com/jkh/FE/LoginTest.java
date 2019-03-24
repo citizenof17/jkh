@@ -12,13 +12,19 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import ru.yandex.qatools.allure.annotations.Features;
+import ru.yandex.qatools.allure.annotations.Stories;
 import ru.yandex.qatools.allure.annotations.Title;
 
-import static com.jkh.utils.Assertions.checkAddress;
-import static com.jkh.utils.TestConstants.USER_PAGE_ADDRESS;
-import static com.jkh.utils.TestConstants.correctRegisterData;
+import java.util.ArrayList;
 
+import static com.jkh.utils.Assertions.checkAddress;
+import static com.jkh.utils.TestConstants.*;
+
+@Features("FrontEnd")
+@Stories("LoginPage UI tests")
 @ContextConfiguration(classes = ConfigurationMain.class)
 public class LoginTest extends AbstractTestNGSpringContextTests {
 
@@ -37,7 +43,10 @@ public class LoginTest extends AbstractTestNGSpringContextTests {
     @BeforeClass(groups = {"FE", "Login"})
     public void prepareData() throws Exception {
         dataLoadSteps.deleteAllData();
-        authSteps.registerUser((RegisterRequest) correctRegisterData[0][0]);
+        //authSteps.registerUser((RegisterRequest) correctRegisterData[0][0]);
+        for (Object[] objects: correctRegisterData) {
+            authSteps.registerUser((RegisterRequest) objects[0]);
+        }
     }
 
     @BeforeMethod(groups = {"FE", "Login"})
@@ -45,15 +54,32 @@ public class LoginTest extends AbstractTestNGSpringContextTests {
         loginPageSteps.openLoginPage();
     }
 
-    @Test(groups = {"FE", "Login"})
+    @Test(groups = {"FE", "Login"}, dataProvider = "correctSignInData")
     @Title("Signing in with correct credential")
-    public void correctSignIn() {
-        RegisterRequest correctUser = (RegisterRequest) correctRegisterData[0][0];
-        loginPageSteps.fillLoginInputField(correctUser.getLogin());
-        loginPageSteps.fillPasswordInputField(correctUser.getPassword());
-        loginPageSteps.clickSignInButton();
+    public void correctSignIn(RegisterRequest correctUser) {
+        //RegisterRequest correctUser = (RegisterRequest) correctRegisterData[0][0];
+        //loginPageSteps.fillLoginInputField(correctUser.getLogin());
+        //loginPageSteps.fillPasswordInputField(correctUser.getPassword());
+        loginPageSteps.fillCorrectCredential(correctUser);
+        //loginPageSteps.clickSignInButton();
         WaiterUtils.wait(1);
-        checkAddress(USER_PAGE_ADDRESS);
+        checkAddress(HOME_PAGE_ADDRESS);
         homePageSteps.checkWelcomeTitle(correctUser.getName());
+    }
+
+    @Test(groups = {"FE", "Login"})
+    @Title("Checking redirection on registration page")
+    public void redirectOnRegistration() {
+        loginPageSteps.clickRegistrationButton();
+        checkAddress(REGISTRATION_PAGE_ADDRESS);
+    }
+
+    @DataProvider(name = "correctSignInData")
+    public Object[] correctSignInData() {
+        ArrayList<RegisterRequest> registerRequests = new ArrayList<>();
+        for(Object[] objects1: correctRegisterData) {
+            registerRequests.add((RegisterRequest) objects1[0]);
+        }
+        return registerRequests.subList(0, registerRequests.size()).toArray();
     }
 }

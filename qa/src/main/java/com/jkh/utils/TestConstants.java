@@ -1,13 +1,38 @@
 package com.jkh.utils;
 
-import com.jkh.BE.models.Flat;
-import com.jkh.BE.models.RegisterBadResponse;
-import com.jkh.BE.models.RegisterRequest;
-import com.jkh.BE.models.RegisterResponse;
+import com.jkh.BE.models.*;
+
+import java.util.Arrays;
 
 public interface TestConstants {
 
     String R = "Response";
+
+    Counter ELECTRICITY_COUNTER = new Counter(Counter.CounterType.ELECTRICITY);
+    Counter COLD_WATER_COUNTER = new Counter(Counter.CounterType.COLD_WATER);
+    Counter HOT_WATER_COUNTER = new Counter(Counter.CounterType.HOT_WATER);
+
+    IndicationResponse CORRECT_INDICATION_RESPONSE = new IndicationResponse(true, "ok");
+
+    Object[][] correctIndicationData = new Object[][]{
+            {
+                    Arrays.asList(
+                            new IndicationRequest(
+                                    ELECTRICITY_COUNTER,
+                                    10
+                            ),
+                            new IndicationRequest(
+                                    COLD_WATER_COUNTER,
+                                    11
+                            ),
+                            new IndicationRequest(
+                                    HOT_WATER_COUNTER,
+                                    12
+                            )
+                    ),
+                    CORRECT_INDICATION_RESPONSE
+            }
+    };
 
     Object[][] correctRegisterData = new Object[][]{
             {
@@ -123,7 +148,7 @@ public interface TestConstants {
 
     String LOGIN_PAGE_ADDRESS = "/login";
     String REGISTRATION_PAGE_ADDRESS = "/register";
-    String USER_PAGE_ADDRESS = "/home";
+    String HOME_PAGE_ADDRESS = "/home";
     String ADMIN_PAGE_ADDRESS = "/admin";
 
     String HOME_PAGE_WELCOME_TITLE = "Добро пожаловать, %s!";

@@ -1,5 +1,6 @@
 package com.jkh.FE.steps;
 
+import com.jkh.BE.models.RegisterRequest;
 import com.jkh.FE.pages.LoginPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,12 @@ public class LoginPageSteps {
     @Step("Filling password input field on: {0}")
     public void fillPasswordInputField(String password) {
         loginPage.fillPassword(password);
+    }
+
+    public void fillCorrectCredential(RegisterRequest registerRequest) {
+        fillLoginInputField(registerRequest.getLogin());
+        fillPasswordInputField(registerRequest.getPassword());
+        clickSignInButton();
     }
 
     @Step("Clicking on button SignIn")

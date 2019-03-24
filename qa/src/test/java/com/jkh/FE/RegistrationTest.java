@@ -14,12 +14,15 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import ru.yandex.qatools.allure.annotations.Features;
+import ru.yandex.qatools.allure.annotations.Stories;
 import ru.yandex.qatools.allure.annotations.Title;
 
 import static com.jkh.utils.Assertions.checkAddress;
-import static com.jkh.utils.TestConstants.USER_PAGE_ADDRESS;
-import static com.jkh.utils.TestConstants.correctRegisterData;
+import static com.jkh.utils.TestConstants.*;
 
+@Features("FrontEnd")
+@Stories("RegistrationPage UI tests")
 @ContextConfiguration(classes = ConfigurationMain.class)
 public class RegistrationTest extends AbstractTestNGSpringContextTests {
 
@@ -54,7 +57,7 @@ public class RegistrationTest extends AbstractTestNGSpringContextTests {
         registrationPageSteps.fillRegistrationFields(registerUser);
         registrationPageSteps.clickRegistrationButton();
         WaiterUtils.wait(1);
-        checkAddress(USER_PAGE_ADDRESS);
+        checkAddress(HOME_PAGE_ADDRESS);
         homePageSteps.checkWelcomeTitle(registerUser.getName());
     }
 }

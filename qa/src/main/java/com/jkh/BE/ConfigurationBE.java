@@ -2,6 +2,7 @@ package com.jkh.BE;
 
 import com.codahale.metrics.MetricRegistry;
 import com.jkh.BE.clients.AuthClient;
+import com.jkh.BE.clients.IndicationClient;
 import com.jkh.BE.database.*;
 import com.jkh.utils.DefaultLogger;
 import com.jkh.utils.NonFollowedRedirectsClient;
@@ -93,6 +94,17 @@ public class ConfigurationBE {
                 .logger(new DefaultLogger(AuthClient.class))
                 .logLevel(Logger.Level.FULL)
                 .target(AuthClient.class, address);
+    }
+
+    @Bean
+    public IndicationClient indicationClient() {
+        return Feign.builder()
+                .client(new NonFollowedRedirectsClient(null, null))
+                .encoder(new JacksonEncoder())
+                .decoder(new JacksonDecoder())
+                .logger(new DefaultLogger(IndicationClient.class))
+                .logLevel(Logger.Level.FULL)
+                .target(IndicationClient.class, address);
     }
 }
 

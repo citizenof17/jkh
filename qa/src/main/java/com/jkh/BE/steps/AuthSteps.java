@@ -71,4 +71,8 @@ public class AuthSteps {
         sessionId = response.headers().get("set-cookie").toString().split(";")[0].substring(1);
         return body2Object(response, clazz);
     }
+
+    public String getSessionId() {
+        return sessionId;
+    }
 }
