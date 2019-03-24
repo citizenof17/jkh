@@ -1,38 +1,96 @@
 <h3 align="center">Регистрация</h3>
-<form (submit)="registerUser($event)" align="center">
+<div align="center">
+<form (submit)="registerUser($event)" [formGroup]="form">
+  <p>
+    <label>Логин</label>
+    <input type="text" id="username" formControlName="username"
+           [ngStyle]="{'background-color': !form.get('username').pristine && (!form.get('username').valid
+           || msg && msg['login'] != 'ok') ? '#ffcccb' :'white' }">
 
-  <p><label>Логин</label>
-    <input type="text" id="username" required pattern="[a-zA-ZА-Яа-я0-9]{3,}"></p>
+  <div *ngIf="form.get('username').touched && form.get('username').dirty">
+    <div *ngIf="form.get('username').hasError('required')" style="color: #ed2939">Введите имя пользователя.</div>
+    <div *ngIf="form.get('username').hasError('pattern')" style="color: #ed2939">Некорректный формат имени пользователя.</div>
+  </div>
 
-  <p><label>Ф.И.О.</label>
-    <input type="text" id="fullname" required pattern="[a-zA-ZА-Яа-я\s]{3,}"></p>
+  <div *ngIf="msg && msg['login'] != 'ok'" style="color: #ed2939" align="center">
+    <p>{{ msg['login'] }}
+  </div>
 
+  <p>
+    <label>Ф.И.О.</label>
+    <input type="text" id="fullname" formControlName="fullname"
+           [ngStyle]="{'background-color': form.get('fullname').pristine || form.get('fullname').valid ? 'white' : '#ffcccb'}">
 
-  <p><label>Номер квартиры</label>
-    <input type="text" id="flatnumber" required pattern="[0-9]{1,}"></p>
+  <div *ngIf="form.get('fullname').touched && form.get('fullname').dirty">
+    <div *ngIf="form.get('fullname').hasError('required')" style="color: #ed2939">Введите Ф.И.О.</div>
+    <div *ngIf="form.get('fullname').hasError('pattern')" style="color: #ed2939">Некорректный формат Ф.И.О.</div>
+  </div>
 
-  <p><label>Почта</label>
-    <input type="email" id="email_address" required></p>
+  <p>
+    <label>Номер квартиры</label>
+    <input type="number" min="1" id="flatnumber" formControlName="flatnumber"
+           [ngStyle]="{'background-color': form.get('flatnumber').pristine || form.get('flatnumber').valid ? 'white' : '#ffcccb'}">
 
+  <div *ngIf="form.get('flatnumber').touched && form.get('flatnumber').dirty">
+    <div *ngIf="form.get('flatnumber').hasError('required')" style="color: #ed2939">Введите номер квартиры.</div>
+    <div *ngIf="form.get('flatnumber').hasError('min')" style="color: #ed2939">Некорректный номер квартиры.</div>
+  </div>
 
-  <p><label>Телефон*</label>
-    <input type="text" id="phone_number" required pattern="\+[0-9]{11}"></p>
+  <p>
+    <label>Электронная почта</label>
+    <input type="email" min="1" id="email" formControlName="email"
+           [ngStyle]="{'background-color':  !form.get('email').pristine && (!form.get('email').valid
+           || msg && msg['email'] != 'ok')? '#ffcccb' : 'white'}">
 
+  <div *ngIf="form.get('email').touched && form.get('email').dirty">
+    <div *ngIf="form.get('email').hasError('required')" style="color: #ed2939">Введите адрес электронной почты.</div>
+    <div *ngIf="form.get('email').hasError('email')" style="color: #ed2939">Некорректный формат адреса электронной почты.</div>
+  </div>
 
-  <p><label>Пароль**</label>
-    <input type="password" id="password" required pattern="(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[_!-])[0-9a-zA-Z_!-]{8,}"></p>
+  <div *ngIf="msg && msg['email'] != 'ok'" style="color: #ed2939" align="center">
+    <p>{{ msg['email'] }}
+  </div>
 
+  <p>
+    <label title="В формате +XXXXXXXXXXX">Номер телефона</label>
+    <input type="text" min="1" id="phonenumber" formControlName="phonenumber"
+           [ngStyle]="{'background-color': !form.get('phonenumber').pristine && (!form.get('phonenumber').valid
+           || msg && msg['phone'] != 'ok')? '#ffcccb' : 'white'}">
 
-  <p><label>Повторите пароль</label>
-    <input type="password" id="confirm_password" required></p>
+  <div *ngIf="form.get('phonenumber').touched && form.get('phonenumber').dirty">
+    <div *ngIf="form.get('phonenumber').hasError('required')" style="color: #ed2939">Введите номер телефона.</div>
+    <div *ngIf="form.get('phonenumber').hasError('pattern')" style="color: #ed2939">Некорректный формат номера телефона.</div>
+  </div>
 
-  <p><input type="submit" value="Зарегистрироваться"></p>
+  <div *ngIf="msg && msg['phone'] != 'ok'" style="color: #ed2939" align="center">
+    <p>{{ msg['phone'] }}
+  </div>
+
+  <p>
+    <label
+      title="Длина пароля должна составлять не менее 8 символов и содержать по крайней мере одну строчную и одну
+            прописную английские буквы, одну цифру и один специальный символ (_, -, !) без пробелов."
+    >Пароль</label>
+    <input type="password" id="password" formControlName="password"
+           [ngStyle]="{'background-color': form.get('password').pristine || form.get('password').valid ? 'white' : '#ffcccb'}">
+
+  <div *ngIf="form.get('password').touched && form.get('password').dirty">
+    <div *ngIf="form.get('password').hasError('required')" style="color: #ed2939">Введите пароль.</div>
+    <div *ngIf="form.get('password').hasError('pattern')" style="color: #ed2939">Некорректный формат пароля.</div>
+  </div>
+
+  <p>
+    <label>Повторите пароль</label>
+    <input type="password" id="confirmpassword" formControlName="confirmpassword"
+           [ngStyle]="{'background-color': form.get('confirmpassword').pristine || form.get('confirmpassword').valid ? 'white' : '#ffcccb'}">
+
+  <div *ngIf="form.get('confirmpassword').touched && form.get('confirmpassword').dirty">
+    <div *ngIf="form.get('password').hasError('required')" style="color: #ed2939">Введите пароль.</div>
+    <div style="color: #ed2939">{{ pmatch }}</div>
+  </div>
+
+  <p><input type="submit" [disabled]="form.invalid" value="Зарегистрироваться"></p>
+
 </form>
-
-<p>*В формате +XXXXXXXXXXX</p>
-
-<p>**Длина пароля должна составлять не менее 8 символов и содержать по крайней мере одну
-  строчную и одну прописную английские буквы, одну цифру и один специальный символ (_, -, !) без пробелов.</p>
+</div>
 <hr>
-
-

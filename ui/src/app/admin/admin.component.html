@@ -1,65 +1,98 @@
 <p align="right">{{ greetingMessage }} | <a href (click)="logout($event)">Выйти</a></p>
 
+<p align="right">
+    <a [routerLink]="['//edit_inhabitants']" routerLinkActive="router-link-active">Список пользователей по квартирам</a>
+    &nbsp;&nbsp;&nbsp;
+    <a [routerLink]="['//did_not_send']" routerLinkActive="router-link-active">Данные о не подававших показания ({{ countWhoDidNotSend }})</a>
+    &nbsp;&nbsp;&nbsp;
+    <a [routerLink]="['//newcomers']" routerLinkActive="router-link-active">Данные о неподтвержденных пользователях ({{ countNewcomers }})</a>
+</p>
+<hr>
 <table width="95%" cellspacing="0" cellpadding="5" align="center">
     <tr>
-        <td width="25%" valign="top" align = "left">
+        <td width="30%" valign="top" align = "left">
+            <h3>Отчетность</h3>
+            <form (submit)="reportAll($event)" [formGroup]="flatForm">
+                <p>1. Выберите статус пользователей:</p>
+                <p><input class="utype" name="utype" type="radio" value="null" checked>все</p>
+                <p><input class="utype" name="utype" type="radio" value="ACTIVE">активные</p>
+                <p><input class="utype" name="utype" type="radio" value="INACTIVE">неактивные</p>
+                <p><input class="utype" name="utype" type="radio" value="REMOVED">удаленные</p>
 
-            <form (submit)="reportAll($event)">
-                <p>Квартира (необязательно): <input type="number" id="flat"></p>
+                <p>2. Квартира (необязательно):&nbsp;&nbsp;<input type="number" id="flatNum" name="flatNum" class="special"  min="1" formControlName="flatNum"
+                    [ngStyle]="{'background-color': !flatForm.get('flatNum').pristine &&
+                    (!flatForm.get('flatNum').valid || errorMessage.length > 0)? '#ffcccb' : 'white'}"></p>
 
-                <p>Выберите тип отчета:</p>
-                <p><input name="repType" type="radio" value="ALL" checked (change)="hideManual()">за весь период</p>
-                <p><input name="repType" type="radio" value="THIS_YEAR" (change)="hideManual()">за этот год</p>
-                <p><input name="repType" type="radio" value="THIS_MONTH" (change)="hideManual()">за этот месяц</p>
-                <p><input name="repType" type="radio" value="MANUAL" (change)="showManual()">указать свой период</p>
-
-                <div id="div1" class="hide">
-                    <p align="center"><input type="date" id="left-b"></p>
-                    <p align="center"><input type="date" id="right-b"></p>
+                <div *ngIf="flatForm.get('flatNum').touched && flatForm.get('flatNum').dirty">
+                    <div *ngIf="flatForm.get('flatNum').hasError('min')" style="color: #ed2939">Некорректное значение.</div>
                 </div>
 
-                <p align="center"><input width="50px" type="submit" value="Построить отчет"></p>
+                <p>3. Выберите период отчетности:</p>
+                <div id="all">
+                    <p><input class="rrange" name="rrange" type="radio" value="ALL" checked (change)="hideManual()">за весь период</p>
+                </div>
+                <p><input class="rrange" name="rrange" type="radio" value="THIS_YEAR" (change)="hideManual()">за этот год</p>
+                <p><input class="rrange" name="rrange" type="radio" value="THIS_MONTH" (change)="hideManual()">за этот месяц</p>
+                <p><input class="rrange" name="rrange" type="radio" value="MANUAL" (change)="showManual()">указать свой период</p>
+
+                <div id="div1" class="hide">
+                    <p><input type="date" id="left-b"></p>
+                    <p><input type="date" id="right-b"></p>
+                </div>
+
+                <p><input type="submit" value="Построить отчет"></p>
+
+                <div *ngIf="errorMessage">
+                    <p style="color: #ed2939">{{ errorMessage }}</p>
+                </div>
+
             </form>
         </td>
 
+
         <td valign="top" align = "center">
             <ng-container
-                    *ngIf="report['rows'] != null && report['rows'].length ; then build_report; else dont_build">
+                    *ngIf="type == 0 ; then dont_build; else build_report">
             </ng-container>
 
             <ng-template #build_report>
-            <table>
-                <caption>{{ report['message']}}</caption>
+                <p align="center">{{ report['message']}}</p>
+                <div *ngIf="report['message'] != 'Данных за указанный период нет'">
+                <table>
                     <thead>
-                        <tr align="center">
-                            <td class="vl">Дата</td>
-                            <td>Квартира</td>
-                            <td>Электричество</td>
-                            <td>Горячая вода</td>
-                            <td>Холодная вода</td>
-                        </tr>
+                    <tr align="center">
+                        <td class="vl">Квартира</td>
+                        <td>Электричество</td>
+                        <td>Горячая вода</td>
+                        <td>Холодная вода</td>
+                        <td>Дата</td>
+                        <td>Прошло дней</td>
+                    </tr>
                     </thead>
                     <tr *ngFor="let line of report['rows']" align="center">
-                        <td>{{ line['date'] }}</td>
                         <td>{{ line['flat']['number'] }}</td>
                         <td>{{ line['indicationMap']["ELECTRICITY"]["value"]}}</td>
                         <td>{{ line['indicationMap']["HOT_WATER"]["value"]}}</td>
                         <td>{{ line['indicationMap']["COLD_WATER"]["value"]}}</td>
+                        <td>{{ line['date'] }}</td>
+                        <td>{{ line['daysPassed'] }}</td>
                     </tr>
 
                     <tr align="center" class="last">
                         <td>Всего</td>
-                        <td> </td>
                         <td>{{ report['total']["ELECTRICITY"]["value"] }}</td>
                         <td>{{ report['total']["HOT_WATER"]["value"] }}</td>
                         <td>{{ report['total']["COLD_WATER"]["value"] }}</td>
+                        <td> </td>
+                        <td></td>
                     </tr>
-            </table>
+                </table>
+                </div>
             </ng-template>
+
             <ng-template #dont_build>
-                {{ report['message']}}
+                <p>Здесь будут отображаться Ваши отчеты.</p>
             </ng-template>
         </td>
-
     </tr>
 </table>

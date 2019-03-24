@@ -4,12 +4,18 @@ label {
     text-align: left;
 }
 
-fieldset {
-    width: 260px;
+input[type="submit"] {
+    width: 159px;
+    height: 25px;
 }
 
-input[type="submit"] {
-    width: 143px;
+input[type="number"] {
+    width: 155px;
+    height: 17px;
+}
+
+input[type="date"] {
+    width: 155px;
 }
 
 .hide {
@@ -26,7 +32,7 @@ td table {
 }
 
 td tr td {
-    width: 150px;
+    width: 10%;
     border-right: 1px solid black;
 }
 

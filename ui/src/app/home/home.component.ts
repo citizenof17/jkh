@@ -3,6 +3,7 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import { Router } from '@angular/router';
 import {CookieService} from "ngx-cookie-service";
 import {environment} from "../../environments/environment";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-home',
@@ -11,10 +12,20 @@ import {environment} from "../../environments/environment";
 })
 export class HomeComponent implements OnInit {
 
+  form: FormGroup;
   greetingMessage = '';
+  errorMessage: [];
+  dateError: String;
+  status = '';
+  notification = 0;
+  infoMessage: any = {
+      msg: '',
+      contacts: {}
+  };
   report: any = {
       message: "Здесь будут отображаться отчеты о Ваших показаниях.",
   };
+
 
   constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) {
     this.greetingMessage = '';
@@ -23,7 +34,26 @@ export class HomeComponent implements OnInit {
     }).subscribe(
         data => {
             if (data['role'] == 'USER') {
-              this.greetingMessage = 'Добро пожаловать, ' + data['name'] + '!';
+              this.status = data['status'];
+              if (this.status == 'ACTIVE' || this.status == 'INACTIVE') {
+                  this.greetingMessage = data['name'];
+                  this.notification = data['daysOverDefaultPeriodOfCountersSending'];
+              } else {
+                  if (this.status == 'REMOVED') {
+                      this.infoMessage['msg'] = 'Ваш аккаунт был удален. Для информации свяжитесь с администратором.';
+                  }
+                  if (this.status == 'UNVERIFIED') {
+                      this.infoMessage['msg'] = 'Ваш аккаунт не был подтвержден. Для подтверждения свяжитесь с администратором.';
+                  }
+
+                  this.http.get(environment.backend + 'getAdminContacts', {
+                      withCredentials: true
+                  }).subscribe(
+                      data => {
+                          this.infoMessage['contacts'] = data;
+                      }
+                  );
+              }
             } else {
               this.router.navigate(['admin']);
             }
@@ -35,22 +65,30 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+      this.form = new FormGroup({
+          electr: new FormControl('', [Validators.required,
+              Validators.min(0)]),
+          hot: new FormControl('', [Validators.required,
+              Validators.min(0)]),
+          cold: new FormControl('', [Validators.required,
+              Validators.min(0)])
+      });
   }
 
   logout(event) {
-    event.preventDefault();
-    this.http.get(environment.backend + 'logout', {
-        observe: "response" as "response",
-        withCredentials: true
-    }).subscribe();
-    this.router.navigate(['login']);
+      event.preventDefault();
+      this.http.get(environment.backend + 'logout', {
+          observe: "response" as "response",
+          withCredentials: true
+      }).subscribe();
+      this.router.navigate(['login']);
   }
 
   sendIndication(event){
-    event.preventDefault();
-    const target = event.target;
+      event.preventDefault();
+      const target = event.target;
 
-    this.http.post(environment.backend + 'sendIndications',
+      this.http.post(environment.backend + 'sendIndications',
             [
                 {
                     counter: {type: 'ELECTRICITY'},
@@ -66,26 +104,16 @@ export class HomeComponent implements OnInit {
                 }
             ], {
         withCredentials: true
-    }).subscribe(
+      }).subscribe(
         _ => {
+            this.errorMessage = [];
             window.alert('Данные успешно отправлены.');
+
         } ,
         err => {
-            let temp = err.error.messages;
-            if (temp.length > 1) {
-                let msg: String = '';
-                for (let i in temp) {
-                    if (temp[i] !== 'ok') {
-                        msg = msg + temp[i] + ' ' + (+i + 1) + '.\n';
-                    }
-                }
-                window.alert(msg);
-            } else {
-                window.alert(temp[0]);
-            }
+            this.errorMessage = err.error.messages;
         }
-
-    );
+      );
   }
 
   showManual() {
@@ -125,9 +153,10 @@ export class HomeComponent implements OnInit {
         }).subscribe(
             data => {
                 this.report = data;
+                this.dateError = '';
             },
             err => {
-                window.alert(err.error.message);
+                this.dateError = err.error.message;
             }
         );
   }

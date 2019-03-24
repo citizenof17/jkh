@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { $ } from 'protractor';
 import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
-import { environment} from "../../environments/environment";
+import {environment} from "../../environments/environment";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-register',
@@ -12,9 +13,31 @@ import { environment} from "../../environments/environment";
 })
 export class RegisterComponent implements OnInit {
 
-  constructor(private router: Router, private http: HttpClient, private cookieService : CookieService) { }
+  form: FormGroup;
+  pmatch: String;
+  msg: any;
 
-  ngOnInit() {
+  constructor(private router: Router, private http: HttpClient, private cookieService : CookieService,
+              private formBuilder: FormBuilder) {}
+
+  ngOnInit(){
+      this.form = new FormGroup({
+          username: new FormControl('', [Validators.required,
+              Validators.pattern("[a-zA-ZА-Яа-я0-9]{3,}")]),
+          fullname: new FormControl('', [Validators.required,
+              Validators.pattern("[a-zA-ZА-Яа-я ]{3,}")]),
+          flatnumber: new FormControl('', [Validators.required,
+              Validators.min(1)]),
+          email: new FormControl('', [Validators.required,
+              Validators.email]),
+          phonenumber: new FormControl('', [Validators.required,
+              Validators.pattern("[\+][0-9]{11}")]),
+          password: new FormControl('', [Validators.required,
+              Validators.pattern("(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[_!-])[0-9a-zA-Z_!-]{8,}")]),
+          confirmpassword: new FormControl('', [Validators.required])
+      });
+
+      console.log(this.msg && this.msg['login'] != 'ok');
   }
 
   registerUser(event) {
@@ -22,9 +45,10 @@ export class RegisterComponent implements OnInit {
     const target = event.target;
 
     const password = target.querySelector('#password').value;
-    const passwordConfirm = target.querySelector('#confirm_password').value;
+    const passwordConfirm = target.querySelector('#confirmpassword').value;
 
     if (passwordConfirm === password) {
+        this.pmatch = '';
         this.http.post(environment.backend + 'register', {
             login: target.querySelector('#username').value,
             name: target.querySelector('#fullname').value,
@@ -32,8 +56,8 @@ export class RegisterComponent implements OnInit {
                 {
                     number: target.querySelector('#flatnumber').value
                 },
-            email: target.querySelector('#email_address').value,
-            phone: target.querySelector('#phone_number').value,
+            email: target.querySelector('#email').value,
+            phone: target.querySelector('#phonenumber').value,
             password: password
         }, {
             observe: 'response' as 'response',
@@ -44,12 +68,14 @@ export class RegisterComponent implements OnInit {
                 this.router.navigate(['home']);
         },
         err => {
-          window.alert(err.error.message);
+          this.msg = err.error;
         }
        );
     } else {
-        window.alert('Введенные пароли не совпадают.');
+        this.pmatch = 'Введенные пароли не совпадают.';
     }
   }
 
 }
+
+

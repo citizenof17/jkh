@@ -1,32 +1,89 @@
-<p align="right">{{ greetingMessage }} | <a href (click)="logout($event)">Выйти</a></p>
+<div *ngIf="status == 'REMOVED' || status == 'UNVERIFIED'; else elseBlock">
+      <p>{{ infoMessage.msg }}
+      <br>
+      <p>Имя: {{ infoMessage.contacts.name}}
+      <p>Электронная почта: {{ infoMessage.contacts.email}}
+      <p>Телефон: {{ infoMessage.contacts.phone}}
+      <p><a [routerLink]="['//login']" routerLinkActive="router-link-active">Вернуться на страницу авторизации</a></p>
+</div>
 
-<table width="100%" cellspacing="0" cellpadding="5" align="center">
+<ng-template #elseBlock>
+<p align="right">{{ greetingMessage }} | <a href (click)="logout($event)">Выйти</a></p>
+<p>
+    <div *ngIf="notification > 0 && status == 'ACTIVE'" align="right" style="color: #ed2939">
+        Вы просрочили отправку показаний на {{ notification }} дня(ей).
+    </div>
+<hr>
+<table width="95%" cellspacing="0" cellpadding="5" align="center">
   <tr>
     <td width="25%" valign="top" align = "left">
-      <form align="center" (submit)="sendIndication($event)">
-        <fieldset>
-          <legend>Отправка показаний счетчиков</legend>
-          <p><input type="number"  placeholder="Электричество" id="electr" required></p>
-          <p><input type="number" placeholder="Горячая вода" id="hot" required></p>
-          <p><input type="number" placeholder="Холодная вода" id="cold" required></p>
-          <p><button type="submit" value="">Отправить показания</button></p>
-        </fieldset>
-      </form>
+      <div align="left">
+        <h3>Отправка показаний счетчиков</h3>
+        <form (submit)="sendIndication($event)" [formGroup]="form">
+            <p>Введите показания счетчиков:</p>
+            <p><input type="number"  min="0"  placeholder="Электричество" id="electr" formControlName="electr"
+               [ngStyle]="{'background-color': !form.get('electr').pristine && (!form.get('electr').valid
+                          || errorMessage && errorMessage[0] != 'ok')? '#ffcccb' : 'white'}"
+               [attr.disabled]="status == 'INACTIVE' || null">
+
+            <div *ngIf="form.get('electr').touched && form.get('electr').dirty">
+              <div *ngIf="form.get('electr').hasError('required')" style="color: #ed2939">Введите показание.</div>
+              <div *ngIf="form.get('electr').hasError('min')" style="color: #ed2939">Некорректное показание.</div>
+            </div>
+
+            <p><input type="number"  min="0"  placeholder="Горячая вода" id="hot" formControlName="hot"
+                      [ngStyle]="{'background-color': !form.get('hot').pristine && (!form.get('hot').valid
+                          || errorMessage && errorMessage[1] != 'ok')? '#ffcccb' : 'white'}"
+                [attr.disabled]="status == 'INACTIVE' || null">
+
+            <div *ngIf="form.get('hot').touched && form.get('hot').dirty">
+              <div *ngIf="form.get('hot').hasError('required')" style="color: #ed2939">Введите показание.</div>
+              <div *ngIf="form.get('hot').hasError('min')" style="color: #ed2939">Некорректное показание.</div>
+            </div>
+
+            <p><input type="number"  min="0"  placeholder="Холодная вода" id="cold" formControlName="cold"
+                      [ngStyle]="{'background-color': !form.get('cold').pristine && (!form.get('cold').valid
+                          || errorMessage && errorMessage[2] != 'ok')? '#ffcccb' : 'white'}"
+                 [attr.disabled]="status == 'INACTIVE' || null">
+
+            <div *ngIf="form.get('cold').touched && form.get('cold').dirty">
+              <div *ngIf="form.get('cold').hasError('required')" style="color: #ed2939">Введите показание.</div>
+              <div *ngIf="form.get('cold').hasError('min')" style="color: #ed2939">Некорректное показание.</div>
+            </div>
+
+            <p><input type="submit" [disabled]="form.invalid || status == 'INACTIVE'" value="Отправить показания"></p>
+
+            <div *ngIf="errorMessage" style="color: #ed2939">
+                <div *ngFor="let msg of errorMessage; index as i">
+                    <div *ngIf="msg != 'ok'">
+                        <p>{{ msg }} {{ i + 1}}.</p>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+      </div>
 
       <br>
       <form (submit)="reportAll($event)">
-        <p>Выберите тип отчета:</p>
+        <h3>Отчетность</h3>
+        <p>Выберите период отчетности:</p>
         <p><input name="repType" type="radio" value="ALL" checked (change)="hideManual()">за весь период</p>
         <p><input name="repType" type="radio" value="THIS_YEAR" (change)="hideManual()">за этот год</p>
         <p><input name="repType" type="radio" value="THIS_MONTH" (change)="hideManual()">за этот месяц</p>
         <p><input name="repType" type="radio" value="MANUAL" (change)="showManual()">указать свой период</p>
 
         <div id="div1" class="hide">
-          <p align="center"><input type="date" id="left-b"></p>
-          <p align="center"><input type="date" id="right-b"></p>
+            <p><input type="date" id="left-b"></p>
+            <p><input type="date" id="right-b"></p>
         </div>
 
-        <p align="center"><input width="50px" type="submit" value="Построить отчет"></p>
+        <p><input width="50px" type="submit" value="Построить отчет"></p>
+
+        <div *ngIf="dateError">
+            <p style="color: #ed2939">{{ dateError }}</p>
+        </div>
+
       </form>
 
 
@@ -37,6 +94,7 @@
       </ng-container>
 
       <ng-template #build_report>
+        <br>
         <table>
           <caption>{{ report['message']}}</caption>
           <thead>
@@ -63,9 +121,11 @@
         </table>
       </ng-template>
       <ng-template #dont_build>
+        <br>
         {{ report['message']}}
       </ng-template>
     </td>
 
   </tr>
 </table>
+</ng-template>

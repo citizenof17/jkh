@@ -1,7 +1,3 @@
-button {
-    width: 200px;
-}
-
 td thead {
     border-bottom: 1px solid black;
 }
@@ -12,7 +8,7 @@ td table {
 }
 
 td tr td {
-    width: 150px;
+    width: 10%;
     border-right: 1px solid black;
 }
 
@@ -24,11 +20,16 @@ td tr td {
     display: none;
 }
 
-input[type="number"] {
-    width: 50px;
+input[type="submit"] {
+    width: 159px;
+    height: 25px;
 }
 
+input[type="date"] {
+    width: 155px;
+}
 
-input[type="submit"] {
-    width: 143px;
+.special {
+    width: 40px;
+    height: 17px;
 }

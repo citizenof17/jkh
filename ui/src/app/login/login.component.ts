@@ -4,23 +4,35 @@ import { $ } from 'protractor';
 import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
 import { environment} from "../../environments/environment";
+import {FormGroup, Validators, FormBuilder, FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+
 export class LoginComponent implements OnInit {
 
-  constructor(private router: Router, private http: HttpClient, private cookieService : CookieService) {
-  }
+  form: FormGroup;
+  msg: String;
+
+  constructor(private router: Router, private http: HttpClient,
+                private cookieService : CookieService, private formBuilder: FormBuilder) {}
 
   ngOnInit() {
+      this.form = new FormGroup({
+          username: new FormControl('', [Validators.required,
+                                    Validators.pattern("[a-zA-ZА-Яа-я0-9]{3,}")]),
+          password: new FormControl('', [Validators.required,
+               Validators.pattern("(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[_!-])[0-9a-zA-Z_!-]{8,}")])
+      });
   }
 
   loginUser(event) {
     event.preventDefault();
     const target = event.target;
+
     const username = target.querySelector('#username').value;
     const password = target.querySelector('#password').value;
 
@@ -35,12 +47,12 @@ export class LoginComponent implements OnInit {
             this.cookieService.set("JSESSIONID", data.headers.get("Set-Cookie"));
             if (data.body['role'] == 'USER') {
               this.router.navigate(['home']);
-            } else {
+            } else if (data.body['role'] == 'ADMIN') {
               this.router.navigate(['admin']);
             }
       },
       err => {
-        window.alert(err.error.message);
+        this.msg = err.error.message;
       }
      );
   }

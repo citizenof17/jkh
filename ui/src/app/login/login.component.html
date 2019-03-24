@@ -1,8 +1,30 @@
 ﻿<h3 align="center">Авторизация</h3>
-<form (submit)="loginUser($event)" align="center">
-    <p><input type="text" placeholder="Логин" id="username" required pattern="[a-zA-ZА-Яа-я0-9]{3,}"></p>
-    <p><input type="password" placeholder="Пароль" id="password" required pattern="(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[_!-])[0-9a-zA-Z_!-]{8,}"></p>
-    <p><input type="submit" value="Войти"></p>
+<div align="center">
+<form (submit)="loginUser($event)" [formGroup]="form">
+    <p>
+        <input type="text" placeholder="Логин" id="username" formControlName="username"
+        [ngStyle]="{'background-color': form.get('username').pristine || form.get('username').valid ? 'white' : '#ffcccb'}">
+
+        <div *ngIf="form.get('username').touched && form.get('username').dirty">
+            <div *ngIf="form.get('username').hasError('required')" style="color: #ed2939">Введите имя пользователя.</div>
+            <div *ngIf="form.get('username').hasError('pattern')" style="color: #ed2939">Некорректный формат имени пользователя.</div>
+        </div>
+
+    <p>
+        <input type="password" placeholder="Пароль" id="password" formControlName="password"
+        [ngStyle]="{'background-color': form.get('password').pristine || form.get('password').valid ? 'white' : '#ffcccb'}">
+
+        <div *ngIf="form.get('password').touched && form.get('password').dirty">
+            <div *ngIf="form.get('password').hasError('required')" style="color: #ed2939">Введите пароль.</div>
+            <div *ngIf="form.get('password').hasError('pattern')" style="color: #ed2939">Некорректный формат пароля.</div>
+        </div>
+
+    <p><input type="submit" [disabled]="form.invalid" value="Войти"></p>
+
+    <p><div style="color: #ed2939">{{ msg }}</div>
+
     <p><a [routerLink]="['//register']" routerLinkActive="router-link-active">Зарегистрироваться</a></p>
+
 </form>
+</div>
 <hr>

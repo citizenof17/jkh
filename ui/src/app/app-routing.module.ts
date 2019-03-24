@@ -4,7 +4,10 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
-import {AdminComponent} from "./admin/admin.component";
+import { AdminComponent } from "./admin/admin.component";
+import { DebitorsComponent} from "./debitors/debitors.component";
+import { NewcomersComponent } from "./newcomers/newcomers.component";
+import { InhabitantsComponent } from "./inhabitants/inhabitants.component";
 
 const routes: Routes = [
         {
@@ -27,8 +30,19 @@ const routes: Routes = [
         {
             path: 'register',
             component: RegisterComponent
+        },
+        {
+            path: 'did_not_send',
+            component: DebitorsComponent
+        },
+        {
+            path: 'newcomers',
+            component: NewcomersComponent
+        },
+        {
+            path: 'edit_inhabitants',
+            component: InhabitantsComponent
         }
-
     ];
 
 @NgModule({

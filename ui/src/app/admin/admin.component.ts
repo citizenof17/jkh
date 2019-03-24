@@ -3,27 +3,34 @@ import {HttpClient, HttpResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {CookieService} from "ngx-cookie-service";
 import {environment} from "../../environments/environment";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css']
 })
+
 export class AdminComponent implements OnInit {
 
-  greetingMessage = '';
-  report: any = {
-      message: "Здесь будут отображаться Ваши отчеты."
-  };
+  greetingMessage: String;
+  countNewcomers: Number;
+  countWhoDidNotSend: Number;
+  flatForm: FormGroup;
+  errorMessage: String = '';
+  type = 0;
+  report: any = {};
 
   constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) {
-    this.greetingMessage = '';
     this.http.get(environment.backend + 'userInfo', {
         withCredentials: true
     }).subscribe(
         data => {
           if (data['role'] == 'ADMIN') {
-              this.greetingMessage = 'Добро пожаловать, администратор ' + data['name'] + '!';
+              this.greetingMessage = 'Администратор ' + data['name'];
+              this.countNewcomers = data['countNewcomers'];
+              this.countWhoDidNotSend = data['countWhoDidNotSend'];
+              this.type = 0;
           } else {
               this.router.navigate(['home']);
           }
@@ -35,15 +42,19 @@ export class AdminComponent implements OnInit {
   }
 
   ngOnInit() {
+      this.flatForm = new FormGroup({
+              flatNum: new FormControl('', [Validators.min(1)])
+          }
+      );
   }
 
   logout(event) {
-    event.preventDefault();
-    this.http.get(environment.backend + 'logout', {
-        observe: "response" as "response",
-        withCredentials: true
-    }).subscribe();
-    this.router.navigate(['login']);
+      event.preventDefault();
+        this.http.get(environment.backend + 'logout', {
+            observe: "response" as "response",
+            withCredentials: true
+      }).subscribe();
+      this.router.navigate(['login']);
   }
 
   showManual() {
@@ -51,33 +62,43 @@ export class AdminComponent implements OnInit {
   }
 
   hideManual() {
-        document.getElementById('div1').style.display = 'none';
+      document.getElementById('div1').style.display = 'none';
   }
 
   reportAll(event) {
       event.preventDefault();
       const target = event.target;
-      let flatNum = target.querySelector("#flat").value;
-      let a = target.getElementsByTagName('input');
+      let flatNum = target.querySelector("#flatNum").value;
 
-      let repType: String = "";
-      for (let i of a) {
+      let b = target.getElementsByClassName("rrange");
+      let c = target.getElementsByClassName("utype");
+
+      let rRange: String = "";
+      for (let i of b) {
+          if (i.checked) { rRange = i.value; }
+      }
+
+      let uType: String = "";
+      for (let i of c) {
           if (i.checked) {
-              repType = i.value;
+              uType = i.value;
           }
       }
 
+
       let q = {};
-      if (repType == "MANUAL") {
+      if (rRange == "MANUAL") {
         q = {
+          status: uType == 'null' ? null : uType,
           leftDate: target.querySelector("#left-b").value,
           rightDate: target.querySelector("#right-b").value,
-          flat: { number: flatNum}
+          flat: { number: flatNum }
         };
       } else {
           q = {
-              standardPeriod: repType,
-              flat: {number: flatNum}
+              status: uType == 'null' ? null : uType,
+              standardPeriod: rRange,
+              flat: { number: flatNum }
           }
       }
 
@@ -85,10 +106,14 @@ export class AdminComponent implements OnInit {
           withCredentials: true
       }).subscribe(
           data => {
-                this.report = data;
+              this.errorMessage = '';
+              this.type = 1;
+              this.report = data;
+
           },
           err => {
-              window.alert(err.error.message);
+              this.errorMessage = err.error.message;
+              this.type = 0;
           }
       );
   }

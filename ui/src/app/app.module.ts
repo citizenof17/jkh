@@ -8,6 +8,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { RegisterComponent } from './register/register.component';
 import { AdminComponent } from './admin/admin.component';
 import {CookieService} from "ngx-cookie-service";
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { DebitorsComponent } from './debitors/debitors.component';
+import { NewcomersComponent } from './newcomers/newcomers.component';
+import { InhabitantsComponent } from './inhabitants/inhabitants.component';
 
 @NgModule({
   declarations: [
@@ -15,10 +19,15 @@ import {CookieService} from "ngx-cookie-service";
     LoginComponent,
     HomeComponent,
     RegisterComponent,
-    AdminComponent
+    AdminComponent,
+    DebitorsComponent,
+    NewcomersComponent,
+    InhabitantsComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
   ],
