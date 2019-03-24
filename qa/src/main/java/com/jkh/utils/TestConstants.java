@@ -20,8 +20,8 @@ public interface TestConstants {
                             "oleg@mail.ru"
                     ),
                     new RegisterResponse(
-                            "USER",
                             "Олег Раскин",
+                            "USER",
                             false
                     )
             },
@@ -35,8 +35,8 @@ public interface TestConstants {
                             "katya@gmail.com"
                     ),
                     new RegisterResponse(
-                            "USER",
                             "Екатерина Астровская",
+                            "USER",
                             false
                     )
             }

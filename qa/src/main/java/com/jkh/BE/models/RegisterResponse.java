@@ -11,9 +11,9 @@ public class RegisterResponse {
     public RegisterResponse() {
     }
 
-    public RegisterResponse(String role, String name, Boolean status) {
-        this.role = role;
+    public RegisterResponse(String name, String role, Boolean status) {
         this.name = name;
+        this.role = role;
         this.status = status;
     }
 

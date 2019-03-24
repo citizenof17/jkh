@@ -3,6 +3,7 @@ package com.jkh.BE;
 import com.codahale.metrics.MetricRegistry;
 import com.jkh.BE.clients.AuthClient;
 import com.jkh.BE.database.*;
+import com.jkh.utils.DefaultLogger;
 import com.jkh.utils.NonFollowedRedirectsClient;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import feign.Feign;
@@ -89,7 +90,7 @@ public class ConfigurationBE {
                 .client(new NonFollowedRedirectsClient(null, null))
                 .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
-                .logger(new Slf4jLogger(AuthClient.class))
+                .logger(new DefaultLogger(AuthClient.class))
                 .logLevel(Logger.Level.FULL)
                 .target(AuthClient.class, address);
     }

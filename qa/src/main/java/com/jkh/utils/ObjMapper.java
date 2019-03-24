@@ -14,7 +14,7 @@ public class ObjMapper {
         return objectMapper.readValue(Util.toString(response.body().asReader()), currentClass);
     }
 
-    public static <T> String objest2Json(T object) throws IOException {
+    public static <T> String object2Json(T object) throws IOException {
         return objectMapper.writerWithDefaultPrettyPrinter()
                 .writeValueAsString(object);
     }
