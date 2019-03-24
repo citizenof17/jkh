@@ -1,0 +1,50 @@
+<p align="right">{{ greetingMessage }} | <a href (click)="logout($event)">Выйти</a></p>
+<a [routerLink]="['//admin']" routerLinkActive="router-link-active">Вернуться на главную</a>
+
+<hr>
+
+<form (submit)="changeNotPeriod($event)" [formGroup]="form">
+  <h3>Настройки срока подачи показаний</h3>
+  <p>Выберите срок подачи показаний:&nbsp;&nbsp;
+    <input type="number" min="1" id="notPeriod" name="notPeriod" formControlName="notPeriod" value="{{ notificationPeriod}}"
+           [ngStyle]="{'background-color': !form.get('notPeriod').pristine && (!form.get('notPeriod').valid || errMessage.length > 0 )? '#ffcccb' : 'white'}">
+
+  <div *ngIf="form.get('notPeriod').touched && form.get('notPeriod').dirty">
+    <div *ngIf="form.get('notPeriod').hasError('required')" style="color: #ed2939">Введите значение.</div>
+    <div *ngIf="form.get('notPeriod').hasError('min')" style="color: #ed2939">Некорректное значение.</div>
+  </div>
+  <p><input class="special" type="submit" [disabled]="form.invalid" value="Изменить"></p>
+
+  <div *ngIf="errMessage.length > 0">
+    <p style="color: #ed2939">{{ errMessage }}</p>
+  </div>
+
+</form>
+
+<br>
+<div *ngIf="report && report.length; else elseBlock">
+    <table align="center">
+      <thead>
+      <tr align="center">
+        <td width="5%" class="vl">Квартира</td>
+        <td width="10%">Логин</td>
+        <td width="10%">Имя</td>
+        <td width="7%">Номер телефона</td>
+        <td width="10%">Электронная почта</td>
+        <td width="5%">Просрочено дней</td>
+      </tr>
+      </thead>
+      <tr *ngFor="let line of report" align="center">
+        <td width="5%">{{ line['flatNumber'] }}</td>
+        <td width="10%">{{ line['login'] }}</td>
+        <td width="10%">{{ line['name'] }}</td>
+        <td width="7%">{{ line['phone'] }}</td>
+        <td width="10%">{{ line['email'] }}</td>
+        <td width="5%">{{ line['daysOverDefaultPeriodOfCountersSending'] }}</td>
+      </tr>
+    </table>
+</div>
+
+<ng-template #elseBlock>
+  <p align="center">Нет пользователей, просрочивших подачу показаний.</p>
+</ng-template>

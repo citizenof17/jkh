@@ -1,0 +1,57 @@
+<p align="right">{{ greetingMessage }} | <a href (click)="logout($event)">Выйти</a></p>
+<a [routerLink]="['//admin']" routerLinkActive="router-link-active">Вернуться на главную</a>
+
+<hr>
+
+<div *ngIf="report && report.length; else elseBlock">
+<p align="center">Пожалуйста, выбирайте статусы так, чтобы в каждой квартире суммарно находилось не более одно активного и неактивного пользователя.</p>
+<br>
+<form (submit)="setNewcomers($event)">
+  <div *ngFor="let block of report; index as i">
+    <table width="100%" border="1">
+      <caption align="left">Квартира {{ block[0]['flatNumber'] }}</caption>
+      <thead>
+      <tr align="center">
+        <td class="vl" width="15%">Имя</td>
+        <td width="15%">Логин</td>
+        <td width="10%">Телефон</td>
+        <td width="20%">Электронная почта</td>
+        <td width="40%">Статус</td>
+      </tr>
+      </thead>
+        <tr *ngFor="let user of block; index as j"  align="center">
+          <td width="15%">{{ user['name'] }}</td>
+          <td width="15%">{{ user['login'] }}</td>
+          <td width="10%">{{ user['phone'] }}</td>
+          <td width="20%">{{ user['email'] }}</td>
+          <td width="40%">
+            <input class="{{ i }}{{ j }}" name="{{ i }}{{ j }}" type="radio" value="ACTIVE"
+              [checked]="user['status'] == 'ACTIVE'" [disabled]="user['status'] == 'REMOVED'">активный
+            <input class="{{ i }}{{ j }}" name="{{ i }}{{ j }}" type="radio" value="INACTIVE"
+                   [checked]="user['status'] == 'INACTIVE'" [disabled]="user['status'] == 'REMOVED'">неактивный
+            <input class="{{ i }}{{ j }}" name="{{ i }}{{ j }}" type="radio" value="UNVERIFIED"
+                   [checked]="user['status'] == 'UNVERIFIED'" [disabled]="user['status'] != 'UNVERIFIED'">неподтвержденный
+            <input class="{{ i }}{{ j }}" name="{{ i }}{{ j }}" type="radio" value="REMOVED"
+                   [checked]="user['status'] == 'REMOVED'">удаленный
+          </td>
+        </tr>
+    </table>
+  <br>
+  </div>
+  <div align="center">
+    <input type="submit" value="Сохранить изменения">
+  </div>
+
+  <div *ngIf="errorMessage">
+    <div *ngFor="let err of errorMessage['messages']">
+      <p align="center" style="color: #ed2939">{{ err }} </p>
+    </div>
+  </div>
+
+  <br>
+</form>
+</div>
+
+<ng-template #elseBlock>
+  <p align="center">Неподтвержденных пользователей нет.</p>
+</ng-template>
