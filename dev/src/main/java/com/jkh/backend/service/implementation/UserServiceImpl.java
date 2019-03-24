@@ -1,16 +1,26 @@
 package com.jkh.backend.service.implementation;
 
+import com.jkh.backend.dto.FullUserInfo;
+import com.jkh.backend.dto.ResponseWrapperStateWithMessages;
 import com.jkh.backend.model.User;
 import com.jkh.backend.model.enums.Role;
-import com.jkh.backend.model.wrappers.ResponseWrapperRegistrationValidator;
+import com.jkh.backend.dto.ResponseWrapperRegistrationValidator;
+import com.jkh.backend.model.enums.Status;
 import com.jkh.backend.repository.UserRepository;
 import com.jkh.backend.service.FlatService;
 import com.jkh.backend.service.UserService;
-import com.jkh.backend.service.validation.RegistrationValidator;
+import com.jkh.backend.service.validation.UserServiceValidator;
+import com.jkh.backend.service.validation.ValidationMessages;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Slf4j
 @Service
@@ -23,7 +33,7 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    private RegistrationValidator registrationValidator;
+    private UserServiceValidator userServiceValidator;
 
     @Autowired
     private FlatService flatService;
@@ -33,6 +43,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+
     @Override
     public User findUserByLogin(String login) {
         return userRepository.findUserByLogin(login);
@@ -40,9 +51,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseWrapperRegistrationValidator register(User user) {
-        ResponseWrapperRegistrationValidator json = registrationValidator.validate(user);
+        ResponseWrapperRegistrationValidator json = userServiceValidator.validate(user);
         if (json.isOk()) {
-            user.setActive(false);
+            user.setStatus(Status.UNVERIFIED);
             user.setRole(Role.USER);
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             boolean addNewFlat = flatService.addUserToFlat(user.getFlat(), user);
@@ -54,5 +65,57 @@ public class UserServiceImpl implements UserService {
         }
 
         return json;
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public void changeStatus(User user, Status desiredStatus) {
+        user.setStatus(desiredStatus);
+        save(user);
+    }
+
+    @Override
+    public ResponseWrapperStateWithMessages setStatusChangesBulk(List<List<FullUserInfo>> blocks) {
+        ResponseWrapperStateWithMessages ans = checkBlocksForStatusChange(blocks);
+
+        if (ans.getIsOk()) {
+            blocks.forEach(block -> block.forEach(x -> changeStatus(findUserByLogin(x.getLogin()), x.getStatus())));
+        }
+
+        return ans;
+    }
+
+    private ResponseWrapperStateWithMessages checkBlocksForStatusChange(List<List<FullUserInfo>> blocks) {
+        boolean isOk = true;
+
+        List<String> messages = new ArrayList<>();
+
+        for (List<FullUserInfo> block : blocks) {
+            boolean checkBlock = checkBlockForStatusChange(block);
+            if (checkBlock) {
+                messages.add(ValidationMessages.OK);
+            } else {
+                messages.add(ValidationMessages.INCORRECT_STATUS_CHANGE_IN_BLOCK);
+            }
+
+            isOk &= checkBlock;
+        }
+
+        return new ResponseWrapperStateWithMessages(isOk, messages);
+    }
+
+
+    private boolean checkBlockForStatusChange(List<FullUserInfo> block) {
+
+        List<List<Status>> usersWithStatuses = block.stream()
+                .map(x -> new ArrayList<>(Arrays.asList(findUserByLogin(x.getLogin()).getStatus(), x.getStatus())))
+                .collect(Collectors.toList());
+
+        return userServiceValidator.checkBlockForStatusChange(usersWithStatuses);
+
     }
 }

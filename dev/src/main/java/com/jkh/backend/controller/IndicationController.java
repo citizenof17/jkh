@@ -1,12 +1,8 @@
 package com.jkh.backend.controller;
 
+import com.jkh.backend.dto.ResponseWrapperStateWithMessages;
 import com.jkh.backend.model.Indication;
-import com.jkh.backend.model.wrappers.reports.RequestWrapperReportOptions;
-import com.jkh.backend.model.wrappers.reports.indicationReport.ResponseWrapperIndicationReportRow;
-import com.jkh.backend.model.wrappers.reports.ResponseWrapperReport;
 import com.jkh.backend.service.IndicationService;
-import com.jkh.backend.service.ReportService;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,41 +13,23 @@ import java.util.List;
 @RestController
 public class IndicationController {
 
+    private static final String SEND_INDICATIONS_ENDPOINT = "/sendIndications";
+
     @Autowired
     private IndicationService indicationService;
 
-    @Autowired
-    private ReportService reportService;
-
     @ResponseBody
-    @RequestMapping(value = "/sendIndications",  method = RequestMethod.POST, consumes = {"application/json"})
-    public ResponseEntity<JSONObject> sendIndication(@RequestBody List<Indication> indications) {
+    @RequestMapping(value = SEND_INDICATIONS_ENDPOINT, method = RequestMethod.POST, consumes = {"application/json"})
+    public ResponseEntity<Object> sendIndication(@RequestBody List<Indication> indications) {
 
-        JSONObject json = indicationService.addIndications(indications);
-        if (json.get("isOk").equals(true)) {
-            return new ResponseEntity<>(json, HttpStatus.CREATED);
+        ResponseWrapperStateWithMessages listOfIndications = indicationService.addIndications(indications);
+        if (listOfIndications.getIsOk()) {
+            return new ResponseEntity<>(listOfIndications, HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(json, HttpStatus.CONFLICT);
+            return new ResponseEntity<>(listOfIndications, HttpStatus.CONFLICT);
         }
 
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/lastNIndications")
-    public ResponseEntity<List<ResponseWrapperIndicationReportRow>> lastNIndications() {
-        List<ResponseWrapperIndicationReportRow> json = indicationService.getLastNIndications(50);
-        return new ResponseEntity<>(json, HttpStatus.OK);
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/report", method = RequestMethod.POST, consumes = {"application/json"})
-    public ResponseEntity<ResponseWrapperReport> getReport(@RequestBody RequestWrapperReportOptions reportOptions) {
-        ResponseWrapperReport report = reportService.getReport(reportOptions);
-        if (report.isOk()) {
-            return new ResponseEntity<>(report, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(report, HttpStatus.CONFLICT);
-        }
-    }
 }
 

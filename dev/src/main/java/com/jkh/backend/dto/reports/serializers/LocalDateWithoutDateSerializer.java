@@ -1,4 +1,4 @@
-package com.jkh.backend.model.serializers;
+package com.jkh.backend.dto.reports.serializers;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;

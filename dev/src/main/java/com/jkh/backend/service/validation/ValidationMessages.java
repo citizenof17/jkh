@@ -44,4 +44,8 @@ public interface ValidationMessages {
 
     String EMPTY_LIST = "Данных за указанный период нет";
 
+    String INCORRECT_STATUS_CHANGE = "Некорректное изменение статуса пользователя";
+
+    String INCORRECT_STATUS_CHANGE_IN_BLOCK = "Блок статусов в квартире некорректен";
+
 }

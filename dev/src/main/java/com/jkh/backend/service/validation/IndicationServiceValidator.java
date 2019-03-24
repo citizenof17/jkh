@@ -1,11 +1,13 @@
 package com.jkh.backend.service.validation;
 
+import com.jkh.backend.dto.ResponseWrapperStateWithMessages;
 import com.jkh.backend.model.Indication;
 import com.jkh.backend.model.enums.CounterType;
 import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.jkh.backend.service.validation.ValidationMessages.*;
@@ -13,28 +15,20 @@ import static com.jkh.backend.service.validation.ValidationMessages.*;
 @Service
 public class IndicationServiceValidator {
 
-
-
-    public static JSONObject checkIndication(Indication newIndication,
-                                             Indication prevIndication) {
-        JSONObject json = new JSONObject();
-        MutableBoolean isOk = new MutableBoolean(true);
+    public static String checkIndication(Indication newIndication, Indication prevIndication) {
 
         //todo compare interval between newIndication date and prevIndication date (?)
 
         if (prevIndication != null && (prevIndication.getValue() > newIndication.getValue()
                 || prevIndication.getDate().isAfter(newIndication.getDate()))) {
-            isOk.setFalse();
-            json.put("message", INDICATION_INCORRECT);
+            return INDICATION_INCORRECT;
         }
 
-        json.put("isOk", isOk.getValue());
-        return json;
+        return OK;
     }
 
+    public static ResponseWrapperStateWithMessages checkListOfIndications(List<Indication> indications) {
 
-    public static JSONObject checkListOfIndications(List<Indication> indications) {
-        JSONObject json = new JSONObject();
         MutableBoolean isOk = new MutableBoolean(true);
         String message = OK;
 
@@ -73,10 +67,6 @@ public class IndicationServiceValidator {
             }
         }
 
-        json.put("isOk", isOk.getValue());
-        json.put("message", message);
-        return json;
+        return new ResponseWrapperStateWithMessages(isOk.booleanValue(), new ArrayList<>(Arrays.asList(message)));
     }
-
-
 }
