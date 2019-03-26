@@ -1,7 +1,7 @@
 package com.jkh.FE.steps;
 
-import com.jkh.BE.models.RegisterRequest;
 import com.jkh.FE.pages.LoginPage;
+import org.assertj.core.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.yandex.qatools.allure.annotations.Step;
@@ -38,10 +38,36 @@ public class LoginPageSteps {
         loginPage.fillPassword(password);
     }
 
-    public void fillCorrectCredential(RegisterRequest registerRequest) {
-        fillLoginInputField(registerRequest.getLogin());
-        fillPasswordInputField(registerRequest.getPassword());
+    public void fillCorrectCredential(String login, String password) {
+        fillLoginInputField(login);
+        fillPasswordInputField(password);
         clickSignInButton();
+    }
+
+    public void fillIncorrectCredential(String login, String password) {
+        fillLoginInputField(login);
+        fillPasswordInputField(password);
+        checkSignInButton();
+    }
+
+    @Step("Checking that sign in button is not enable")
+    public void checkSignInButton() {
+        Assertions.assertThat(loginPage.signInButtonEnable()).as("Error login button enable").isFalse();
+    }
+
+    @Step("Checking login error message is visible")
+    public void checkLoginErrorMessage() {
+        Assertions.assertThat(loginPage.loginErrorMessageVisibility()).as("Login error message is not visible").isTrue();
+    }
+
+    @Step("Checking password error message is visible")
+    public void checkPasswordErrorMessage() {
+        Assertions.assertThat(loginPage.passwordErrorMessageVisibility()).as("Password error message is not visible").isTrue();
+    }
+
+    @Step("Checking credential error message is visible")
+    public void checkCredentialErrorMessage() {
+        Assertions.assertThat(loginPage.credentialErrorMessageVisibility()).as("Credential error message is not visible").isTrue();
     }
 
     @Step("Clicking on button SignIn")
@@ -53,5 +79,9 @@ public class LoginPageSteps {
     public void clickRegistrationButton() {
         loginPage.clickRegistrationButton();
         checkAddress(REGISTRATION_PAGE_ADDRESS);
+    }
+
+    public void reset() {
+        loginPage.reset();
     }
 }

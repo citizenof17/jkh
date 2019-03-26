@@ -1,6 +1,8 @@
 package com.jkh.BE.models;
 
-public class LoginResponse extends RegisterResponse{
+import com.jkh.BE.models.enums.Status;
+
+public class LoginResponse extends RegisterResponse {
 
     public LoginResponse(RegisterResponse registerResponse) {
         super(registerResponse.getName(), registerResponse.getRole(), registerResponse.getStatus());
@@ -10,7 +12,7 @@ public class LoginResponse extends RegisterResponse{
 
     }
 
-    public LoginResponse(String name, String role, boolean status) {
+    public LoginResponse(String name, String role, Status status) {
         super(name, role, status);
     }
 

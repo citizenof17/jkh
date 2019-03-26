@@ -11,7 +11,8 @@ import java.io.IOException;
 
 import static com.jkh.utils.AllureUtils.saveText;
 import static com.jkh.utils.Assertions.compareIfEqual;
-import static com.jkh.utils.ObjMapper.*;
+import static com.jkh.utils.ObjMapper.body2Object;
+import static com.jkh.utils.ObjMapper.object2Json;
 import static com.jkh.utils.TestConstants.R;
 
 
@@ -32,7 +33,6 @@ public class AuthSteps {
     @Step("Signing in with correct credential")
     public void loginCorrectUser(LoginRequest credential) throws IOException {
         loginResponse = getDataAndSessionID(authClient.login(credential), LoginResponse.class);
-        //saveText(R, object2Json(loginResponse));
     }
 
     @Step("Signing in with incorrect credential")
@@ -48,7 +48,6 @@ public class AuthSteps {
     @Step("Register new user")
     public void registerUser(RegisterRequest request) throws Exception {
         registerResponse = getDataAndSessionID(authClient.register(request), RegisterResponse.class);
-        //saveText(R, object2Json(registerResponse));
     }
 
     @Step("Check register response")

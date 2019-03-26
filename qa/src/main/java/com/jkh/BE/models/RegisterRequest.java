@@ -1,8 +1,9 @@
 package com.jkh.BE.models;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class RegisterRequest {
+public class RegisterRequest implements Serializable {
 
     private String login;
     private String password;
@@ -54,6 +55,8 @@ public class RegisterRequest {
     public void setFlat(Flat flat) {
         this.flat = flat;
     }
+
+    public void setFlatNumber(Integer number) {this.flat.setNumber(number);}
 
     public String getName() {
         return name;

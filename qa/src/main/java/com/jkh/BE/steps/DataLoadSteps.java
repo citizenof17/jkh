@@ -2,9 +2,17 @@ package com.jkh.BE.steps;
 
 import com.jkh.BE.database.*;
 import com.jkh.BE.models.Counter;
+import com.jkh.BE.models.RegisterRequest;
+import com.jkh.BE.models.enums.Status;
+import org.assertj.core.api.Assertions;
+import org.assertj.core.api.SoftAssertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.yandex.qatools.allure.annotations.Step;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class DataLoadSteps {
@@ -29,8 +37,8 @@ public class DataLoadSteps {
 
     @Step("Delete all data from DB")
     public void deleteAllData() {
-        usersDao.deleteAll();
         indicationDao.deleteAll();
+        usersDao.deleteAll();
         counterDao.deleteAll();
         flatDao.deleteAll();
         houseDao.deleteAll();
@@ -40,5 +48,38 @@ public class DataLoadSteps {
     @Step("Select {1} last indication")
     public Integer lastIndication(String login, Counter.CounterType counterType) {
         return indicationDao.select(login, counterType);
+    }
+
+    @Step("Generating lists of all users by flats")
+    public List<List<Map<String, Object>>> listsUsersByFlat() {
+        List<Map<String, Object>> flats = flatDao.selectAllFlatsNumbers();
+        List<List<Map<String, Object>>> users = new ArrayList<>();
+        for (Map<String, Object> flat: flats) {
+            List<Map<String, Object>> usersInFlat = usersDao.selectUserByFlat((Integer) flat.get("number"));
+            users.add(usersInFlat);
+        }
+        return users;
+    }
+
+    @Step("Checking that new user saved in database")
+    public void checkUser(RegisterRequest expectedUser) {
+        Map<String, Object> actualUser = usersDao.selectUserByLogin(expectedUser.getLogin());
+        SoftAssertions softAssertions = new SoftAssertions();
+        softAssertions.assertThat(actualUser.get("login")).as("Incorrect login in DB").isEqualTo(expectedUser.getLogin());
+        softAssertions.assertThat(actualUser.get("name")).as("Incorrect name in DB").isEqualTo(expectedUser.getName());
+        softAssertions.assertThat(actualUser.get("number")).as("Incorrect flat number in DB").isEqualTo(expectedUser.getFlat().getNumber());
+        softAssertions.assertThat(actualUser.get("email")).as("Incorrect email in DB").isEqualTo(expectedUser.getEmail());
+        softAssertions.assertThat(actualUser.get("phone")).as("Incorrect phone number in DB").isEqualTo(expectedUser.getPhone());
+        softAssertions.assertAll();
+    }
+
+    @Step("Checking that {0} user status equal in DB to: {1}")
+    public void checkUserStatus(String login, Status status) {
+        Assertions.assertThat(usersDao.selectUserByLogin(login).get("status")).as("Incorrect status in DB").isEqualTo(status.toString());
+    }
+
+    @Step("Getting information about user: {0}")
+    public Map<String, Object> selectUserByLogin(String login) {
+        return usersDao.selectUserByLogin(login);
     }
 }

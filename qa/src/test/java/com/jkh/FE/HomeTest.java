@@ -1,6 +1,5 @@
 package com.jkh.FE;
 
-import com.jkh.BE.models.Counter;
 import com.jkh.BE.models.IndicationRequest;
 import com.jkh.BE.models.RegisterRequest;
 import com.jkh.BE.steps.AuthSteps;
@@ -50,20 +49,22 @@ public class HomeTest extends AbstractTestNGSpringContextTests {
     @BeforeClass(groups = {"FE", "Home"})
     public void prepareData() throws Exception {
         dataLoadSteps.deleteAllData();
-        for (Object[] objects: correctRegisterData) {
+        for (Object[] objects : correctRegisterData) {
             authSteps.registerUser((RegisterRequest) objects[0]);
         }
     }
 
     @BeforeMethod(groups = {"FE", "Home"})
     public void openHomePage() {
+        baseSteps.deleteAllCookies();
         loginPageSteps.openLoginPage();
     }
 
     @Test(groups = {"FE", "Home"})
     @Title("Clicking on logout button")
     public void logoutTest() {
-        loginPageSteps.fillCorrectCredential((RegisterRequest) correctRegisterData[0][0]);
+        RegisterRequest correctUser = (RegisterRequest) correctRegisterData[0][0];
+        loginPageSteps.fillCorrectCredential(correctUser.getLogin(), correctUser.getPassword());
         homePageSteps.clickLogoutButton();
         Assertions.checkAddress(LOGIN_PAGE_ADDRESS);
     }
@@ -78,7 +79,7 @@ public class HomeTest extends AbstractTestNGSpringContextTests {
     @Test(groups = {"FE", "Home"}, dataProvider = "correctIndicationData")
     @Title("Checking sending correct indications data")
     public void sendCorrectIndications(RegisterRequest correctUser) {
-        loginPageSteps.fillCorrectCredential(correctUser);
+        loginPageSteps.fillCorrectCredential(correctUser.getLogin(), correctUser.getPassword());
         homePageSteps.fillIndications((List<IndicationRequest>) correctIndicationData[0][0]);
         homePageSteps.checkLastIndications((List<IndicationRequest>) correctIndicationData[0][0], correctUser.getLogin());
     }
@@ -86,9 +87,9 @@ public class HomeTest extends AbstractTestNGSpringContextTests {
     @DataProvider(name = "correctIndicationData")
     public Object[] correctIndicationData() {
         ArrayList<RegisterRequest> registerRequests = new ArrayList<>();
-        for(Object[] objects1: correctRegisterData) {
+        for (Object[] objects1 : correctRegisterData) {
             registerRequests.add((RegisterRequest) objects1[0]);
         }
-        return registerRequests.subList(0, registerRequests.size() -1).toArray();
+        return registerRequests.subList(0, registerRequests.size() - 1).toArray();
     }
 }

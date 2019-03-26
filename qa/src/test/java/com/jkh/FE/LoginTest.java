@@ -4,6 +4,7 @@ import com.jkh.BE.models.RegisterRequest;
 import com.jkh.BE.steps.AuthSteps;
 import com.jkh.BE.steps.DataLoadSteps;
 import com.jkh.ConfigurationMain;
+import com.jkh.FE.steps.AdminPageSteps;
 import com.jkh.FE.steps.HomePageSteps;
 import com.jkh.FE.steps.LoginPageSteps;
 import com.jkh.utils.WaiterUtils;
@@ -40,11 +41,14 @@ public class LoginTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private HomePageSteps homePageSteps;
 
+    @Autowired
+    private AdminPageSteps adminPageSteps;
+
     @BeforeClass(groups = {"FE", "Login"})
     public void prepareData() throws Exception {
         dataLoadSteps.deleteAllData();
         //authSteps.registerUser((RegisterRequest) correctRegisterData[0][0]);
-        for (Object[] objects: correctRegisterData) {
+        for (Object[] objects : correctRegisterData) {
             authSteps.registerUser((RegisterRequest) objects[0]);
         }
     }
@@ -54,17 +58,23 @@ public class LoginTest extends AbstractTestNGSpringContextTests {
         loginPageSteps.openLoginPage();
     }
 
+    @Test(groups = {"FE", "Login"})
+    @Title("Signing in with correct ADMIN credential")
+    public void correctAdminSignIn() {
+        loginPageSteps.fillCorrectCredential(ADMIN.getLogin(), ADMIN.getPassword());
+        WaiterUtils.wait(1);
+        checkAddress(ADMIN_PAGE_ADDRESS);
+        adminPageSteps.checkWelcomeTitle(ADMIN.getName());
+    }
+
     @Test(groups = {"FE", "Login"}, dataProvider = "correctSignInData")
-    @Title("Signing in with correct credential")
+    @Title("Signing in with correct USER credential")
     public void correctSignIn(RegisterRequest correctUser) {
-        //RegisterRequest correctUser = (RegisterRequest) correctRegisterData[0][0];
-        //loginPageSteps.fillLoginInputField(correctUser.getLogin());
-        //loginPageSteps.fillPasswordInputField(correctUser.getPassword());
-        loginPageSteps.fillCorrectCredential(correctUser);
-        //loginPageSteps.clickSignInButton();
+        loginPageSteps.fillCorrectCredential(correctUser.getLogin(), correctUser.getPassword());
         WaiterUtils.wait(1);
         checkAddress(HOME_PAGE_ADDRESS);
-        homePageSteps.checkWelcomeTitle(correctUser.getName());
+        //homePageSteps.checkUnverifiedTitle();
+        homePageSteps.checkUnverifiedInfo();
     }
 
     @Test(groups = {"FE", "Login"})
@@ -74,12 +84,54 @@ public class LoginTest extends AbstractTestNGSpringContextTests {
         checkAddress(REGISTRATION_PAGE_ADDRESS);
     }
 
+    @Test(groups = {"FE", "Login"}, dataProvider = "incorrectLoginData")
+    @Title("Signing in with incorrect format login")
+    public void invalidLoginSignIn(String incorrectLogin) {
+        loginPageSteps.fillIncorrectCredential(incorrectLogin, CORRECT_FORMAT_PASSWORD);
+        loginPageSteps.checkLoginErrorMessage();
+    }
+
+    @Test(groups = {"FE", "Login"}, dataProvider = "incorrectPasswordData")
+    @Title("Signing in with incorrect format password")
+    public void invalidPasswordSignIn(String incorrectPassword) {
+        loginPageSteps.fillIncorrectCredential(CORRECT_FORMAT_LOGIN, incorrectPassword);
+        loginPageSteps.clickSignInButton();
+        loginPageSteps.reset();
+        loginPageSteps.checkPasswordErrorMessage();
+    }
+
+    @Test(groups = {"FE", "Login"})
+    @Title("Signing in with incorrect format login and password")
+    public void invalidCredentialFormatSignIn() {
+        loginPageSteps.fillIncorrectCredential((String) incorrectLoginData[0], (String) incorrectPasswordData[0]);
+        loginPageSteps.reset();
+        loginPageSteps.checkLoginErrorMessage();
+        loginPageSteps.checkPasswordErrorMessage();
+    }
+
+    @Test(groups = {"FE", "Login"})
+    @Title("Signing in with incorrect credential")
+    public void invalidCredentialSignIn() {
+        loginPageSteps.fillCorrectCredential(CORRECT_FORMAT_LOGIN, CORRECT_FORMAT_PASSWORD);
+        loginPageSteps.checkCredentialErrorMessage();
+    }
+
     @DataProvider(name = "correctSignInData")
     public Object[] correctSignInData() {
         ArrayList<RegisterRequest> registerRequests = new ArrayList<>();
-        for(Object[] objects1: correctRegisterData) {
+        for (Object[] objects1 : correctRegisterData) {
             registerRequests.add((RegisterRequest) objects1[0]);
         }
         return registerRequests.subList(0, registerRequests.size()).toArray();
+    }
+
+    @DataProvider(name = "incorrectLoginData")
+    public Object[] incorrectLoginData() {
+        return incorrectLoginData;
+    }
+
+    @DataProvider(name = "incorrectPasswordData")
+    public Object[] incorrectPasswordData() {
+        return incorrectPasswordData;
     }
 }

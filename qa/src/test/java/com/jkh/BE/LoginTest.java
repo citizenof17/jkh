@@ -14,12 +14,14 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import ru.yandex.qatools.allure.annotations.Features;
+import ru.yandex.qatools.allure.annotations.Stories;
 
 import java.io.IOException;
 
 import static com.jkh.utils.TestConstants.correctRegisterData;
 
-@Features("Login API tests")
+@Features("BackEnd")
+@Stories("Login API tests")
 @ContextConfiguration(classes = ConfigurationMain.class)
 public class LoginTest extends AbstractTestNGSpringContextTests {
 
@@ -32,7 +34,7 @@ public class LoginTest extends AbstractTestNGSpringContextTests {
     @BeforeClass(groups = {"BE", "Login"})
     public void prepareData() throws Exception {
         dataLoadSteps.deleteAllData();
-        for (Object[] registerRequest: correctRegisterData) {
+        for (Object[] registerRequest : correctRegisterData) {
             authSteps.registerUser((RegisterRequest) registerRequest[0]);
         }
     }

@@ -1,6 +1,8 @@
 package com.jkh.utils;
 
 import com.jkh.BE.models.*;
+import com.jkh.BE.models.enums.Status;
+import com.jkh.FE.models.RegisterUser;
 
 import java.util.Arrays;
 
@@ -47,7 +49,7 @@ public interface TestConstants {
                     new RegisterResponse(
                             "Олег Раскин",
                             "USER",
-                            false
+                            Status.UNVERIFIED
                     )
             },
             {
@@ -62,10 +64,31 @@ public interface TestConstants {
                     new RegisterResponse(
                             "Екатерина Астровская",
                             "USER",
-                            false
+                            Status.UNVERIFIED
+                    )
+            },
+            {
+                    new RegisterRequest(
+                            "login3",
+                            "Qwerty_3",
+                            "+79874147393",
+                            new Flat(55),
+                            "Валерий Островский",
+                            "valera@gmail.com"
+                    ),
+                    new RegisterResponse(
+                            "Валерий Островский",
+                            "USER",
+                            Status.UNVERIFIED
                     )
             }
+
     };
+
+    RegisterRequest ADMIN = new RegisterRequest("Administrator", "Administrator_1", "+79995550000",
+            new Flat(1000), "Администратор Великий Ужаснович", "Administrator@jkh.ru");
+
+    RegisterRequest CORRECT_REGISTER_USER = (RegisterRequest) correctRegisterData[0][0];
 
     Object[][] incorrectRegisterData = new Object[][]{
             {
@@ -88,7 +111,7 @@ public interface TestConstants {
             },
             {
                     new RegisterRequest(
-                            "login3",
+                            "login6",
                             "dsffdf",
                             "+7999679856",
                             new Flat(-123),
@@ -145,11 +168,31 @@ public interface TestConstants {
                     )
             }
     };
-
+    //jkh url addresses
     String LOGIN_PAGE_ADDRESS = "/login";
     String REGISTRATION_PAGE_ADDRESS = "/register";
     String HOME_PAGE_ADDRESS = "/home";
     String ADMIN_PAGE_ADDRESS = "/admin";
+    String EDIT_INHABITANTS_ADDRESS = "/edit_inhabitants";
+    String DID_NOT_SEND_ADDRESS = "/did_not_send";
+    String NEWCOMERS_ADDRESS = "/newcomers";
+
+    Object[] incorrectLoginData = new String[]{"!0wrt", "12", "My login"};
+    Object[] incorrectNameData = new String[]{"I", "Александр 1"};
+    Object[] incorrectFlatData = new Integer[]{-10, 0};
+    Object[] incorrectEmailData = new String[]{"!sf@df s", "olegmail.ru", "12@m"};
+    Object[] incorrectPhoneData = new String[]{"+7999999999", "99999999999", "+791111111111"};
+
+    Object[] incorrectPasswordData = new String[]{"12Qwer!", "!2314324_ddfs"};
+
+    String CORRECT_FORMAT_LOGIN = "Victor1";
+    String CORRECT_FORMAT_PASSWORD = "Qwerty_1";
 
     String HOME_PAGE_WELCOME_TITLE = "Добро пожаловать, %s!";
+    String HOME_ADMIN_NAME = "Имя: %s";
+    String HOME_ADMIN_EMAIL = "Электронная почта: %s";
+    String HOME_ADMIN_PHONE = "Телефон: %s";
+
+    String UNCONFIRMED_PASSWORD = "Unconfirmed_1";
+    String ADMIN_PAGE_WELCOME_TITLE = "Администратор %s";
 }

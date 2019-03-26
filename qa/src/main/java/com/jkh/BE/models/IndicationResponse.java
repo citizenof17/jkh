@@ -1,13 +1,11 @@
 package com.jkh.BE.models;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class IndicationResponse {
 
-    boolean isOk;
-    String messages;
+    private boolean isOk;
+    private String messages;
 
     public IndicationResponse() {
 

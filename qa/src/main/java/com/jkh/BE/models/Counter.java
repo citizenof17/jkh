@@ -1,7 +1,5 @@
 package com.jkh.BE.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Set;
 
 public class Counter {
@@ -82,6 +80,6 @@ public class Counter {
         HOT_WATER,
         ELECTRICITY,
         GAS,
-        INVALID;
+        INVALID
     }
 }

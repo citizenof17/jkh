@@ -5,7 +5,6 @@ import com.jkh.BE.models.IndicationResponse;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
-import feign.Response;
 
 import java.util.List;
 

@@ -1,17 +1,19 @@
 package com.jkh.BE.models;
 
+import com.jkh.BE.models.enums.Status;
+
 import java.util.Objects;
 
 public class RegisterResponse {
 
     private String role;
     private String name;
-    private Boolean status;
+    private Status status;
 
     public RegisterResponse() {
     }
 
-    public RegisterResponse(String name, String role, Boolean status) {
+    public RegisterResponse(String name, String role, Status status) {
         this.name = name;
         this.role = role;
         this.status = status;
@@ -33,11 +35,11 @@ public class RegisterResponse {
         this.name = name;
     }
 
-    public Boolean getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

@@ -40,6 +40,7 @@ public class RegisterTest extends AbstractTestNGSpringContextTests {
     public void registerTest(RegisterRequest request, RegisterResponse response) throws Exception {
         authSteps.registerUser(request);
         authSteps.checkRegisterResponse(response);
+        dataLoadSteps.checkUser(request);
     }
 
     @DataProvider(name = "CorrectRegister")
