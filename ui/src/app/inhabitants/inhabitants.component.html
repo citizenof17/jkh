@@ -22,7 +22,7 @@
 </form>
 
 <div *ngIf="type; else elseBlock">
-  <p align="center">Пожалуйста, выбирайте статусы так, чтобы в квартире суммарно находилось не более одно активного и неактивного пользователя.</p>
+  <p align="center">Пожалуйста, выбирайте статусы так, чтобы в квартире находился только один активный/неактивный пользователь.</p>
   <br>
 
   <form (submit)="setInhabitants($event)">
@@ -59,7 +59,12 @@
       <input type="submit" value="Сохранить изменения">
     </div>
 
-    <div *ngIf="errorMessage">
+    <div *ngIf="successMessage">
+       <p align="center" style="color: green">{{ successMessage }} </p>
+    </div>
+
+
+      <div *ngIf="errorMessage">
       <div *ngFor="let err of errorMessage['messages']">
         <p align="center" style="color: #ed2939">{{ err }} </p>
       </div>
@@ -71,6 +76,6 @@
 </div>
 
 <ng-template #elseBlock>
-  <p align="center">Пожалуйста, выберите номер квартира для просмотра списка пользователей.</p>
+  <p align="center">Пожалуйста, выберите номер квартиры для просмотра списка пользователей.</p>
 </ng-template>
 

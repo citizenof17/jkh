@@ -15,6 +15,7 @@ export class HomeComponent implements OnInit {
   form: FormGroup;
   greetingMessage = '';
   errorMessage: [];
+  successMessage = '';
   dateError: String;
   status = '';
   notification = 0;
@@ -107,10 +108,10 @@ export class HomeComponent implements OnInit {
       }).subscribe(
         _ => {
             this.errorMessage = [];
-            window.alert('Данные успешно отправлены.');
-
+            this.successMessage = 'Данные успешно отправлены.';
         } ,
         err => {
+            this.successMessage = '';
             this.errorMessage = err.error.messages;
         }
       );

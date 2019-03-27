@@ -13,6 +13,7 @@ export class NewcomersComponent implements OnInit {
 
   greetingMessage: String;
   errorMessage: any;
+  successMessage = '';
   report: any;
 
   constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) {
@@ -78,7 +79,7 @@ export class NewcomersComponent implements OnInit {
       ).subscribe(
           _ => {
             this.errorMessage = '';
-            window.alert('Изменения успешно сохранены.');
+            this.successMessage = 'Изменения успешно сохранены.';
             this.http.get(environment.backend + 'admin/getNewcomers', {
                   withCredentials: true
               }).subscribe(
@@ -88,6 +89,7 @@ export class NewcomersComponent implements OnInit {
               );
           }, err => {
             this.errorMessage = err.error;
+            this.successMessage = '';
           }
       )
   }

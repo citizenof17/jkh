@@ -3,9 +3,9 @@
 <form (submit)="registerUser($event)" [formGroup]="form">
   <p>
     <label>Логин</label>
-    <input type="text" id="username" formControlName="username"
+    <span title="Логин может состоять из русских и латинских букв и цифр."><input type="text" id="username" formControlName="username"
            [ngStyle]="{'background-color': !form.get('username').pristine && (!form.get('username').valid
-           || msg && msg['login'] != 'ok') ? '#ffcccb' :'white' }">
+           || msg && msg['login'] != 'ok') ? '#ffcccb' :'white' }"></span>
 
   <div *ngIf="form.get('username').touched && form.get('username').dirty">
     <div *ngIf="form.get('username').hasError('required')" style="color: #ed2939">Введите имя пользователя.</div>
@@ -44,7 +44,7 @@
 
   <div *ngIf="form.get('email').touched && form.get('email').dirty">
     <div *ngIf="form.get('email').hasError('required')" style="color: #ed2939">Введите адрес электронной почты.</div>
-    <div *ngIf="form.get('email').hasError('email')" style="color: #ed2939">Некорректный формат адреса электронной почты.</div>
+    <div *ngIf="form.get('email').hasError('pattern')" style="color: #ed2939">Некорректный формат адреса электронной почты.</div>
   </div>
 
   <div *ngIf="msg && msg['email'] != 'ok'" style="color: #ed2939" align="center">
@@ -52,10 +52,10 @@
   </div>
 
   <p>
-    <label title="В формате +XXXXXXXXXXX">Номер телефона</label>
-    <input type="text" min="1" id="phonenumber" formControlName="phonenumber"
+    <label>Номер телефона</label>
+    <span title="В формате +XXXXXXXXXXX"><input type="text" min="1" id="phonenumber" formControlName="phonenumber"
            [ngStyle]="{'background-color': !form.get('phonenumber').pristine && (!form.get('phonenumber').valid
-           || msg && msg['phone'] != 'ok')? '#ffcccb' : 'white'}">
+           || msg && msg['phone'] != 'ok')? '#ffcccb' : 'white'}"></span>
 
   <div *ngIf="form.get('phonenumber').touched && form.get('phonenumber').dirty">
     <div *ngIf="form.get('phonenumber').hasError('required')" style="color: #ed2939">Введите номер телефона.</div>
@@ -67,12 +67,11 @@
   </div>
 
   <p>
-    <label
-      title="Длина пароля должна составлять не менее 8 символов и содержать по крайней мере одну строчную и одну
-            прописную английские буквы, одну цифру и один специальный символ (_, -, !) без пробелов."
-    >Пароль</label>
-    <input type="password" id="password" formControlName="password"
-           [ngStyle]="{'background-color': form.get('password').pristine || form.get('password').valid ? 'white' : '#ffcccb'}">
+    <label>Пароль</label>
+    <span title="Длина пароля должна составлять не менее 8 символов и содержать по крайней мере одну строчную и одну прописную английские буквы, одну цифру и один специальный символ (_, -, !) без пробелов."
+    ><input type="password" id="password" formControlName="password"
+            [ngStyle]="{'background-color': form.get('password').pristine || form.get('password').valid ? 'white' : '#ffcccb'}"></span>
+  </p>
 
   <div *ngIf="form.get('password').touched && form.get('password').dirty">
     <div *ngIf="form.get('password').hasError('required')" style="color: #ed2939">Введите пароль.</div>

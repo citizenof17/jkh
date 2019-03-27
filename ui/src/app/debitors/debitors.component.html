@@ -10,10 +10,14 @@
            [ngStyle]="{'background-color': !form.get('notPeriod').pristine && (!form.get('notPeriod').valid || errMessage.length > 0 )? '#ffcccb' : 'white'}">
 
   <div *ngIf="form.get('notPeriod').touched && form.get('notPeriod').dirty">
-    <div *ngIf="form.get('notPeriod').hasError('required')" style="color: #ed2939">Введите значение.</div>
+    <div *ngIf="form.get('notPeriod').hasError('required')"style="color: #ed2939">Введите значение.</div>
     <div *ngIf="form.get('notPeriod').hasError('min')" style="color: #ed2939">Некорректное значение.</div>
   </div>
   <p><input class="special" type="submit" [disabled]="form.invalid" value="Изменить"></p>
+
+  <div *ngIf="successMessage">
+    <p style="color: green">{{ successMessage }}</p>
+  </div>
 
   <div *ngIf="errMessage.length > 0">
     <p style="color: #ed2939">{{ errMessage }}</p>

@@ -32,15 +32,15 @@ const routes: Routes = [
             component: RegisterComponent
         },
         {
-            path: 'did_not_send',
+            path: 'admin/did_not_send',
             component: DebitorsComponent
         },
         {
-            path: 'newcomers',
+            path: 'admin/newcomers',
             component: NewcomersComponent
         },
         {
-            path: 'edit_inhabitants',
+            path: 'admin/edit_inhabitants',
             component: InhabitantsComponent
         }
     ];

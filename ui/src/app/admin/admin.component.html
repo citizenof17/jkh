@@ -1,11 +1,11 @@
 <p align="right">{{ greetingMessage }} | <a href (click)="logout($event)">Выйти</a></p>
 
 <p align="right">
-    <a [routerLink]="['//edit_inhabitants']" routerLinkActive="router-link-active">Список пользователей по квартирам</a>
+    <a [routerLink]="['//admin/edit_inhabitants']" routerLinkActive="router-link-active">Список пользователей по квартирам</a>
     &nbsp;&nbsp;&nbsp;
-    <a [routerLink]="['//did_not_send']" routerLinkActive="router-link-active">Данные о не подававших показания ({{ countWhoDidNotSend }})</a>
+    <a [routerLink]="['//admin/did_not_send']" routerLinkActive="router-link-active">Данные о не подававших показания ({{ countWhoDidNotSend }})</a>
     &nbsp;&nbsp;&nbsp;
-    <a [routerLink]="['//newcomers']" routerLinkActive="router-link-active">Данные о неподтвержденных пользователях ({{ countNewcomers }})</a>
+    <a [routerLink]="['//admin/newcomers']" routerLinkActive="router-link-active">Данные о неподтвержденных пользователях ({{ countNewcomers }})</a>
 </p>
 <hr>
 <table width="95%" cellspacing="0" cellpadding="5" align="center">

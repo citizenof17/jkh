@@ -15,8 +15,10 @@ export class InhabitantsComponent implements OnInit {
   greetingMessage : String;
   form: FormGroup;
   errorMessage: String = '';
+  successMessage = '';
   report: any;
   type = 0;
+  flat: string;
 
   constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) {
     this.http.get(environment.backend + 'userInfo', {
@@ -55,18 +57,19 @@ export class InhabitantsComponent implements OnInit {
       event.preventDefault();
       const target = event.target;
 
-      let val = target.querySelector("#flat").value;
+      this.flat = target.querySelector("#flat").value;
 
       this.http.get(environment.backend + 'admin/getFlatInhabitants', {
           withCredentials: true,
           params: {
-            flatNumber: val
+            flatNumber: this.flat
           }
         }).subscribe(
           data => {
             this.type = 1;
             this.report = data;
             this.errorMessage = '';
+            this.successMessage = '';
           }, err => {
             this.errorMessage = err.error['message'];
             this.type = 0;
@@ -98,14 +101,12 @@ export class InhabitantsComponent implements OnInit {
       ).subscribe(
           _ => {
             this.errorMessage = '';
-            window.alert('Изменения успешно сохранены.');
-
-            let val = this.form.get('flat').value;
+            this.successMessage = 'Изменения успешно сохранены.';
 
             this.http.get(environment.backend + 'admin/getFlatInhabitants', {
                   withCredentials: true,
                   params: {
-                      flatNumber: val
+                      flatNumber: this.flat
                   }
               }).subscribe(
                   data => {
@@ -119,6 +120,7 @@ export class InhabitantsComponent implements OnInit {
               );
           }, err => {
             this.errorMessage = err.error;
+            this.successMessage = '';
           }
       );
   }

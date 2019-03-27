@@ -17,6 +17,7 @@ export class DebitorsComponent implements OnInit {
   notificationPeriod: number;
   report: any;
   errMessage: String = '';
+  successMessage = '';
 
   constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) {
     this.http.get(environment.backend + 'userInfo', {
@@ -63,7 +64,7 @@ export class DebitorsComponent implements OnInit {
       }
     }).subscribe(
         _ => {
-          window.alert("Максимальный срок подачи показаний успешно изменен.");
+          this.successMessage = "Максимальный срок подачи показаний успешно изменен.";
 
           this.http.get(environment.backend + 'admin/getWhoDidNotSend', {
             withCredentials: true
@@ -76,6 +77,7 @@ export class DebitorsComponent implements OnInit {
         },
         err => {
           this.errMessage = err.error.message;
+          this.successMessage = '';
         }
     );
   }

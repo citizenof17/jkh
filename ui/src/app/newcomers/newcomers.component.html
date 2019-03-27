@@ -4,7 +4,7 @@
 <hr>
 
 <div *ngIf="report && report.length; else elseBlock">
-<p align="center">Пожалуйста, выбирайте статусы так, чтобы в каждой квартире суммарно находилось не более одно активного и неактивного пользователя.</p>
+<p align="center">Пожалуйста, выбирайте статусы так, чтобы в каждой квартире находился только один активный/неактивный пользователь.</p>
 <br>
 <form (submit)="setNewcomers($event)">
   <div *ngFor="let block of report; index as i">
@@ -40,6 +40,10 @@
   </div>
   <div align="center">
     <input type="submit" value="Сохранить изменения">
+  </div>
+
+  <div *ngIf="successMessage">
+      <p align="center" style="color: green">{{ successMessage }} </p>
   </div>
 
   <div *ngIf="errorMessage">

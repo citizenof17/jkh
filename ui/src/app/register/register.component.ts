@@ -29,7 +29,7 @@ export class RegisterComponent implements OnInit {
           flatnumber: new FormControl('', [Validators.required,
               Validators.min(1)]),
           email: new FormControl('', [Validators.required,
-              Validators.email]),
+              Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}')]),
           phonenumber: new FormControl('', [Validators.required,
               Validators.pattern("[\+][0-9]{11}")]),
           password: new FormControl('', [Validators.required,
