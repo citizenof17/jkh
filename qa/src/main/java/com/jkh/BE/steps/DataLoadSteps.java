@@ -4,6 +4,7 @@ import com.jkh.BE.database.*;
 import com.jkh.BE.models.Counter;
 import com.jkh.BE.models.RegisterRequest;
 import com.jkh.BE.models.enums.Status;
+import com.jkh.utils.AllureUtils;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,9 @@ public class DataLoadSteps {
 
     @Step("Select {1} last indication")
     public Integer lastIndication(String login, Counter.CounterType counterType) {
-        return indicationDao.select(login, counterType);
+        Integer result = indicationDao.select(login, counterType);
+        AllureUtils.saveText( "Last " + counterType.toString() + " indication in DB: " + result.toString(), result.toString());
+        return result;
     }
 
     @Step("Generating lists of all users by flats")
@@ -81,5 +84,10 @@ public class DataLoadSteps {
     @Step("Getting information about user: {0}")
     public Map<String, Object> selectUserByLogin(String login) {
         return usersDao.selectUserByLogin(login);
+    }
+
+    @Step("Updating all users status to ACTIVE")
+    public void ubdateAllUsersToActive() {
+        usersDao.updateAllUsersToActive();
     }
 }

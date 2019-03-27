@@ -14,6 +14,7 @@ public class UserDaoImpl extends JdbcDao implements UserDao {
             "user.phone, user.status from user inner join flat on user.flat_id = flat.id and user.login = '%s';";
     private static final String SELECT_USER_BY_FLAT = "select user.name, user.login, user.phone, user.email, flat.number " +
             "from user inner join flat on user.flat_id = flat.id and flat.number = '%s';";
+    private static final String UPDATE_ALL_USERS_TO_ACTIVE = "update user set user.status = 'ACTIVE'";
 
     @Autowired
     public UserDaoImpl(JdbcTemplate jdbcTemplate, MetricRegistry metricRegistry) {
@@ -33,5 +34,10 @@ public class UserDaoImpl extends JdbcDao implements UserDao {
     @Override
     public List<Map<String, Object>> selectUserByFlat(Integer flat){
         return getJdbcTemplate().queryForList(String.format(SELECT_USER_BY_FLAT, flat.toString()));
+    }
+
+    @Override
+    public void updateAllUsersToActive() {
+        getJdbcTemplate().update(UPDATE_ALL_USERS_TO_ACTIVE);
     }
 }

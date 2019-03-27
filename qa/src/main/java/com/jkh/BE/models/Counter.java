@@ -10,7 +10,6 @@ public class Counter {
     private CounterType type;
     //@JsonProperty(value = "flat_id")
     private Flat flat;
-    private Integer zero = 0;
     private Set<IndicationRequest> indicationSet;
 
     public Counter() {
@@ -57,14 +56,6 @@ public class Counter {
 
     public void setFlat(Flat flat) {
         this.flat = flat;
-    }
-
-    public Integer getZero() {
-        return zero;
-    }
-
-    public void setZero(Integer zero) {
-        this.zero = zero;
     }
 
     public Set<IndicationRequest> getIndicationSet() {

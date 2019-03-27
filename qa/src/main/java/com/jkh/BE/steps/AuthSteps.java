@@ -58,7 +58,6 @@ public class AuthSteps {
     @Step("Register incorrect register new user")
     public void registerIncorrectUser(RegisterRequest request) throws Exception {
         registerBadResponse = body2Object(authClient.register(request), RegisterBadResponse.class);
-        saveText(R, object2Json(registerBadResponse));
     }
 
     @Step("Check incorrect response")
@@ -72,6 +71,12 @@ public class AuthSteps {
     }
 
     public String getSessionId() {
-        return sessionId;
+        try {
+            //getDataAndSessionID(authClient.login(credential), LoginResponse.class);
+            return sessionId;
+        }
+        catch (Exception e) {
+            return sessionId;
+        }
     }
 }

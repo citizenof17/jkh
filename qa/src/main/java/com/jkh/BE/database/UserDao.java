@@ -10,4 +10,6 @@ public interface UserDao {
     Map<String, Object> selectUserByLogin(String login);
 
     List<Map<String, Object>> selectUserByFlat(Integer flat);
+
+    void updateAllUsersToActive();
 }

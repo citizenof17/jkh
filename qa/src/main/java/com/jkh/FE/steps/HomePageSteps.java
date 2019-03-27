@@ -4,10 +4,13 @@ import com.jkh.BE.models.Counter;
 import com.jkh.BE.models.IndicationRequest;
 import com.jkh.BE.models.RegisterRequest;
 import com.jkh.BE.steps.DataLoadSteps;
+import com.jkh.FE.ConfigurationFE;
 import com.jkh.FE.pages.HomePage;
+import com.jkh.utils.AllureUtils;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.yandex.qatools.allure.annotations.Step;
 
@@ -27,6 +30,18 @@ public class HomePageSteps {
 
     @Autowired
     private DataLoadSteps dataLoadSteps;
+
+    @Autowired
+    private ConfigurationFE configurationFE;
+
+    @Value("${ADMIN_NAME:Администратор Великий Ужаснович}")
+    private String name;
+
+    @Value("${ADMIN_EMAIL:Administrator@jkh.ru}")
+    private String email;
+
+    @Value("${ADMIN_PHONE:+79995550000}")
+    private String phone;
 
     @Step("Opening Home page")
     public void openHomePage() {
@@ -59,9 +74,9 @@ public class HomePageSteps {
     @Step("Checking UNVERIFIED home page fields")
     public void checkUnverifiedInfo() {
         checkUnverifiedTitle();
-        checkAdminNameField(ADMIN.getName());
-        checkAdminEmailField(ADMIN.getEmail());
-        checkAdminPhoneField(ADMIN.getPhone());
+        checkAdminNameField(name);
+        checkAdminEmailField(email);
+        checkAdminPhoneField(phone);
     }
 
     @Step("Checking welcome title contains username: {0}")

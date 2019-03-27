@@ -2,10 +2,19 @@ package com.jkh.utils;
 
 import com.jkh.BE.models.*;
 import com.jkh.BE.models.enums.Status;
+import com.jkh.FE.ConfigurationFE;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+@ConfigurationProperties
 public interface TestConstants {
+
+    @Value("${DEFAULT_PERIOD_BETWEEN_COUNTERS_SENDINGS:30}")
 
     String R = "Response";
 
@@ -13,7 +22,7 @@ public interface TestConstants {
     Counter COLD_WATER_COUNTER = new Counter(Counter.CounterType.COLD_WATER);
     Counter HOT_WATER_COUNTER = new Counter(Counter.CounterType.HOT_WATER);
 
-    IndicationResponse CORRECT_INDICATION_RESPONSE = new IndicationResponse(true, "ok");
+    IndicationResponse CORRECT_INDICATION_RESPONSE = new IndicationResponse(true, new String[]{"ok", "ok", "ok"});
 
     Object[][] correctIndicationData = new Object[][]{
             {
@@ -23,11 +32,11 @@ public interface TestConstants {
                                     10
                             ),
                             new IndicationRequest(
-                                    COLD_WATER_COUNTER,
+                                    HOT_WATER_COUNTER,
                                     11
                             ),
                             new IndicationRequest(
-                                    HOT_WATER_COUNTER,
+                                    COLD_WATER_COUNTER,
                                     12
                             )
                     ),
@@ -84,10 +93,15 @@ public interface TestConstants {
 
     };
 
-    RegisterRequest ADMIN = new RegisterRequest("Administrator", "Administrator_1", "+79995550000",
-            new Flat(1000), "Администратор Великий Ужаснович", "Administrator@jkh.ru");
+    //RegisterRequest ADMIN = new RegisterRequest("Administrator", "Administrator_1", "+79995550000",
+     //       new Flat(1000), "Администратор Великий Ужаснович", "Administrator@jkh.ru");
 
     RegisterRequest CORRECT_REGISTER_USER = (RegisterRequest) correctRegisterData[0][0];
+
+    RegisterRequest HOME_USER = new RegisterRequest("Victor1", "Qwerty_1", "+79053882198", new Flat(27),
+            "Колесников Виктор Анатольевич", "kolvictor@mail.ru");
+
+    List<RegisterRequest> CORRECT_USERS = new ArrayList<>(Arrays.asList(HOME_USER, CORRECT_REGISTER_USER));
 
     Object[][] incorrectRegisterData = new Object[][]{
             {

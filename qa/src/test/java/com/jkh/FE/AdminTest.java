@@ -3,13 +3,13 @@ package com.jkh.FE;
 import com.jkh.BE.models.RegisterRequest;
 import com.jkh.BE.steps.AuthSteps;
 import com.jkh.BE.steps.DataLoadSteps;
-import com.jkh.ConfigurationMain;
 import com.jkh.FE.pages.AdminPage;
 import com.jkh.FE.steps.AdminPageSteps;
 import com.jkh.FE.steps.BaseSteps;
 import com.jkh.FE.steps.LoginPageSteps;
 import com.jkh.utils.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeClass;
@@ -23,7 +23,7 @@ import static com.jkh.utils.TestConstants.*;
 
 @Features("FrontEnd")
 @Stories("AdminPage UI tests")
-@ContextConfiguration(classes = ConfigurationMain.class)
+@ContextConfiguration(classes = ConfigurationFE.class)
 public class AdminTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
@@ -41,6 +41,16 @@ public class AdminTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private BaseSteps baseSteps;
 
+    @Value("${ADMIN_LOGIN:Administrator}")
+    private String login;
+
+    @Value("${ADMIN_PASSWORD:Administrator_1}")
+    private String password;
+
+    @Value("${ADMIN_NAME:Администратор Великий Ужаснович}")
+    private String name;
+
+
     @BeforeClass(groups = {"FE", "Admin"})
     public void prepareData() throws Exception {
         dataLoadSteps.deleteAllData();
@@ -52,7 +62,7 @@ public class AdminTest extends AbstractTestNGSpringContextTests {
     @BeforeMethod(groups = {"FE", "Admin"})
     public void openAdminPage() {
         loginPageSteps.openLoginPage();
-        loginPageSteps.fillCorrectCredential(ADMIN.getLogin(), ADMIN.getPassword());
+        loginPageSteps.fillCorrectCredential(login, password);
     }
 
     @Test(groups = {"FE", "Admin"})

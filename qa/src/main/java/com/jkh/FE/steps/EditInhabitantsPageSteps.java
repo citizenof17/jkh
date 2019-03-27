@@ -1,17 +1,18 @@
 package com.jkh.FE.steps;
 
+import com.jkh.BE.models.RegisterRequest;
 import com.jkh.BE.models.enums.Status;
+import com.jkh.FE.ConfigurationFE;
 import com.jkh.FE.pages.AdminPage;
 import com.jkh.FE.pages.EditInhabitantsPage;
 import org.assertj.core.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.yandex.qatools.allure.annotations.Step;
 
 import java.util.List;
 import java.util.Map;
-
-import static com.jkh.utils.TestConstants.ADMIN;
 
 @Component
 public class EditInhabitantsPageSteps {
@@ -25,10 +26,19 @@ public class EditInhabitantsPageSteps {
     @Autowired
     private AdminPageSteps adminPageSteps;
 
+    @Autowired
+    private ConfigurationFE configurationFE;
+
+    @Value("${ADMIN_LOGIN:Administrator}")
+    private String login;
+
+    @Value("${ADMIN_PASSWORD:Administrator_1}")
+    private String password;
+
     @Step("Open Edit Inhabitants page")
     public void openEditInhabitantsPage() {
         loginPageSteps.openLoginPage();
-        loginPageSteps.fillCorrectCredential(ADMIN.getLogin(), ADMIN.getPassword());
+        loginPageSteps.fillCorrectCredential(login, password);
         adminPageSteps.clickButton(AdminPage.Button.EDIT_INHABITANTS);
     }
 

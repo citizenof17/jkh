@@ -5,13 +5,13 @@ import java.util.Objects;
 public class IndicationResponse {
 
     private boolean isOk;
-    private String messages;
+    private String[] messages;
 
     public IndicationResponse() {
 
     }
 
-    public IndicationResponse(boolean isOk, String messages) {
+    public IndicationResponse(boolean isOk, String[] messages) {
         this.isOk = isOk;
         this.messages = messages;
     }
@@ -24,11 +24,11 @@ public class IndicationResponse {
         isOk = ok;
     }
 
-    public String getMessages() {
+    public String[] getMessages() {
         return messages;
     }
 
-    public void setMessages(String messages) {
+    public void setMessages(String[] messages) {
         this.messages = messages;
     }
 

@@ -25,7 +25,7 @@ public class HomePage {
     private static final SelenideElement ADMIN_PHONE_FIELD = findField("Телефон:");
     //buttons
     private static final SelenideElement LOGOUT_BUTTON = $x("//a");
-    private static final SelenideElement SEND_INDICATIONS_BUTTON = $x("//button");
+    private static final SelenideElement SEND_INDICATIONS_BUTTON = $x("//input[contains(@value, 'Отправить показания')]");
     private static final SelenideElement MAKE_REPORT_BUTTON = $x("//input[contains(@value, 'Построить отчет')]");
     //indication input fields
     private static final SelenideElement ELECTRICITY_INPUT_FIELD = $(By.id("electr"));
@@ -38,6 +38,8 @@ public class HomePage {
     private static final SelenideElement MANUAL_RADIO = findPeriodRadioButton(TimePeriod.MANUAL);
     //table columns
     private static final ElementsCollection COLUMNS = $$x("//tbody//tbody//tr//td");
+    //messages
+    private static final SelenideElement SUCCESS_SENT_INDICATIONS_MESSAGE = findField(Message.SUCCESS_SENT_INDICATIONS.getMessage());
 
     private static SelenideElement findField(String title) {
         return $x(String.format("//p[contains(text(), '%s')]", title));
@@ -117,6 +119,21 @@ public class HomePage {
         indication.put("hot", COLUMNS.get(id * 4 + 2).getValue());
         indication.put("cold", COLUMNS.get(id * 4 + 3).getValue());
         return indication;
+    }
+
+    public enum Message {
+
+        SUCCESS_SENT_INDICATIONS("Данные успешно отправлены.");
+
+        private String message;
+
+        Message(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
     }
 
     public enum TimePeriod {

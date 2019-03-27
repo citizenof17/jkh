@@ -6,6 +6,7 @@ import com.jkh.BE.steps.AuthSteps;
 import com.jkh.BE.steps.DataLoadSteps;
 import com.jkh.ConfigurationMain;
 import com.jkh.FE.steps.BaseSteps;
+import com.jkh.FE.steps.EditInhabitantsPageSteps;
 import com.jkh.FE.steps.HomePageSteps;
 import com.jkh.FE.steps.LoginPageSteps;
 import com.jkh.utils.Assertions;
@@ -20,7 +21,6 @@ import ru.yandex.qatools.allure.annotations.Features;
 import ru.yandex.qatools.allure.annotations.Stories;
 import ru.yandex.qatools.allure.annotations.Title;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.jkh.utils.TestConstants.*;
@@ -46,12 +46,21 @@ public class HomeTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private BaseSteps baseSteps;
 
+    @Autowired
+    private EditInhabitantsPageSteps editInhabitantsPageSteps;
+
     @BeforeClass(groups = {"FE", "Home"})
     public void prepareData() throws Exception {
         dataLoadSteps.deleteAllData();
-        for (Object[] objects : correctRegisterData) {
-            authSteps.registerUser((RegisterRequest) objects[0]);
+        for (RegisterRequest user: CORRECT_USERS) {
+            authSteps.registerUser(user);
+            /*editInhabitantsPageSteps.openEditInhabitantsPage();
+            editInhabitantsPageSteps.fillFlatInputField(String.valueOf(user.getFlat().getNumber()));
+            editInhabitantsPageSteps.clickButton(EditInhabitantsPage.Button.SHOW_USER);
+            editInhabitantsPageSteps.selectStatusRadio(0, Status.ACTIVE);
+            editInhabitantsPageSteps.clickButton(EditInhabitantsPage.Button.SAVE_USER);*/
         }
+        dataLoadSteps.ubdateAllUsersToActive();
     }
 
     @BeforeMethod(groups = {"FE", "Home"})
@@ -63,8 +72,7 @@ public class HomeTest extends AbstractTestNGSpringContextTests {
     @Test(groups = {"FE", "Home"})
     @Title("Clicking on logout button")
     public void logoutTest() {
-        RegisterRequest correctUser = (RegisterRequest) correctRegisterData[0][0];
-        loginPageSteps.fillCorrectCredential(correctUser.getLogin(), correctUser.getPassword());
+        loginPageSteps.fillCorrectCredential(CORRECT_REGISTER_USER.getLogin(), CORRECT_REGISTER_USER.getPassword());
         homePageSteps.clickLogoutButton();
         Assertions.checkAddress(LOGIN_PAGE_ADDRESS);
     }
@@ -72,6 +80,7 @@ public class HomeTest extends AbstractTestNGSpringContextTests {
     @Test(groups = {"FE", "Home"})
     @Title("Checking inaccessibility home page without authorization")
     public void inaccessibilityHomePageTest() {
+        baseSteps.deleteAllCookies();
         homePageSteps.openHomePage();
         Assertions.checkAddress(LOGIN_PAGE_ADDRESS);
     }
@@ -84,12 +93,10 @@ public class HomeTest extends AbstractTestNGSpringContextTests {
         homePageSteps.checkLastIndications((List<IndicationRequest>) correctIndicationData[0][0], correctUser.getLogin());
     }
 
+    @Test(groups = {"FE", "Home"}, dataProvider = "correctUserData")
+
     @DataProvider(name = "correctIndicationData")
     public Object[] correctIndicationData() {
-        ArrayList<RegisterRequest> registerRequests = new ArrayList<>();
-        for (Object[] objects1 : correctRegisterData) {
-            registerRequests.add((RegisterRequest) objects1[0]);
-        }
-        return registerRequests.subList(0, registerRequests.size() - 1).toArray();
+        return CORRECT_USERS.toArray();
     }
 }

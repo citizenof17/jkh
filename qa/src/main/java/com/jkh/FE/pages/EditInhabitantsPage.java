@@ -20,15 +20,8 @@ public class EditInhabitantsPage {
     private static final SelenideElement SAVE_USER_BUTTON = findInput("Сохранить изменения");
     //flat number input field
     private static final SelenideElement FLAT_NUMBER_INPUT_FIELD = $(By.id("flat"));
-    //table rows
-    private static final ElementsCollection ROWS = $$x("//tbody//tr");
     //table columns
     private static final ElementsCollection COLUMNS = $$x("//tbody//tr//td");
-    private static final SelenideElement NAME_COLUMN = COLUMNS.get(0);
-    private static final SelenideElement LOGIN_COLUMN = COLUMNS.get(1);
-    private static final SelenideElement PHONE_COLUMN = COLUMNS.get(2);
-    private static final SelenideElement EMAIL_COLUMN = COLUMNS.get(3);
-    private static final SelenideElement RADIOS = COLUMNS.get(4);
     //status radio
     private static final ElementsCollection ACTIVE_STATUS_RADIO = findRadioButton(Status.ACTIVE.toString());
     private static final ElementsCollection INACTIVE_STATUS_RADIO = findRadioButton(Status.INACTIVE.toString());
@@ -38,6 +31,8 @@ public class EditInhabitantsPage {
     private static final SelenideElement FLAT_NOT_FOUND_ERROR_MESSAGE = findErrorMessage1(Error.FLAT_NOT_FOUND);
     private static final SelenideElement INCORRECT_FLAT_ERROR_MESSAGE = findErrorMessage2(Error.INCORRECT_FLAT);
     private static final SelenideElement INCORRECT_STATUSES_ERROR_MESSAGE = findErrorMessage1(Error.INCORRECT_STATUSES);
+    //success message
+    private static final SelenideElement SUCCESS_MESSAGE = findErrorMessage1(Error.SUCCESS);
 
     private static SelenideElement findButton(String text) {
         return $x(String.format("//a[contains(text(), '%s')]", text));
@@ -84,6 +79,8 @@ public class EditInhabitantsPage {
                 return INCORRECT_FLAT_ERROR_MESSAGE.isDisplayed();
             case INCORRECT_STATUSES:
                 return INCORRECT_STATUSES_ERROR_MESSAGE.isDisplayed();
+            case SUCCESS:
+                return SUCCESS_MESSAGE.isDisplayed();
             default:
                 return false;
         }
@@ -141,7 +138,8 @@ public class EditInhabitantsPage {
 
         FLAT_NOT_FOUND("Квартира не найдена"),
         INCORRECT_FLAT("Некорректное значение."),
-        INCORRECT_STATUSES("Блок статусов некорректен в квартире");
+        INCORRECT_STATUSES("Блок статусов некорректен в квартире"),
+        SUCCESS("Изменения успешно сохранены.");
 
         private String message;
 
