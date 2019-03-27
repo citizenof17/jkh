@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.jkh.backend.service.validation.ValidationMessages.*;
+import static com.jkh.backend.service.validation.ValidationRegexes.*;
 
 @Service
 public class UserServiceValidator {
@@ -21,9 +22,9 @@ public class UserServiceValidator {
     private UserRepository userRepository;
 
     private String checkLogin(String login, MutableBoolean isOk) {
-        if (login == null || login.length() < 3) {
+        if (login == null || !login.matches(LOGIN_REGEX)) {
             isOk.setFalse();
-            return LOGIN_LENGTH;
+            return LOGIN_INCORRECT;
         }
 
         User user = userRepository.findUserByLogin(login);
@@ -43,10 +44,10 @@ public class UserServiceValidator {
         return OK;
     }
 
-    private String checkNotEmpty(String field, MutableBoolean isOk) {
-        if (StringUtils.isBlank(field)) {
+    private String checkName(String name, MutableBoolean isOk) {
+        if (name == null || !name.matches(NAME_REGEX)) {
             isOk.setFalse();
-            return FIELD_IS_EMPTY;
+            return NAME_INCORRECT;
         }
 
         return OK;
@@ -96,7 +97,7 @@ public class UserServiceValidator {
         return new ResponseWrapperRegistrationValidator(
                 checkLogin(user.getLogin(), userDataIsOk),
                 checkPassword(user.getPassword(), userDataIsOk),
-                checkNotEmpty(user.getName(), userDataIsOk),
+                checkName(user.getName(), userDataIsOk),
                 checkFlat(user.getFlat(), userDataIsOk),
                 checkPhone(user.getPhone(), userDataIsOk),
                 checkEmail(user.getEmail(), userDataIsOk),
