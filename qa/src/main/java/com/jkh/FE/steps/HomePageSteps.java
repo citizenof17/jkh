@@ -98,6 +98,11 @@ public class HomePageSteps {
         assertions.assertAll();
     }
 
+    @Step("Checking indications in table")
+    public void checkIndications() {
+        homePage.getIndication(1);
+    }
+
     @Step("Clicking on send indications button")
     public void clickSendIndicationsButton() {
         homePage.clickSendIndicationsButton();

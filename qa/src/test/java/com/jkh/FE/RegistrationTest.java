@@ -165,6 +165,9 @@ public class RegistrationTest extends AbstractTestNGSpringContextTests {
         return incorrectFlatData;
     }
 
+    @DataProvider(name = "incorrectEmailData")
+    public Object[] incorrectEmailData() { return incorrectEmailData; }
+
     @DataProvider(name = "incorrectPhoneData")
     public Object[] incorrectPhoneData() {
         return incorrectPhoneData;

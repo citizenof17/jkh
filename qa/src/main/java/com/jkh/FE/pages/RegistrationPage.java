@@ -13,7 +13,7 @@ public class RegistrationPage {
     private static final String LOGIN_ERROR_TEXT = "Некорректный формат имени пользователя.";
     private static final String NAME_ERROR_TEXT = "Некорректный формат Ф.И.О.";
     private static final String FLAT_ERROR_TEXT = "Некорректный номер квартиры.";
-    private static final String EMAIL_ERROR_TEXT = "Некорректный почтовый адрес";
+    private static final String EMAIL_ERROR_TEXT = "Некорректный формат адреса электронной почты.";
     private static final String PHONE_ERROR_TEXT = "Некорректный формат номера телефона.";
     private static final String PASSWORD_ERROR_TEXT = "Некорректный формат пароля.";
     private static final String CONFIRM_PASSWORD_ERROR_TEXT = "Введенные пароли не совпадают.";

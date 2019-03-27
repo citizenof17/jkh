@@ -1,33 +1,43 @@
 package com.jkh.FE.pages;
 
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import com.jkh.BE.models.Counter;
 import org.assertj.core.api.Assertions;
 import org.openqa.selenium.By;
 import org.springframework.stereotype.Component;
 
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$x;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.codeborne.selenide.Selenide.*;
 
 @Component
 public class HomePage {
 
+    private static String UNVERIFIED_TITLE_TEXT = "Ваш аккаунт не был подтвержден. Для подтверждения свяжитесь с администратором. ";
+    //titles
     private static final SelenideElement WELCOME_TITLE = $x("//p");
+    private static final SelenideElement UNVERIFIED_TITLE = findField(UNVERIFIED_TITLE_TEXT);
+    //admin info
+    private static final SelenideElement ADMIN_NAME_FIELD = findField("Имя:");
+    private static final SelenideElement ADMIN_EMAIL_FIELD = findField("Электронная почта:");
+    private static final SelenideElement ADMIN_PHONE_FIELD = findField("Телефон:");
+    //buttons
     private static final SelenideElement LOGOUT_BUTTON = $x("//a");
+    private static final SelenideElement SEND_INDICATIONS_BUTTON = $x("//button");
+    private static final SelenideElement MAKE_REPORT_BUTTON = $x("//input[contains(@value, 'Построить отчет')]");
+    //indication input fields
     private static final SelenideElement ELECTRICITY_INPUT_FIELD = $(By.id("electr"));
     private static final SelenideElement HOT_WATER_INPUT_FIELD = $(By.id("hot"));
     private static final SelenideElement COLD_WATER_INPUT_FIELD = $(By.id("cold"));
-    private static final SelenideElement SEND_INDICATIONS_BUTTON = $x("//button");
+    //period radio
     private static final SelenideElement ALL_RADIO = findPeriodRadioButton(TimePeriod.ALL);
     private static final SelenideElement THIS_YEAR_RADIO = findPeriodRadioButton(TimePeriod.THIS_YEAR);
     private static final SelenideElement THIS_MONTH_RADIO = findPeriodRadioButton(TimePeriod.THIS_MONTH);
     private static final SelenideElement MANUAL_RADIO = findPeriodRadioButton(TimePeriod.MANUAL);
-    private static final SelenideElement MAKE_REPORT_BUTTON = $x("//input[contains(@value, 'Построить отчет')]");
-    private static String UNVERIFIED_TITLE_TEXT = "Ваш аккаунт не был подтвержден. Для подтверждения свяжитесь с администратором. ";
-    private static final SelenideElement UNVERIFIED_TITLE = findField(UNVERIFIED_TITLE_TEXT);
-    private static final SelenideElement ADMIN_NAME_FIELD = findField("Имя:");
-    private static final SelenideElement ADMIN_EMAIL_FIELD = findField("Электронная почта:");
-    private static final SelenideElement ADMIN_PHONE_FIELD = findField("Телефон:");
+    //table columns
+    private static final ElementsCollection COLUMNS = $$x("//tbody//tbody//tr//td");
 
     private static SelenideElement findField(String title) {
         return $x(String.format("//p[contains(text(), '%s')]", title));
@@ -98,6 +108,15 @@ public class HomePage {
 
     public void clickMakeReportButton() {
         MAKE_REPORT_BUTTON.click();
+    }
+
+    public Map<String, String> getIndication(Integer id) {
+        HashMap<String, String> indication = new HashMap<>();
+        indication.put("date", COLUMNS.get(id * 4).getValue());
+        indication.put("electr", COLUMNS.get(id * 4 + 1).getValue());
+        indication.put("hot", COLUMNS.get(id * 4 + 2).getValue());
+        indication.put("cold", COLUMNS.get(id * 4 + 3).getValue());
+        return indication;
     }
 
     public enum TimePeriod {

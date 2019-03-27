@@ -2,7 +2,6 @@ package com.jkh.utils;
 
 import com.jkh.BE.models.*;
 import com.jkh.BE.models.enums.Status;
-import com.jkh.FE.models.RegisterUser;
 
 import java.util.Arrays;
 
@@ -182,8 +181,15 @@ public interface TestConstants {
     Object[] incorrectFlatData = new Integer[]{-10, 0};
     Object[] incorrectEmailData = new String[]{"!sf@df s", "olegmail.ru", "12@m"};
     Object[] incorrectPhoneData = new String[]{"+7999999999", "99999999999", "+791111111111"};
-
     Object[] incorrectPasswordData = new String[]{"12Qwer!", "!2314324_ddfs"};
+
+    Object[][] incorrectStatusesForFlat55Data = new Object[][]{
+            {Arrays.asList(Status.ACTIVE, Status.ACTIVE)},
+            {Arrays.asList(Status.ACTIVE, Status.INACTIVE)},
+            {Arrays.asList(Status.INACTIVE, Status.INACTIVE)}
+    };
+
+    String NOT_FOUND_FLAT = "1000";
 
     String CORRECT_FORMAT_LOGIN = "Victor1";
     String CORRECT_FORMAT_PASSWORD = "Qwerty_1";

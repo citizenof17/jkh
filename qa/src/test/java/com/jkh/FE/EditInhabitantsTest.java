@@ -7,6 +7,7 @@ import com.jkh.BE.steps.DataLoadSteps;
 import com.jkh.ConfigurationMain;
 import com.jkh.FE.pages.EditInhabitantsPage;
 import com.jkh.FE.steps.EditInhabitantsPageSteps;
+import org.apache.commons.lang3.EnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -21,8 +22,7 @@ import ru.yandex.qatools.allure.annotations.Title;
 import java.util.List;
 import java.util.Map;
 
-import static com.jkh.utils.TestConstants.CORRECT_REGISTER_USER;
-import static com.jkh.utils.TestConstants.correctRegisterData;
+import static com.jkh.utils.TestConstants.*;
 
 @Features("FrontEnd")
 @Stories("EditInhabitantsPage UI tests")
@@ -60,17 +60,61 @@ public class EditInhabitantsTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(groups = {"FE", "Edit"})
-    @Title("Checking editing user status on ACTIVE")
-    public void checkRadioTest() {
+    @Title("Checking show FLAT_NOT_FOUND error message")
+    public void checkFlatNotFoundErrorMessageTest() {
+        editInhabitantsPageSteps.fillFlatInputField(NOT_FOUND_FLAT);
+        editInhabitantsPageSteps.clickButton(EditInhabitantsPage.Button.SHOW_USER);
+        editInhabitantsPageSteps.checkErrorMessageVisibility(EditInhabitantsPage.Error.FLAT_NOT_FOUND, true);
+    }
+
+    @Test(groups = {"FE", "Edit"}, dataProvider = "incorrectFlatData")
+    @Title("Checking show INCORRECT_FLAT error message")
+    public void checkIncorrectFlatErrorMessageTest(Integer flat) {
+        editInhabitantsPageSteps.fillFlatInputField(String.valueOf(flat));
+        editInhabitantsPageSteps.clickButton(EditInhabitantsPage.Button.SHOW_USER);
+        editInhabitantsPageSteps.reset();
+        editInhabitantsPageSteps.checkErrorMessageVisibility(EditInhabitantsPage.Error.INCORRECT_FLAT, true);
+    }
+
+    @Test(groups = {"FE", "Edit"}, dataProvider = "incorrectStatusesForFlat55Data")
+    @Title("Checking show INCORRECT_STATUSES error message")
+    public void checkIncorrectStatusesErrorMessageTest(List<Status> statuses) {
+        editInhabitantsPageSteps.fillFlatInputField(String.valueOf(55));
+        editInhabitantsPageSteps.clickButton(EditInhabitantsPage.Button.SHOW_USER);
+        for (int i = 0; i < statuses.size(); i++) {
+            editInhabitantsPageSteps.selectStatusRadio(i, statuses.get(i));
+        }
+        editInhabitantsPageSteps.clickButton(EditInhabitantsPage.Button.SAVE_USER);
+        editInhabitantsPageSteps.checkErrorMessageVisibility(EditInhabitantsPage.Error.INCORRECT_STATUSES, true);
+    }
+
+    @Test(groups = {"FE", "Edit"}, enabled = false, dataProvider = "statusesData")
+    @Title("Checking editing user status")
+    public void checkRadioTest(Status status) {
         editInhabitantsPageSteps.fillFlatInputField(String.valueOf(CORRECT_REGISTER_USER.getFlat().getNumber()));
         editInhabitantsPageSteps.clickButton(EditInhabitantsPage.Button.SHOW_USER);
-        editInhabitantsPageSteps.selectStatusRadio(0, Status.ACTIVE);
+        editInhabitantsPageSteps.selectStatusRadio(0, status);
         editInhabitantsPageSteps.clickButton(EditInhabitantsPage.Button.SAVE_USER);
-        dataLoadSteps.checkUserStatus(CORRECT_REGISTER_USER.getLogin(), Status.ACTIVE);
+        dataLoadSteps.checkUserStatus(CORRECT_REGISTER_USER.getLogin(), status);
     }
 
     @DataProvider(name = "correctUserData")
     public Object[] correctUserData() {
         return dataLoadSteps.listsUsersByFlat().toArray();
+    }
+
+    @DataProvider(name = "incorrectFlatData")
+    public Object[] incorrectFlatData() {
+        return incorrectFlatData;
+    }
+
+    @DataProvider(name = "statusesData")
+    public Object[] statusesData() {
+        return EnumUtils.getEnumList(Status.class).subList(0, 3).toArray();
+    }
+
+    @DataProvider(name = "incorrectStatusesForFlat55Data")
+    public Object[] incorrectStatusesForFlat55Data() {
+        return incorrectStatusesForFlat55Data;
     }
 }

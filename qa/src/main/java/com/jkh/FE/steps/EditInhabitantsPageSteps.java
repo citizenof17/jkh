@@ -42,7 +42,7 @@ public class EditInhabitantsPageSteps {
         editInhabitantsPage.fillFlatNumberInputField(flat);
     }
 
-    @Step("Select {0} user status")
+    @Step("Select {0} user status on {1}")
     public void selectStatusRadio(Integer id, Status status) {
         editInhabitantsPage.selectStatusRadio(id, status);
     }
@@ -79,5 +79,15 @@ public class EditInhabitantsPageSteps {
     @Step("Checking email: {1}")
     public void checkEmail(Integer id, String email) {
         Assertions.assertThat(editInhabitantsPage.getEmail(id)).as("Wrong email").isEqualTo(email);
+    }
+
+    @Step("Checking {0} error message is visible: {1}")
+    public void checkErrorMessageVisibility(EditInhabitantsPage.Error error, boolean visibility) {
+        Assertions.assertThat(editInhabitantsPage.getErrorMessageVisibility(error)).as("Error message \"" +
+                error.getMessage()+"\" visibility is not equal: " + visibility).isEqualTo(visibility);
+    }
+
+    public void reset() {
+        editInhabitantsPage.reset();
     }
 }
