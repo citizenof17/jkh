@@ -30,6 +30,7 @@
             <div *ngIf="form.get('electr').touched && form.get('electr').dirty">
               <div *ngIf="form.get('electr').hasError('required')" style="color: #ed2939">Введите показание.</div>
               <div *ngIf="form.get('electr').hasError('min')" style="color: #ed2939">Некорректное показание.</div>
+              <div *ngIf="form.get('electr').hasError('pattern')" style="color: #ed2939">Некорректное показание.</div>
             </div>
 
             <p><label>Горячая вода</label>
@@ -40,7 +41,7 @@
 
             <div *ngIf="form.get('hot').touched && form.get('hot').dirty">
               <div *ngIf="form.get('hot').hasError('required')" style="color: #ed2939">Введите показание.</div>
-              <div *ngIf="form.get('hot').hasError('min')" style="color: #ed2939">Некорректное показание.</div>
+              <div *ngIf="form.get('hot').hasError('min') || form.get('hot').hasError('pattern')" style="color: #ed2939">Некорректное показание.</div>
             </div>
 
             <p><label>Холодная вода</label>
@@ -51,7 +52,7 @@
 
             <div *ngIf="form.get('cold').touched && form.get('cold').dirty">
               <div *ngIf="form.get('cold').hasError('required')" style="color: #ed2939">Введите показание.</div>
-              <div *ngIf="form.get('cold').hasError('min')" style="color: #ed2939">Некорректное показание.</div>
+              <div *ngIf="form.get('cold').hasError('min') || form.get('cold').hasError('pattern')" style="color: #ed2939">Некорректное показание.</div>
             </div>
 
             <p><input type="submit" [disabled]="form.invalid || status == 'INACTIVE'" value="Отправить показания"></p>

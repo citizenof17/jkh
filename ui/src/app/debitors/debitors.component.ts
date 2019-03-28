@@ -47,7 +47,8 @@ export class DebitorsComponent implements OnInit {
 
   ngOnInit() {
     this.form = new FormGroup({
-          notPeriod: new FormControl(this.notificationPeriod, [Validators.required, Validators.min(1)])
+          notPeriod: new FormControl(this.notificationPeriod, [Validators.required, Validators.min(1),
+              Validators.pattern("^[0-9]*$")])
         }
     );
   }

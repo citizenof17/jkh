@@ -12,6 +12,7 @@
   <div *ngIf="form.get('notPeriod').touched && form.get('notPeriod').dirty">
     <div *ngIf="form.get('notPeriod').hasError('required')"style="color: #ed2939">Введите значение.</div>
     <div *ngIf="form.get('notPeriod').hasError('min')" style="color: #ed2939">Некорректное значение.</div>
+    <div *ngIf="form.get('notPeriod').hasError('pattern')" style="color: #ed2939">Некорректное значение.</div>
   </div>
   <p><input class="special" type="submit" [disabled]="form.invalid" value="Изменить"></p>
 

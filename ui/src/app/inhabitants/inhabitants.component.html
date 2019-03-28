@@ -12,10 +12,12 @@
   <div *ngIf="form.get('flat').touched && form.get('flat').dirty">
     <div *ngIf="form.get('flat').hasError('required')" style="color: #ed2939">Введите значение.</div>
     <div *ngIf="form.get('flat').hasError('min')" style="color: #ed2939">Некорректное значение.</div>
-  </div>
+    <div *ngIf="form.get('flat').hasError('pattern')" style="color: #ed2939">Некорректное значение.</div>
+
+</div>
   <p><input class="special" type="submit" [disabled]="form.invalid" value="Посмотреть пользователей"></p>
 
-  <div *ngIf="errorMessage">
+  <div *ngIf="errorMessage.length > 0">
     <p style="color: #ed2939">{{ errorMessage }}</p>
   </div>
 

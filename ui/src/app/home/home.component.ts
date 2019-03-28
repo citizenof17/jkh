@@ -68,11 +68,11 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
       this.form = new FormGroup({
           electr: new FormControl('', [Validators.required,
-              Validators.min(0)]),
+              Validators.min(0), Validators.pattern("^[0-9]*$")]),
           hot: new FormControl('', [Validators.required,
-              Validators.min(0)]),
+              Validators.min(0), Validators.pattern("^[0-9]*$")]),
           cold: new FormControl('', [Validators.required,
-              Validators.min(0)])
+              Validators.min(0), Validators.pattern("^[0-9]*$")])
       });
   }
 

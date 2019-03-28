@@ -39,7 +39,8 @@ export class InhabitantsComponent implements OnInit {
 
   ngOnInit() {
     this.form = new FormGroup({
-          flat: new FormControl('', [Validators.required, Validators.min(1)])
+          flat: new FormControl('', [Validators.required, Validators.min(1),
+              Validators.pattern("^[0-9]*$")])
         }
     );
   }
@@ -114,7 +115,7 @@ export class InhabitantsComponent implements OnInit {
                       this.report = data;
                       this.errorMessage = '';
                   }, err => {
-                      this.errorMessage = err.error['message'];
+                      this.errorMessage = err.error;
                       this.type = 0;
                   }
               );
