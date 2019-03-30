@@ -4,11 +4,13 @@ import { Router } from '@angular/router';
 import {CookieService} from "ngx-cookie-service";
 import {environment} from "../../environments/environment";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  providers: [DatePipe]
 })
 export class HomeComponent implements OnInit {
 
@@ -19,6 +21,7 @@ export class HomeComponent implements OnInit {
   dateError: String;
   status = '';
   notification = 0;
+  myDate = '';
   infoMessage: any = {
       msg: '',
       contacts: {}
@@ -28,7 +31,8 @@ export class HomeComponent implements OnInit {
   };
 
 
-  constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) {
+  constructor(private http: HttpClient, private router: Router, private cookieService: CookieService,
+              private datePipe: DatePipe) {
     this.greetingMessage = '';
     this.http.get(environment.backend + 'userInfo', {
       withCredentials: true
@@ -108,7 +112,8 @@ export class HomeComponent implements OnInit {
       }).subscribe(
         _ => {
             this.errorMessage = [];
-            this.successMessage = 'Данные успешно отправлены.';
+            this.myDate = this.datePipe.transform(new Date(), "dd.MM.yyyy", "en");
+            this.successMessage = 'Данные успешно отправлены за ' + this.myDate + '.';
         } ,
         err => {
             this.successMessage = '';
