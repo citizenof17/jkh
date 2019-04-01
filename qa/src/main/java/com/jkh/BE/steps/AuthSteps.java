@@ -9,11 +9,8 @@ import ru.yandex.qatools.allure.annotations.Step;
 
 import java.io.IOException;
 
-import static com.jkh.utils.AllureUtils.saveText;
 import static com.jkh.utils.Assertions.compareIfEqual;
 import static com.jkh.utils.ObjMapper.body2Object;
-import static com.jkh.utils.ObjMapper.object2Json;
-import static com.jkh.utils.TestConstants.R;
 
 
 @Component
@@ -71,12 +68,6 @@ public class AuthSteps {
     }
 
     public String getSessionId() {
-        try {
-            //getDataAndSessionID(authClient.login(credential), LoginResponse.class);
-            return sessionId;
-        }
-        catch (Exception e) {
-            return sessionId;
-        }
+        return sessionId;
     }
 }

@@ -2,14 +2,10 @@ package com.jkh.BE;
 
 import com.jkh.BE.models.IndicationRequest;
 import com.jkh.BE.models.IndicationResponse;
-import com.jkh.BE.models.LoginRequest;
-import com.jkh.BE.models.RegisterRequest;
-import com.jkh.BE.models.enums.Status;
 import com.jkh.BE.steps.AuthSteps;
 import com.jkh.BE.steps.DataLoadSteps;
 import com.jkh.BE.steps.IndicationSteps;
 import com.jkh.ConfigurationMain;
-import com.jkh.FE.pages.EditInhabitantsPage;
 import com.jkh.FE.steps.EditInhabitantsPageSteps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,7 +20,8 @@ import ru.yandex.qatools.allure.annotations.Title;
 import java.io.IOException;
 import java.util.List;
 
-import static com.jkh.utils.TestConstants.*;
+import static com.jkh.utils.TestConstants.CORRECT_REGISTER_USER;
+import static com.jkh.utils.TestConstants.correctIndicationData;
 
 @Features("BackEnd")
 @Stories("Indication API tests")
@@ -47,10 +44,10 @@ public class IndicationTest extends AbstractTestNGSpringContextTests {
     public void prepareData() throws Exception {
         dataLoadSteps.deleteAllData();
         authSteps.registerUser(CORRECT_REGISTER_USER);
-        dataLoadSteps.ubdateAllUsersToActive();
+        dataLoadSteps.updateAllUsersToActive();
     }
 
-    @Test(groups = {"BE", "Indication"}, dataProvider = "correctIndicationData")
+    @Test(groups = {"BE", "Indication"}, dataProvider = "correctIndicationData", enabled = false)
     @Title("Send correct indication data")
     public void sendCorrectIndication(List<IndicationRequest> indicationRequests, IndicationResponse indicationResponse) throws IOException {
         indicationSteps.sendIndications(indicationRequests, authSteps.getSessionId());

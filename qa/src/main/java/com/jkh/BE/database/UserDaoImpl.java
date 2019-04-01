@@ -32,7 +32,7 @@ public class UserDaoImpl extends JdbcDao implements UserDao {
     }
 
     @Override
-    public List<Map<String, Object>> selectUserByFlat(Integer flat){
+    public List<Map<String, Object>> selectUserByFlat(Integer flat) {
         return getJdbcTemplate().queryForList(String.format(SELECT_USER_BY_FLAT, flat.toString()));
     }
 

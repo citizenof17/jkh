@@ -3,6 +3,7 @@ package com.jkh.FE;
 import com.jkh.BE.models.RegisterRequest;
 import com.jkh.BE.steps.AuthSteps;
 import com.jkh.BE.steps.DataLoadSteps;
+import com.jkh.ConfigurationMain;
 import com.jkh.FE.pages.AdminPage;
 import com.jkh.FE.steps.AdminPageSteps;
 import com.jkh.FE.steps.BaseSteps;
@@ -23,7 +24,7 @@ import static com.jkh.utils.TestConstants.*;
 
 @Features("FrontEnd")
 @Stories("AdminPage UI tests")
-@ContextConfiguration(classes = ConfigurationFE.class)
+@ContextConfiguration(classes = ConfigurationMain.class)
 public class AdminTest extends AbstractTestNGSpringContextTests {
 
     @Autowired

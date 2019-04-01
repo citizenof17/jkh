@@ -56,7 +56,9 @@ public class RegisterRequest implements Serializable {
         this.flat = flat;
     }
 
-    public void setFlatNumber(Integer number) {this.flat.setNumber(number);}
+    public void setFlatNumber(Integer number) {
+        this.flat.setNumber(number);
+    }
 
     public String getName() {
         return name;

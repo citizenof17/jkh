@@ -88,13 +88,14 @@ public class EditInhabitantsTest extends AbstractTestNGSpringContextTests {
         editInhabitantsPageSteps.checkErrorMessageVisibility(EditInhabitantsPage.Error.INCORRECT_STATUSES, true);
     }
 
-    @Test(groups = {"FE", "Edit"}, enabled = false, dataProvider = "statusesData")
+    @Test(groups = {"FE", "Edit"}, dataProvider = "statusesData")
     @Title("Checking editing user status")
     public void checkRadioTest(Status status) {
         editInhabitantsPageSteps.fillFlatInputField(String.valueOf(CORRECT_REGISTER_USER.getFlat().getNumber()));
         editInhabitantsPageSteps.clickButton(EditInhabitantsPage.Button.SHOW_USER);
         editInhabitantsPageSteps.selectStatusRadio(0, status);
         editInhabitantsPageSteps.clickButton(EditInhabitantsPage.Button.SAVE_USER);
+        editInhabitantsPageSteps.checkErrorMessageVisibility(EditInhabitantsPage.Error.SUCCESS, true);
         dataLoadSteps.checkUserStatus(CORRECT_REGISTER_USER.getLogin(), status);
     }
 

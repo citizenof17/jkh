@@ -5,6 +5,7 @@ import com.jkh.BE.models.RegisterRequest;
 import com.jkh.BE.steps.AuthSteps;
 import com.jkh.BE.steps.DataLoadSteps;
 import com.jkh.ConfigurationMain;
+import com.jkh.FE.pages.HomePage;
 import com.jkh.FE.steps.BaseSteps;
 import com.jkh.FE.steps.EditInhabitantsPageSteps;
 import com.jkh.FE.steps.HomePageSteps;
@@ -52,15 +53,10 @@ public class HomeTest extends AbstractTestNGSpringContextTests {
     @BeforeClass(groups = {"FE", "Home"})
     public void prepareData() throws Exception {
         dataLoadSteps.deleteAllData();
-        for (RegisterRequest user: CORRECT_USERS) {
+        for (RegisterRequest user : CORRECT_USERS) {
             authSteps.registerUser(user);
-            /*editInhabitantsPageSteps.openEditInhabitantsPage();
-            editInhabitantsPageSteps.fillFlatInputField(String.valueOf(user.getFlat().getNumber()));
-            editInhabitantsPageSteps.clickButton(EditInhabitantsPage.Button.SHOW_USER);
-            editInhabitantsPageSteps.selectStatusRadio(0, Status.ACTIVE);
-            editInhabitantsPageSteps.clickButton(EditInhabitantsPage.Button.SAVE_USER);*/
         }
-        dataLoadSteps.ubdateAllUsersToActive();
+        dataLoadSteps.updateAllUsersToActive();
     }
 
     @BeforeMethod(groups = {"FE", "Home"})
@@ -87,13 +83,25 @@ public class HomeTest extends AbstractTestNGSpringContextTests {
 
     @Test(groups = {"FE", "Home"}, dataProvider = "correctIndicationData")
     @Title("Checking sending correct indications data")
-    public void sendCorrectIndications(RegisterRequest correctUser) {
+    public void sendCorrectIndicationsTest(RegisterRequest correctUser) {
         loginPageSteps.fillCorrectCredential(correctUser.getLogin(), correctUser.getPassword());
         homePageSteps.fillIndications((List<IndicationRequest>) correctIndicationData[0][0]);
         homePageSteps.checkLastIndications((List<IndicationRequest>) correctIndicationData[0][0], correctUser.getLogin());
+        homePageSteps.checkMessageVisibility(HomePage.Message.SUCCESS_SENT_INDICATIONS, true);
     }
 
-    @Test(groups = {"FE", "Home"}, dataProvider = "correctUserData")
+
+    @Test(groups = {"FE", "Home"}, dataProvider = "correctIndicationData")
+    @Title("Checking report by last year")
+    public void checkLastYearReportTest(RegisterRequest correctUser) {
+        loginPageSteps.fillCorrectCredential(correctUser.getLogin(), correctUser.getPassword());
+        for (Object[] indicationRequest : correctIndicationData) {
+            homePageSteps.fillIndications((List<IndicationRequest>) indicationRequest[0]);
+        }
+        homePageSteps.selectPeriodRadio(HomePage.TimePeriod.THIS_YEAR);
+        homePageSteps.clickMakeReportButton();
+        homePageSteps.checkAllTableIndications(correctUser.getLogin());
+    }
 
     @DataProvider(name = "correctIndicationData")
     public Object[] correctIndicationData() {

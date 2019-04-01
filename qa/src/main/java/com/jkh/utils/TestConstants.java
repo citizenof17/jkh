@@ -2,19 +2,12 @@ package com.jkh.utils;
 
 import com.jkh.BE.models.*;
 import com.jkh.BE.models.enums.Status;
-import com.jkh.FE.ConfigurationFE;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@ConfigurationProperties
 public interface TestConstants {
-
-    @Value("${DEFAULT_PERIOD_BETWEEN_COUNTERS_SENDINGS:30}")
 
     String R = "Response";
 
@@ -93,9 +86,6 @@ public interface TestConstants {
 
     };
 
-    //RegisterRequest ADMIN = new RegisterRequest("Administrator", "Administrator_1", "+79995550000",
-     //       new Flat(1000), "Администратор Великий Ужаснович", "Administrator@jkh.ru");
-
     RegisterRequest CORRECT_REGISTER_USER = (RegisterRequest) correctRegisterData[0][0];
 
     RegisterRequest HOME_USER = new RegisterRequest("Victor1", "Qwerty_1", "+79053882198", new Flat(27),
@@ -172,7 +162,7 @@ public interface TestConstants {
                             "oleg@mail,ru"
                     ),
                     new RegisterBadResponse(
-                            "ok",
+                            "Некорректный логин",
                             "ok",
                             "ok",
                             "Некорректный номер квартиры",

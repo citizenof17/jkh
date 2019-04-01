@@ -11,7 +11,7 @@ public interface IndicationDao {
 
     Integer select(String login, Counter.CounterType counterType);
 
-    List<Map<String, Object>> selectIndicationByDate(String date);
+    Map<String, Object> selectIndicationByDate(String date);
 
     List<Map<String, Object>> selectDates(String login);
 }

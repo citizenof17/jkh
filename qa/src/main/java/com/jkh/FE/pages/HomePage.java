@@ -15,10 +15,10 @@ import static com.codeborne.selenide.Selenide.*;
 @Component
 public class HomePage {
 
-    private static String UNVERIFIED_TITLE_TEXT = "Ваш аккаунт не был подтвержден. Для подтверждения свяжитесь с администратором. ";
+    //table columns
+    public static final ElementsCollection COLUMNS = $$x("//tbody//tbody//tr//td");
     //titles
     private static final SelenideElement WELCOME_TITLE = $x("//p");
-    private static final SelenideElement UNVERIFIED_TITLE = findField(UNVERIFIED_TITLE_TEXT);
     //admin info
     private static final SelenideElement ADMIN_NAME_FIELD = findField("Имя:");
     private static final SelenideElement ADMIN_EMAIL_FIELD = findField("Электронная почта:");
@@ -36,10 +36,10 @@ public class HomePage {
     private static final SelenideElement THIS_YEAR_RADIO = findPeriodRadioButton(TimePeriod.THIS_YEAR);
     private static final SelenideElement THIS_MONTH_RADIO = findPeriodRadioButton(TimePeriod.THIS_MONTH);
     private static final SelenideElement MANUAL_RADIO = findPeriodRadioButton(TimePeriod.MANUAL);
-    //table columns
-    private static final ElementsCollection COLUMNS = $$x("//tbody//tbody//tr//td");
     //messages
     private static final SelenideElement SUCCESS_SENT_INDICATIONS_MESSAGE = findField(Message.SUCCESS_SENT_INDICATIONS.getMessage());
+    private static String UNVERIFIED_TITLE_TEXT = "Ваш аккаунт не был подтвержден. Для подтверждения свяжитесь с администратором. ";
+    private static final SelenideElement UNVERIFIED_TITLE = findField(UNVERIFIED_TITLE_TEXT);
 
     private static SelenideElement findField(String title) {
         return $x(String.format("//p[contains(text(), '%s')]", title));
@@ -53,12 +53,21 @@ public class HomePage {
         Assertions.assertThat(UNVERIFIED_TITLE.isDisplayed()).as("Wrong Home page Redirect").isTrue();
     }
 
+    public Boolean getMessageVisibility(Message message) {
+        switch (message) {
+            case SUCCESS_SENT_INDICATIONS:
+                return SUCCESS_SENT_INDICATIONS_MESSAGE.isDisplayed();
+            default:
+                return false;
+        }
+    }
+
     public String getWelcomeTitle() {
         return WELCOME_TITLE.text();
     }
 
     public String getAdminName() {
-        return  ADMIN_NAME_FIELD.text();
+        return ADMIN_NAME_FIELD.text();
     }
 
     public String getAdminEmail() {
@@ -114,16 +123,16 @@ public class HomePage {
 
     public Map<String, String> getIndication(Integer id) {
         HashMap<String, String> indication = new HashMap<>();
-        indication.put("date", COLUMNS.get(id * 4).getValue());
-        indication.put("electr", COLUMNS.get(id * 4 + 1).getValue());
-        indication.put("hot", COLUMNS.get(id * 4 + 2).getValue());
-        indication.put("cold", COLUMNS.get(id * 4 + 3).getValue());
+        indication.put("date", COLUMNS.get(id * 4).text().replace("\"", ""));
+        indication.put("electr", COLUMNS.get(id * 4 + 1).text().replace("\"", ""));
+        indication.put("hot", COLUMNS.get(id * 4 + 2).text());
+        indication.put("cold", COLUMNS.get(id * 4 + 3).text().replace("\"", ""));
         return indication;
     }
 
     public enum Message {
 
-        SUCCESS_SENT_INDICATIONS("Данные успешно отправлены.");
+        SUCCESS_SENT_INDICATIONS("Данные успешно отправлены");
 
         private String message;
 

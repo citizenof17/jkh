@@ -2,11 +2,9 @@ package com.jkh.FE.steps;
 
 import com.jkh.BE.models.Counter;
 import com.jkh.BE.models.IndicationRequest;
-import com.jkh.BE.models.RegisterRequest;
 import com.jkh.BE.steps.DataLoadSteps;
 import com.jkh.FE.ConfigurationFE;
 import com.jkh.FE.pages.HomePage;
-import com.jkh.utils.AllureUtils;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.qatools.allure.annotations.Step;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.jkh.utils.TestConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -95,6 +94,7 @@ public class HomePageSteps {
         homePage.fillIndication(value, counterType);
     }
 
+    @Step("Filling correct indications")
     public void fillIndications(List<IndicationRequest> indicationRequests) {
         for (IndicationRequest indicationRequest : indicationRequests) {
             fillIndication(indicationRequest.getValue().toString(), indicationRequest.getCounter().getType());
@@ -113,14 +113,15 @@ public class HomePageSteps {
         assertions.assertAll();
     }
 
-    @Step("Checking indications in table")
-    public void checkIndications() {
-        homePage.getIndication(1);
-    }
-
     @Step("Clicking on send indications button")
     public void clickSendIndicationsButton() {
         homePage.clickSendIndicationsButton();
+    }
+
+    @Step("Checking {0} message is visible: {1}")
+    public void checkMessageVisibility(HomePage.Message message, boolean visibility) {
+        Assertions.assertThat(homePage.getMessageVisibility(message)).as("Message \"" +
+                message.getMessage() + "\" visibility is not equal: " + visibility).isEqualTo(visibility);
     }
 
     @Step("Selecting time period radio on: {0}")
@@ -131,5 +132,24 @@ public class HomePageSteps {
     @Step("Clicking on make report button")
     public void clickMakeReportButton() {
         homePage.clickMakeReportButton();
+    }
+
+    @Step("Checking {2} indication")
+    public void checkIndication(Map<String, String> actualIndication, Map<String, Object> expectedIndication, String date) {
+        SoftAssertions softAssertions = new SoftAssertions();
+        softAssertions.assertThat(actualIndication.get("electr")).as("Incorrect ELECTRICITY").isEqualTo(expectedIndication.get("electr").toString());
+        softAssertions.assertThat(actualIndication.get("hot")).as("Incorrect HOT_WATER").isEqualTo(expectedIndication.get("hot").toString());
+        softAssertions.assertThat(actualIndication.get("cold")).as("Incorrect COLD_WATER").isEqualTo(expectedIndication.get("cold").toString());
+        softAssertions.assertAll();
+    }
+
+    @Step("Checking all indication in the table")
+    public void checkAllTableIndications(String login) {
+        List<Map<String, Object>> dates = dataLoadSteps.selectDatesByUser(login);
+        for (int i = 0; i < dates.size(); i++) {
+            Map<String, Object> expectedIndication = dataLoadSteps.selectIndicationByDate(dates.get(i).get("ind_time").toString());
+            Map<String, String> actualIndication = homePage.getIndication(i);
+            checkIndication(actualIndication, expectedIndication, dates.get(i).get("ind_time").toString());
+        }
     }
 }

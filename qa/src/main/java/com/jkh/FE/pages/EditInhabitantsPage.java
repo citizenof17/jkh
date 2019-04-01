@@ -123,15 +123,15 @@ public class EditInhabitantsPage {
         }
     }
 
+    public void reset() {
+        WELCOME_TITLE.click();
+    }
+
     public enum Button {
         LOGOUT,
         BACK_TO_ADMIN_PAGE,
         SHOW_USER,
         SAVE_USER
-    }
-
-    public void reset() {
-        WELCOME_TITLE.click();
     }
 
     public enum Error {

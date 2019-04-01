@@ -1,7 +1,6 @@
 package com.jkh.BE.clients;
 
 import com.jkh.BE.models.IndicationRequest;
-import com.jkh.BE.models.IndicationResponse;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;

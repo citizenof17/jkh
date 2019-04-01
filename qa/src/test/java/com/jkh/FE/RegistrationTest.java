@@ -42,9 +42,6 @@ public class RegistrationTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private HomePageSteps homePageSteps;
 
-    @Autowired
-    private BaseSteps baseSteps;
-
     @BeforeClass(groups = {"FE", "Register"})
     public void prepareData() {
         dataLoadSteps.deleteAllData();
@@ -166,7 +163,9 @@ public class RegistrationTest extends AbstractTestNGSpringContextTests {
     }
 
     @DataProvider(name = "incorrectEmailData")
-    public Object[] incorrectEmailData() { return incorrectEmailData; }
+    public Object[] incorrectEmailData() {
+        return incorrectEmailData;
+    }
 
     @DataProvider(name = "incorrectPhoneData")
     public Object[] incorrectPhoneData() {

@@ -1,7 +1,6 @@
 package com.jkh.FE.steps;
 
 import com.jkh.BE.models.RegisterRequest;
-import com.jkh.FE.models.RegisterUser;
 import com.jkh.FE.pages.RegistrationPage;
 import org.assertj.core.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,5 @@
 package com.jkh.FE.steps;
 
-import com.jkh.BE.models.RegisterRequest;
 import com.jkh.BE.models.enums.Status;
 import com.jkh.FE.ConfigurationFE;
 import com.jkh.FE.pages.AdminPage;
@@ -77,7 +76,7 @@ public class EditInhabitantsPageSteps {
     }
 
     @Step("Checking login: {1}")
-    public void checkLogin(Integer id,String login) {
+    public void checkLogin(Integer id, String login) {
         Assertions.assertThat(editInhabitantsPage.getLogin(id)).as("Wrong login").isEqualTo(login);
     }
 
@@ -94,7 +93,7 @@ public class EditInhabitantsPageSteps {
     @Step("Checking {0} error message is visible: {1}")
     public void checkErrorMessageVisibility(EditInhabitantsPage.Error error, boolean visibility) {
         Assertions.assertThat(editInhabitantsPage.getErrorMessageVisibility(error)).as("Error message \"" +
-                error.getMessage()+"\" visibility is not equal: " + visibility).isEqualTo(visibility);
+                error.getMessage() + "\" visibility is not equal: " + visibility).isEqualTo(visibility);
     }
 
     public void reset() {

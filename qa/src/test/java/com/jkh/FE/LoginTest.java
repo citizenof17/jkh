@@ -118,7 +118,6 @@ public class LoginTest extends AbstractTestNGSpringContextTests {
         loginPageSteps.fillIncorrectCredential((String) incorrectLoginData[0], (String) incorrectPasswordData[0]);
         loginPageSteps.reset();
         loginPageSteps.checkLoginErrorMessage();
-        //loginPageSteps.checkPasswordErrorMessage();
     }
 
     @Test(groups = {"FE", "Login"})

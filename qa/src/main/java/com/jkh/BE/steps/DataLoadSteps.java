@@ -49,7 +49,7 @@ public class DataLoadSteps {
     @Step("Select {1} last indication")
     public Integer lastIndication(String login, Counter.CounterType counterType) {
         Integer result = indicationDao.select(login, counterType);
-        AllureUtils.saveText( "Last " + counterType.toString() + " indication in DB: " + result.toString(), result.toString());
+        AllureUtils.saveText("Last " + counterType.toString() + " indication in DB: " + result.toString(), result.toString());
         return result;
     }
 
@@ -57,7 +57,7 @@ public class DataLoadSteps {
     public List<List<Map<String, Object>>> listsUsersByFlat() {
         List<Map<String, Object>> flats = flatDao.selectAllFlatsNumbers();
         List<List<Map<String, Object>>> users = new ArrayList<>();
-        for (Map<String, Object> flat: flats) {
+        for (Map<String, Object> flat : flats) {
             List<Map<String, Object>> usersInFlat = usersDao.selectUserByFlat((Integer) flat.get("number"));
             users.add(usersInFlat);
         }
@@ -87,7 +87,21 @@ public class DataLoadSteps {
     }
 
     @Step("Updating all users status to ACTIVE")
-    public void ubdateAllUsersToActive() {
+    public void updateAllUsersToActive() {
         usersDao.updateAllUsersToActive();
+    }
+
+    @Step("Getting information about date of sent indications by user {0}")
+    public List<Map<String, Object>> selectDatesByUser(String login) {
+        List<Map<String, Object>> result = indicationDao.selectDates(login);
+        AllureUtils.saveText("Dates: " + result.toString(), result.toString());
+        return result;
+    }
+
+    @Step("Selecting indication by date {0}")
+    public Map<String, Object> selectIndicationByDate(String date) {
+        Map<String, Object> result = indicationDao.selectIndicationByDate(date);
+        AllureUtils.saveText("Indication " + date + ": " + result.toString(), result.toString());
+        return result;
     }
 }
